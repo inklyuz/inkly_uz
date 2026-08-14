@@ -84,11 +84,10 @@ export default function WritePage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <div className="mb-8 flex items-center justify-between">
-        <p className="text-sm font-medium text-[#6B7280]">Yangi maqola yozish</p>
-        <Button onClick={handlePublish} variant="accent" loading={loading} size="sm">
-          Chop etish (Publish)
+    <div className="mx-auto max-w-[700px] px-4 py-8 sm:py-12">
+      <div className="mb-8 flex items-center justify-end">
+        <Button onClick={handlePublish} variant="accent" loading={loading} size="sm" className="rounded-full px-6">
+          Chop etish
         </Button>
       </div>
 
@@ -103,7 +102,7 @@ export default function WritePage() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Sarlavha..."
-          className="w-full resize-none overflow-hidden bg-transparent text-4xl font-extrabold tracking-tight text-[#141414] outline-none placeholder:text-[#E8E3DD]"
+          className="w-full resize-none overflow-hidden bg-transparent text-[3.8rem] leading-[1.15] font-extrabold tracking-tight text-[#141414] outline-none placeholder:text-[#E8E3DD]"
           rows={1}
           onInput={(e) => {
             const target = e.target as HTMLTextAreaElement

@@ -3,14 +3,13 @@ import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { Eye } from "lucide-react"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
 import { Avatar } from "@/components/ui/avatar"
 import { Badge, VerifiedDot } from "@/components/ui/badge"
 import { CommentSection } from "@/components/ui/comment-section"
 import { ReactionBar } from "@/components/ui/reaction-bar"
 import { getCommentsSafe, getPostSafe } from "@/lib/api/posts"
 import { formatCount, formatDate, readingTime } from "@/lib/utils/format"
+import { parseTeletypeToHtml } from "@/lib/utils/teletype-parser"
 
 function parseUsername(raw: string): string | null {
   const decoded = decodeURIComponent(raw)
@@ -104,9 +103,10 @@ export default async function PostDetailPage({
         )}
 
         {/* ── Kontent ──────────────────────────────────────────────────── */}
-        <div className="prose prose-inkly mt-10 max-w-none">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
-        </div>
+        <div 
+          className="prose prose-inkly mt-10 max-w-none"
+          dangerouslySetInnerHTML={{ __html: parseTeletypeToHtml(post.content) }}
+        />
 
         {/* ── Reaksiyalar ──────────────────────────────────────────────── */}
         <div className="mt-12 border-t border-[#E8E3DD] pt-8">
