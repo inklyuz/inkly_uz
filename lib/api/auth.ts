@@ -11,7 +11,7 @@ export const authApi = {
 
   logout: (token: string) => apiRequest<void>("/auth/logout", { method: "POST", token }),
 
-  refresh: () => apiRequest<TokenPair>("/auth/refresh", { method: "POST" }),
+  refresh: () => apiRequest<TokenPair>("/auth/refresh", { method: "POST", body: { refresh_token: "" } }),
 
   me: (token: string) => apiRequest<UserMeResponse>("/auth/me", { token }),
 
@@ -35,6 +35,9 @@ export const authApi = {
 
   // Google OAuth
   getGoogleUrl: () => apiRequest<{ authorization_url: string; state: string }>("/auth/google"),
+
+  googleCallback: (code: string, state: string) =>
+    apiRequest<{ tokens: TokenPair }>(`/auth/google/callback?code=${code}&state=${state}`),
 
   // Sessiyalar
   getSessions: (token: string) => apiRequest<SessionOut[]>("/auth/sessions", { token }),

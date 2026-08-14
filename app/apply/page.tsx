@@ -1,0 +1,97 @@
+"use client"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/lib/auth/context"
+import { creatorsApi } from "@/lib/api/creators"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/input"
+
+export default function ApplyPage() {
+  const router = useRouter()
+  const { state } = useAuth()
+  
+  const [description, setDescription] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+
+  if (!state.loading && !state.user) {
+    router.replace("/login")
+    return null
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!description.trim() || !state.token) return
+
+    setLoading(true)
+    setError(null)
+
+    try {
+      await creatorsApi.apply(state.token, { description })
+      setSuccess(true)
+    } catch (err: any) {
+      if (err?.code === "ALREADY_EXISTS") {
+        setSuccess(true) // Agar allaqachon topshirgan bo'lsa, xursand qilamiz
+      } else {
+        setError(err.message || "Xatolik yuz berdi")
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (success) {
+    return (
+      <div className="mx-auto mt-20 max-w-lg text-center px-4">
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#FFE9D6] text-[#FF6A00]">
+          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h1 className="text-2xl font-bold text-[#141414]">Arizangiz qabul qilindi!</h1>
+        <p className="mt-4 text-[#36565F]">
+          Sizning mualliflik arizangiz moderatorlarimiz tomonidan ko'rib chiqilmoqda. Tasdiqlanishi bilan maqola yozishingiz mumkin bo'ladi.
+        </p>
+        <Button variant="outline" className="mt-8" onClick={() => router.push("/")}>
+          Bosh sahifaga qaytish
+        </Button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mx-auto mt-16 max-w-lg px-4">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-extrabold tracking-tight text-[#141414]">Muallif bo'lish</h1>
+        <p className="mt-3 text-[#36565F]">
+          Inkly platformasida o'z maqolalaringizni yozish uchun o'zingiz haqingizda qisqacha ma'lumot qoldiring.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="rounded-2xl border border-[#E8E3DD] bg-white p-6 shadow-sm sm:p-8">
+        <div className="flex flex-col gap-6">
+          {error && (
+            <div className="rounded-lg bg-[#DC2626]/10 p-3 text-sm text-[#DC2626]">
+              {error}
+            </div>
+          )}
+
+          <Textarea
+            label="O'zingiz haqingizda"
+            placeholder="Qaysi mavzularda yozmoqchisiz? Avvalgi tajribalaringiz bormi?"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+            rows={5}
+          />
+
+          <Button type="submit" variant="accent" size="lg" loading={loading} className="w-full">
+            Arizani yuborish
+          </Button>
+        </div>
+      </form>
+    </div>
+  )
+}

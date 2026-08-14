@@ -68,7 +68,13 @@ export const postsApi = {
     },
   ) => apiRequest<PostResponse>("/posts", { method: "POST", body: data, token }),
 
-  publish: (token: string, uuid: string) => apiRequest<PostResponse>(`/posts/${uuid}/publish`, { method: "POST", token }),
+  publish: (token: string, uuid: string) => apiRequest<PostResponse>(`/posts/me/${uuid}/publish`, { method: "POST", token }),
+
+  unpublish: (token: string, uuid: string) => apiRequest<PostResponse>(`/posts/me/${uuid}/unpublish`, { method: "POST", token }),
+
+  archive: (token: string, uuid: string) => apiRequest<PostResponse>(`/posts/me/${uuid}/archive`, { method: "POST", token }),
+
+  unarchive: (token: string, uuid: string) => apiRequest<PostResponse>(`/posts/me/${uuid}/unarchive`, { method: "POST", token }),
 }
 
 // ── Server component uchun demo fallback'li o'ramlar ────────────────────────

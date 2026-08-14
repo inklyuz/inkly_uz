@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth/context"
 import { postsApi } from "@/lib/api/posts"
+import { creatorsApi } from "@/lib/api/creators"
 import { InklyEditor } from "@/components/editor/inkly-editor"
 import { Button } from "@/components/ui/button"
 
@@ -15,12 +16,40 @@ export default function WritePage() {
   const [content, setContent] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  
+  const [checkingCreator, setCheckingCreator] = useState(true)
 
-  // Agar foydalanuvchi tizimga kirmagan bo'lsa
-  if (!state.loading && !state.user) {
-    router.replace("/login")
-    return null
+  useEffect(() => {
+    if (state.loading) return
+    if (!state.user) {
+      router.replace("/login")
+      return
+    }
+
+    if (state.token) {
+      creatorsApi
+        .me(state.token)
+        .then((res) => {
+          if (res.status !== "active") {
+            router.replace("/apply")
+          } else {
+            setCheckingCreator(false)
+          }
+        })
+        .catch(() => {
+          router.replace("/apply")
+        })
+    }
+  }, [state, router])
+
+  if (state.loading || checkingCreator) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <p className="text-[#6B7280]">Tekshirilmoqda...</p>
+      </div>
+    )
   }
+
 
   const handlePublish = async () => {
     if (!title.trim() || !content.trim()) {

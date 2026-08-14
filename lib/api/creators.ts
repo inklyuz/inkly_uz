@@ -15,6 +15,9 @@ export const creatorsApi = {
 
   apply: (token: string, data: { description?: string }) =>
     apiRequest<CreatorMeResponse>("/creators/apply", { method: "POST", body: data, token }),
+
+  updateMe: (token: string, data: { description?: string }) =>
+    apiRequest<CreatorMeResponse>("/creators/me", { method: "PATCH", body: data, token }),
 }
 
 export async function listCreatorsSafe(params: { page?: number; page_size?: number } = {}): Promise<Page<CreatorPublicResponse>> {
