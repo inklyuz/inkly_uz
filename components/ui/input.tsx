@@ -5,7 +5,7 @@ const fieldBase =
   "w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#141414] placeholder:text-[#6B7280] outline-none transition-colors duration-150"
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string
+  label?: React.ReactNode
   error?: string
   hint?: string
 }

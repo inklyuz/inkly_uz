@@ -38,7 +38,7 @@ export default function RegisterPage() {
     try {
       const res = await authApi.register(data)
       await login(res.tokens)
-      router.push("/")
+      router.push("/verify-email")
     } catch (err: any) {
       setError(err.message || "Ro'yxatdan o'tishda xatolik yuz berdi")
     }

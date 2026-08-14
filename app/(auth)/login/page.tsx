@@ -72,7 +72,14 @@ export default function LoginPage() {
         />
         
         <Input
-          label="Parolingiz"
+          label={
+            <div className="flex items-center justify-between">
+              <span>Parolingiz</span>
+              <Link href="/forgot-password" className="text-xs font-normal text-[#FF6A00] hover:underline" tabIndex={-1}>
+                Parolni unutdingizmi?
+              </Link>
+            </div>
+          }
           type="password"
           autoComplete="current-password"
           placeholder="••••••••"
