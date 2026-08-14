@@ -52,8 +52,8 @@ const itemVariants = {
 }
 
 const iconVariants = {
-  closed: { rotate: 0,   scale: 1 },
-  open:   { rotate: 90,  scale: 1 },
+  closed: { rotate: 0,  scale: 1 },
+  open:   { rotate: 90, scale: 1 },
 }
 
 export function Navbar() {
@@ -64,7 +64,8 @@ export function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-ink-900/95 backdrop-blur-md">
+      {/* ── Dark navbar — #141414 background ── */}
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#141414]/95 backdrop-blur-md">
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
 
           {/* ── Logo ── */}
@@ -75,25 +76,26 @@ export function Navbar() {
 
           {/* ── Markaziy zona ── */}
           {siteConfig.SHOW_ANNOUNCEMENT ? (
-            <div className="relative hidden overflow-hidden rounded-full border border-lime-400/25 bg-white/5 px-5 py-1.5 lg:flex">
+            <div className="relative hidden overflow-hidden rounded-full border border-[#FF6A00]/25 bg-white/5 px-5 py-1.5 lg:flex">
+              {/* Shimmer — orange */}
               <motion.div
                 aria-hidden
-                className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-lime-400/20 to-transparent"
+                className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-[#FF6A00]/20 to-transparent"
                 animate={{ x: ["-100%", "260%"] }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", repeatDelay: 2 }}
               />
               <span className="relative flex items-center gap-2 text-sm font-medium text-white/90">
-                <Sparkles size={13} className="shrink-0 text-lime-400" />
+                <Sparkles size={13} className="shrink-0 text-[#FF6A00]" />
                 Inkly tez kunda ishga tushadi —{" "}
                 <button
                   onClick={() =>
                     document.getElementById("waitlist-section")?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="font-semibold text-lime-400 underline underline-offset-2 transition-colors hover:text-lime-300"
+                  className="font-semibold text-[#FF6A00] underline underline-offset-2 transition-colors hover:text-[#FF8A3D]"
                 >
                   username ni hoziroq band qiling
                 </button>
-                <Sparkles size={13} className="shrink-0 text-lime-400" />
+                <Sparkles size={13} className="shrink-0 text-[#FF6A00]" />
               </span>
             </div>
           ) : (
@@ -136,10 +138,11 @@ export function Navbar() {
                 >
                   Kirish
                 </Link>
+                {/* Register — Orange CTA */}
                 <Link href="/register">
                   <Button
                     size="sm"
-                    className="gap-1.5 rounded-full bg-lime-400 px-5 font-semibold text-ink-900 hover:bg-lime-300"
+                    className="gap-1.5 rounded-full bg-[#FF6A00] px-5 font-semibold text-white hover:bg-[#E85F00]"
                   >
                     Boshlash <ArrowRight size={14} />
                   </Button>
@@ -176,7 +179,7 @@ export function Navbar() {
               initial="closed"
               animate="open"
               exit="closed"
-              className="overflow-hidden border-t border-white/10 bg-ink-900 lg:hidden"
+              className="overflow-hidden border-t border-white/10 bg-[#141414] lg:hidden"
             >
               <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4">
 
@@ -184,10 +187,10 @@ export function Navbar() {
                 {siteConfig.SHOW_ANNOUNCEMENT && (
                   <motion.div
                     variants={itemVariants}
-                    className="mb-3 rounded-xl border border-lime-400/20 bg-lime-400/10 px-4 py-3"
+                    className="mb-3 rounded-xl border border-[#FF6A00]/20 bg-[#FF6A00]/8 px-4 py-3"
                   >
                     <p className="text-sm font-medium text-white/80">
-                      <Sparkles size={12} className="mr-1.5 inline text-lime-400" />
+                      <Sparkles size={12} className="mr-1.5 inline text-[#FF6A00]" />
                       Inkly tez kunda ishga tushadi —{" "}
                       <button
                         onClick={() => {
@@ -200,7 +203,7 @@ export function Navbar() {
                             150,
                           )
                         }}
-                        className="font-semibold text-lime-400 underline underline-offset-2"
+                        className="font-semibold text-[#FF6A00] underline underline-offset-2"
                       >
                         username band qiling
                       </button>
@@ -258,9 +261,10 @@ export function Navbar() {
                       Kirish
                     </Link>
                     <Link href="/register" onClick={() => setOpen(false)}>
+                      {/* Orange CTA — mobil */}
                       <Button
                         size="sm"
-                        className="w-full gap-1.5 rounded-xl bg-lime-400 font-semibold text-ink-900 hover:bg-lime-300"
+                        className="w-full gap-1.5 rounded-xl bg-[#FF6A00] font-semibold text-white hover:bg-[#E85F00]"
                       >
                         Boshlash <ArrowRight size={14} />
                       </Button>
@@ -282,7 +286,7 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-40 bg-[#141414]/40 backdrop-blur-sm lg:hidden"
             onClick={() => setOpen(false)}
           />
         )}

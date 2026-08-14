@@ -5,14 +5,14 @@ import { Button } from "@/components/ui/button"
 
 export default function NotFound() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-cream-100 px-6">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#FFF9F3] px-6">
       {/* ── Orqa fon: yumshoq radial nur ─────────────────────────── */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(111,209,215,0.20) 0%, rgba(93,248,216,0.08) 45%, transparent 75%)",
+            "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(255,106,0,0.06) 0%, rgba(255,138,61,0.03) 45%, transparent 75%)",
         }}
       />
 
@@ -22,9 +22,9 @@ export default function NotFound() {
         {/* ── 404 katta raqam ── */}
         <div className="relative mb-4">
           <span
-            className="select-none text-[7rem] font-bold leading-none tracking-tighter text-ink-900 sm:text-[9rem]"
+            className="select-none text-[7rem] font-bold leading-none tracking-tighter text-[#141414] sm:text-[9rem]"
             style={{
-              backgroundImage: "linear-gradient(135deg, #093C5D 0%, #3B7597 55%, #6FD1D7 100%)",
+              backgroundImage: "linear-gradient(135deg, #141414 0%, #36565F 55%, #6B7280 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
               color: "transparent",
@@ -34,10 +34,10 @@ export default function NotFound() {
           </span>
         </div>
 
-        <h1 className="mb-3 text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl">
+        <h1 className="mb-3 text-2xl font-bold tracking-tight text-[#141414] sm:text-3xl">
           Sahifa topilmadi
         </h1>
-        <p className="mb-10 max-w-sm text-balance text-base leading-relaxed text-ink-700">
+        <p className="mb-10 max-w-sm text-balance text-base leading-relaxed text-[#36565F]">
           Siz izlagan sahifa mavjud emas, o&apos;chirilgan yoki manzil noto&apos;g&apos;ri kiritilgan bo&apos;lishi mumkin.
         </p>
 

@@ -8,52 +8,52 @@ import { cn } from "@/lib/utils"
 const iconConfig = {
   heart: {
     Icon: Heart,
-    iconColor: "text-ink-600",
-    iconBg: "bg-cream-100",
+    iconColor: "text-[#FF6A00]",
+    iconBg: "bg-[#FFE9D6]",
     isHeart: true,
   },
   users: {
     Icon: Users,
-    iconColor: "text-lime-600",
-    iconBg: "bg-lime-50",
+    iconColor: "text-[#FF6A00]",
+    iconBg: "bg-[#FFF3E8]",
     isHeart: false,
   },
   clock: {
     Icon: Clock,
-    iconColor: "text-ink-600",
-    iconBg: "bg-cream-100",
+    iconColor: "text-[#36565F]",
+    iconBg: "bg-[#F2F4F7]",
     isHeart: false,
   },
   trending: {
     Icon: TrendingUp,
-    iconColor: "text-lime-600",
-    iconBg: "bg-lime-50",
+    iconColor: "text-[#FF6A00]",
+    iconBg: "bg-[#FFF3E8]",
     isHeart: false,
   },
   share: {
     Icon: Share2,
-    iconColor: "text-ink-600",
-    iconBg: "bg-cream-100",
+    iconColor: "text-[#36565F]",
+    iconBg: "bg-[#F2F4F7]",
     isHeart: false,
   },
   pen: {
     Icon: PenLine,
-    iconColor: "text-lime-600",
-    iconBg: "bg-lime-50",
+    iconColor: "text-[#FF6A00]",
+    iconBg: "bg-[#FFF3E8]",
     isHeart: false,
   },
 }
 
-/* ── Instagram-like yurak animatsiyasi ────────────────────────────── */
+/* ── Heart animatsiyasi ────────────────────────────────────────────── */
 function HeartIcon({ prefersReducedMotion }: { prefersReducedMotion: boolean | null }) {
   return (
     <div className="relative flex h-7 w-7 shrink-0 items-center justify-center">
       {/* Ripple 1 — tashqi */}
       {!prefersReducedMotion && (
         <motion.div
-          className="absolute inset-0 rounded-xl bg-ink-400"
+          className="absolute inset-0 rounded-xl bg-[#FF8A3D]"
           initial={{ scale: 1, opacity: 0.5 }}
-          animate={{ scale: [1, 1.9], opacity: [0.45, 0] }}
+          animate={{ scale: [1, 1.9], opacity: [0.35, 0] }}
           transition={{
             duration: 0.7,
             repeat: Infinity,
@@ -66,7 +66,7 @@ function HeartIcon({ prefersReducedMotion }: { prefersReducedMotion: boolean | n
       {/* Ripple 2 — ichki */}
       {!prefersReducedMotion && (
         <motion.div
-          className="absolute inset-0 rounded-xl bg-ink-300"
+          className="absolute inset-0 rounded-xl bg-[#FFE9D6]"
           initial={{ scale: 1, opacity: 0 }}
           animate={{ scale: [1, 1.5], opacity: [0.6, 0] }}
           transition={{
@@ -80,7 +80,7 @@ function HeartIcon({ prefersReducedMotion }: { prefersReducedMotion: boolean | n
       )}
       {/* Yurak icon — bounce pop animatsiyasi */}
       <motion.div
-        className="relative z-10 flex h-7 w-7 items-center justify-center rounded-xl bg-cream-100"
+        className="relative z-10 flex h-7 w-7 items-center justify-center rounded-xl bg-[#FFE9D6]"
         animate={
           prefersReducedMotion
             ? undefined
@@ -98,7 +98,7 @@ function HeartIcon({ prefersReducedMotion }: { prefersReducedMotion: boolean | n
           times: [0, 0.05, 0.3, 0.55, 0.75, 1],
         }}
       >
-        <Heart size={13} className="fill-ink-600 text-ink-600" />
+        <Heart size={13} className="fill-[#FF6A00] text-[#FF6A00]" />
       </motion.div>
     </div>
   )
@@ -129,7 +129,7 @@ export function FloatingBadge({
   const content = (
     <motion.div
       className={cn(
-        "pointer-events-auto flex items-center gap-2.5 rounded-2xl border border-cream-200 bg-white px-3.5 py-2.5 shadow-[0_2px_12px_rgba(9,60,93,0.08)]",
+        "pointer-events-auto flex items-center gap-2.5 rounded-2xl border border-[#E8E3DD] bg-white px-3.5 py-2.5 shadow-[0_2px_12px_rgba(20,20,20,0.08)]",
         href && "cursor-pointer",
       )}
       whileHover={prefersReducedMotion ? undefined : { scale: 1.06, y: -2 }}
@@ -146,8 +146,8 @@ export function FloatingBadge({
       )}
       {/* Matn */}
       <div className="leading-tight">
-        <p className="text-xs font-bold text-ink-900">{label}</p>
-        {sub && <p className="text-[10px] text-ink-600/60">{sub}</p>}
+        <p className="text-xs font-bold text-[#141414]">{label}</p>
+        {sub && <p className="text-[10px] text-[#6B7280]">{sub}</p>}
       </div>
     </motion.div>
   )

@@ -33,14 +33,14 @@ export default async function CategoryPage({
 
   return (
     <main>
-      <header className="border-b border-cream-300 bg-cream-200 px-4 py-16 sm:px-6">
+      <header className="border-b border-[#E8E3DD] bg-[#FFF9F3] px-4 py-16 sm:px-6">
         <div className="mx-auto max-w-6xl">
-          <p className="text-xs font-semibold uppercase tracking-widest text-ink-400">Kategoriya</p>
-          <h1 className="mt-2 text-4xl font-extrabold tracking-tighter text-ink-900 sm:text-5xl">{category.name}</h1>
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280]">Kategoriya</p>
+          <h1 className="mt-2 text-4xl font-extrabold tracking-tighter text-[#141414] sm:text-5xl">{category.name}</h1>
           {category.description && (
-            <p className="mt-4 max-w-xl leading-relaxed text-pretty text-ink-600">{category.description}</p>
+            <p className="mt-4 max-w-xl leading-relaxed text-pretty text-[#36565F]">{category.description}</p>
           )}
-          <p className="mt-6 inline-block rounded-full bg-lime-400 px-3 py-1 text-xs font-semibold text-ink-900">
+          <p className="mt-6 inline-block rounded-full bg-[#FF6A00] px-3 py-1 text-xs font-semibold text-white">
             {category.post_count} maqola
           </p>
         </div>

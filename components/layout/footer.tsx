@@ -33,7 +33,8 @@ const columns = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-ink-900">
+    /* ── Dark footer — #141414 background ── */
+    <footer className="border-t border-white/10 bg-[#141414]">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
 
         {/* Top row */}
@@ -56,7 +57,7 @@ export function Footer() {
               rel="noopener noreferrer"
               className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/70 transition hover:border-white/20 hover:bg-white/10 hover:text-white"
             >
-              <Send size={12} className="text-ink-400" />
+              <Send size={12} className="text-[#FF6A00]" />
               Telegram kanalimiz
             </a>
           </div>
@@ -72,7 +73,7 @@ export function Footer() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-sm text-white/50 transition-colors hover:text-white"
+                    className="text-sm text-white/50 transition-colors hover:text-[#FF6A00]"
                   >
                     {link.label}
                   </Link>
@@ -92,7 +93,8 @@ export function Footer() {
             <Link href="/terms" className="transition-colors hover:text-white/60">
               Foydalanish shartlari
             </Link>
-            <span className="text-lime-400/60">inkly.uz</span>
+            {/* Orange brand accent */}
+            <span className="text-[#FF6A00]/60">inkly.uz</span>
           </div>
         </div>
       </div>

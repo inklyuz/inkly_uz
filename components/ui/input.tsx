@@ -2,7 +2,7 @@ import { forwardRef, type InputHTMLAttributes, type TextareaHTMLAttributes } fro
 import { cn } from "@/lib/utils"
 
 const fieldBase =
-  "w-full rounded-lg border bg-cream-50 px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400 outline-none transition-colors duration-150"
+  "w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#141414] placeholder:text-[#6B7280] outline-none transition-colors duration-150"
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -18,7 +18,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={fieldId} className="text-sm font-medium text-ink-900">
+        <label htmlFor={fieldId} className="text-sm font-medium text-[#141414]">
           {label}
         </label>
       )}
@@ -29,12 +29,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         {...props}
         className={cn(
           fieldBase,
-          error ? "border-danger focus:border-danger" : "border-cream-300 focus:border-ink-900",
+          error
+            ? "border-[#DC2626] focus:border-[#DC2626]"
+            : "border-[#E8E3DD] focus:border-[#FF6A00]",
           className,
         )}
       />
-      {hint && !error && <p className="text-xs text-ink-400">{hint}</p>}
-      {error && <p className="text-xs text-danger">{error}</p>}
+      {hint && !error && <p className="text-xs text-[#6B7280]">{hint}</p>}
+      {error && <p className="text-xs text-[#DC2626]">{error}</p>}
     </div>
   )
 })
@@ -52,7 +54,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={fieldId} className="text-sm font-medium text-ink-900">
+        <label htmlFor={fieldId} className="text-sm font-medium text-[#141414]">
           {label}
         </label>
       )}
@@ -64,11 +66,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
         className={cn(
           fieldBase,
           "resize-y leading-relaxed",
-          error ? "border-danger focus:border-danger" : "border-cream-300 focus:border-ink-900",
+          error
+            ? "border-[#DC2626] focus:border-[#DC2626]"
+            : "border-[#E8E3DD] focus:border-[#FF6A00]",
           className,
         )}
       />
-      {error && <p className="text-xs text-danger">{error}</p>}
+      {error && <p className="text-xs text-[#DC2626]">{error}</p>}
     </div>
   )
 })

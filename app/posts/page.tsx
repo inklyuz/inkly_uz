@@ -26,10 +26,10 @@ export default async function PostsPage({
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-      <header className="flex flex-col gap-6 border-b border-cream-300 pb-8">
+      <header className="flex flex-col gap-6 border-b border-[#E8E3DD] pb-8">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-ink-400">Kutubxona</p>
-          <h1 className="mt-2 text-4xl font-extrabold tracking-tighter text-ink-900 sm:text-5xl">Maqolalar</h1>
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280]">Kutubxona</p>
+          <h1 className="mt-2 text-4xl font-extrabold tracking-tighter text-[#141414] sm:text-5xl">Maqolalar</h1>
         </div>
         <SearchForm defaultValue={search} />
       </header>
@@ -39,8 +39,8 @@ export default async function PostsPage({
       </div>
 
       {search && (
-        <p className="mb-8 text-sm text-ink-600">
-          <span className="font-medium text-ink-900">{postsPage.total}</span> natija —{" "}
+        <p className="mb-8 text-sm text-[#36565F]">
+          <span className="font-medium text-[#141414]">{postsPage.total}</span> natija —{" "}
           <span className="italic">{search}</span>
         </p>
       )}

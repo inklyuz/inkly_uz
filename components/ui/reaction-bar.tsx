@@ -56,23 +56,35 @@ export function ReactionBar({ slug, initialLikes, initialDislikes, initialReacte
 
   return (
     <div className="flex flex-wrap items-center gap-3">
+      {/* Like — active: orange */}
       <button
         type="button"
         disabled={pending}
         onClick={() => handleReaction("like")}
         aria-pressed={reacted === "like"}
-        className={cn(pill, reacted === "like" ? "bg-lime-400 text-ink-900" : "bg-cream-200 text-ink-600 hover:bg-cream-300")}
+        className={cn(
+          pill,
+          reacted === "like"
+            ? "bg-[#FF6A00] text-white"
+            : "bg-[#F2F4F7] text-[#36565F] hover:bg-[#FFF3E8] hover:text-[#FF6A00]",
+        )}
       >
-        <Heart size={15} className={reacted === "like" ? "fill-ink-900" : ""} />
+        <Heart size={15} className={reacted === "like" ? "fill-white" : ""} />
         {formatCount(likes)} Yoqdi
       </button>
 
+      {/* Dislike — active: muted gray */}
       <button
         type="button"
         disabled={pending}
         onClick={() => handleReaction("dislike")}
         aria-pressed={reacted === "dislike"}
-        className={cn(pill, reacted === "dislike" ? "bg-cream-400 text-ink-900" : "bg-cream-200 text-ink-600 hover:bg-cream-300")}
+        className={cn(
+          pill,
+          reacted === "dislike"
+            ? "bg-[#E8E3DD] text-[#141414]"
+            : "bg-[#F2F4F7] text-[#36565F] hover:bg-[#E8E3DD]",
+        )}
       >
         <ThumbsDown size={15} />
         {formatCount(dislikes)} Yoqmadi

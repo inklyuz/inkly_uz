@@ -18,28 +18,28 @@ export default function ErrorPage({
   }, [error])
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-cream-100 px-6">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#FFF9F3] px-6">
       {/* ── Orqa fon: yumshoq radial nur ─────────────────────────── */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(59,117,151,0.18) 0%, rgba(111,209,215,0.08) 45%, transparent 75%)",
+            "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(255,106,0,0.06) 0%, rgba(255,138,61,0.03) 45%, transparent 75%)",
         }}
       />
 
       <div className="relative z-10 flex w-full max-w-lg flex-col items-center text-center">
         <LogoMark size={40} className="mb-8" />
 
-        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-ink-900/5 text-ink-900">
+        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#141414]/5 text-[#141414]">
           <AlertTriangle size={30} strokeWidth={1.75} />
         </div>
 
-        <h1 className="mb-3 text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl">
+        <h1 className="mb-3 text-2xl font-bold tracking-tight text-[#141414] sm:text-3xl">
           Nimadir noto&apos;g&apos;ri ketdi
         </h1>
-        <p className="mb-10 max-w-sm text-balance text-base leading-relaxed text-ink-700">
+        <p className="mb-10 max-w-sm text-balance text-base leading-relaxed text-[#36565F]">
           Kutilmagan xatolik yuz berdi. Sahifani qayta yuklab ko&apos;ring yoki bosh sahifaga qayting.
         </p>
 
@@ -57,7 +57,7 @@ export default function ErrorPage({
         </div>
 
         {error?.digest && (
-          <p className="mt-8 text-xs text-ink-400">Xatolik kodi: {error.digest}</p>
+          <p className="mt-8 text-xs text-[#6B7280]">Xatolik kodi: {error.digest}</p>
         )}
       </div>
     </main>

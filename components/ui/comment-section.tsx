@@ -45,7 +45,7 @@ export function CommentSection({ slug, initialComments, totalCount }: CommentSec
 
   return (
     <section aria-labelledby="comments-heading" className="flex flex-col gap-6">
-      <h2 id="comments-heading" className="text-sm font-semibold uppercase tracking-widest text-ink-400">
+      <h2 id="comments-heading" className="text-sm font-semibold uppercase tracking-widest text-[#6B7280]">
         Izohlar · {Math.max(totalCount, comments.length)}
       </h2>
 
@@ -64,28 +64,30 @@ export function CommentSection({ slug, initialComments, totalCount }: CommentSec
           </Button>
         </div>
       ) : (
-        <div className="rounded-xl border border-cream-300 bg-cream-200 px-5 py-4 text-sm text-ink-600">
+        <div className="rounded-xl border border-[#E8E3DD] bg-[#F2F4F7] px-5 py-4 text-sm text-[#36565F]">
           Izoh yozish uchun{" "}
-          <Link href="/login" className="font-medium text-ink-900 underline underline-offset-4">
+          <Link href="/login" className="font-medium text-[#FF6A00] underline underline-offset-4 hover:text-[#E85F00]">
             hisobingizga kiring
           </Link>
           .
         </div>
       )}
 
-      <ul className="flex flex-col divide-y divide-cream-300">
-        {comments.length === 0 && <li className="py-8 text-center text-sm text-ink-400">Hali izoh yo'q</li>}
+      <ul className="flex flex-col divide-y divide-[#E8E3DD]">
+        {comments.length === 0 && (
+          <li className="py-8 text-center text-sm text-[#6B7280]">Hali izoh yo&apos;q</li>
+        )}
         {comments.map((comment) => (
           <li key={comment.uuid} className="flex gap-3 py-5">
             <Avatar src={comment.author.avatar} name={comment.author.full_name} size={36} />
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <Link href={`/@${comment.author.username}`} className="text-sm font-medium text-ink-900">
+                <Link href={`/@${comment.author.username}`} className="text-sm font-medium text-[#141414] hover:text-[#FF6A00]">
                   {comment.author.full_name}
                 </Link>
-                <span className="text-xs text-ink-400">{timeAgo(comment.created_at)}</span>
+                <span className="text-xs text-[#6B7280]">{timeAgo(comment.created_at)}</span>
               </div>
-              <p className="mt-1.5 text-sm leading-relaxed text-ink-600">{comment.content}</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-[#36565F]">{comment.content}</p>
             </div>
           </li>
         ))}

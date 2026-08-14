@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils"
 
 /**
- * Inkly brand mark: lime nuqta + chorak doira ("y" / qo'shtirnoq shakli).
+ * Inkly brand mark: orange dot + quarter arc ("y" / quote shape).
  */
 export function LogoMark({ size = 22, className }: { size?: number; className?: string }) {
   return (
@@ -14,8 +14,8 @@ export function LogoMark({ size = 22, className }: { size?: number; className?: 
       aria-label="Inkly"
       className={cn("flex-shrink-0", className)}
     >
-      <circle cx="10" cy="9" r="5" fill="var(--color-lime-400)" />
-      <path d="M32 0v10a22 22 0 0 1-22 22H4V22h6a12 12 0 0 0 12-12V0h10Z" transform="translate(-2 -2)" fill="var(--color-lime-400)" />
+      <circle cx="10" cy="9" r="5" fill="#FF6A00" />
+      <path d="M32 0v10a22 22 0 0 1-22 22H4V22h6a12 12 0 0 0 12-12V0h10Z" transform="translate(-2 -2)" fill="#FF6A00" />
     </svg>
   )
 }

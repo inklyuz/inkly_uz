@@ -11,8 +11,8 @@ interface PostGridProps {
 export function PostGrid({ posts, columns = 3, emptyLabel = "Hozircha maqola yo'q" }: PostGridProps) {
   if (posts.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-cream-400 px-6 py-16 text-center">
-        <p className="text-sm text-ink-400">{emptyLabel}</p>
+      <div className="rounded-xl border border-dashed border-[#E8E3DD] px-6 py-16 text-center">
+        <p className="text-sm text-[#6B7280]">{emptyLabel}</p>
       </div>
     )
   }

@@ -21,7 +21,8 @@ function hrefFor(basePath: string, page: number, query?: Record<string, string |
   return qs ? `${basePath}?${qs}` : basePath
 }
 
-const arrow = "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-cream-400 text-ink-900"
+const arrow =
+  "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#E8E3DD] text-[#141414] transition-colors"
 
 export function Pagination({ page, totalPages, basePath, query }: PaginationProps) {
   if (totalPages <= 1) return null
@@ -36,12 +37,16 @@ export function Pagination({ page, totalPages, basePath, query }: PaginationProp
           <ChevronLeft size={16} />
         </span>
       ) : (
-        <Link href={hrefFor(basePath, page - 1, query)} className={cn(arrow, "hover:bg-cream-200")} aria-label="Oldingi sahifa">
+        <Link
+          href={hrefFor(basePath, page - 1, query)}
+          className={cn(arrow, "hover:bg-[#FFF3E8] hover:border-[#FF6A00] hover:text-[#FF6A00]")}
+          aria-label="Oldingi sahifa"
+        >
           <ChevronLeft size={16} />
         </Link>
       )}
 
-      <span className="text-sm text-ink-600">
+      <span className="text-sm text-[#36565F]">
         {page} / {totalPages}
       </span>
 
@@ -50,7 +55,11 @@ export function Pagination({ page, totalPages, basePath, query }: PaginationProp
           <ChevronRight size={16} />
         </span>
       ) : (
-        <Link href={hrefFor(basePath, page + 1, query)} className={cn(arrow, "hover:bg-cream-200")} aria-label="Keyingi sahifa">
+        <Link
+          href={hrefFor(basePath, page + 1, query)}
+          className={cn(arrow, "hover:bg-[#FFF3E8] hover:border-[#FF6A00] hover:text-[#FF6A00]")}
+          aria-label="Keyingi sahifa"
+        >
           <ChevronRight size={16} />
         </Link>
       )}

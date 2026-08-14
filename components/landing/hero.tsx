@@ -99,9 +99,8 @@ export function Hero() {
   const item = prefersReduced ? noAnimation : fadeSlideUp
 
   return (
-    <section className="relative overflow-x-hidden bg-cream-50 px-4 pt-16 pb-24 sm:px-6 sm:pt-20 sm:pb-32">
+    <section className="relative overflow-x-hidden bg-[#FFF9F3] px-4 pt-16 pb-24 sm:px-6 sm:pt-20 sm:pb-32">
       <HeroBackground />
-
 
       {/* ── Matn qismi — staggered fade-in + slide-up ────────────── */}
       <motion.div
@@ -110,26 +109,27 @@ export function Hero() {
         initial="hidden"
         animate="visible"
       >
+        {/* Badge — orange accent */}
         <motion.div
           variants={item}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-lime-400/30 bg-lime-400/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-ink-900"
+          className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#FF6A00]/25 bg-[#FFF3E8] px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-[#141414]"
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-lime-400" />
+          <span className="h-1.5 w-1.5 rounded-full bg-[#FF6A00]" />
           O&apos;zbekistonlik mualliflar uchun
         </motion.div>
 
         <motion.h1
           variants={item}
-          className="text-5xl font-extrabold leading-[1.05] tracking-tight text-balance text-ink-900 sm:text-7xl"
+          className="text-5xl font-extrabold leading-[1.05] tracking-tight text-balance text-[#141414] sm:text-7xl"
         >
           Yozing. Nashr qiling.
           <br />
-          O&apos;zingizni <span className="text-lime-500">ifoda eting.</span>
+          O&apos;zingizni <span className="text-[#FF6A00]">ifoda eting.</span>
         </motion.h1>
 
         <motion.p
           variants={item}
-          className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-pretty text-ink-600"
+          className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-pretty text-[#36565F]"
         >
           Maqola, blog va g&apos;oyalaringizni bitta zamonaviy platformada yarating, nashr qiling va
           auditoriyangiz bilan ulashing.
@@ -140,9 +140,9 @@ export function Hero() {
         </motion.div>
 
         <motion.div variants={item} className="mt-4 flex flex-col items-center gap-0">
-          <ChevronDown size={20} className="text-ink-400" strokeWidth={2.5} />
-          <ChevronDown size={20} className="-mt-2 text-ink-300" strokeWidth={2.5} />
-          <span className="mt-2 text-xs text-ink-400">
+          <ChevronDown size={20} className="text-[#6B7280]" strokeWidth={2.5} />
+          <ChevronDown size={20} className="-mt-2 text-[#E8E3DD]" strokeWidth={2.5} />
+          <span className="mt-2 text-xs text-[#6B7280]">
             Bepul boshlang. Bir necha daqiqada o&apos;z sahifangizga ega bo&apos;ling.
           </span>
         </motion.div>
@@ -158,14 +158,14 @@ export function Hero() {
             initial={prefersReduced ? false : { opacity: 0, x: i === 0 ? -70 : 70, rotate: card.rotate * 2 }}
             animate={{ opacity: 1, x: 0, rotate: card.rotate }}
             transition={{ type: "spring", stiffness: 70, damping: 16, delay: 0.7 + i * 0.15 }}
-            className={`absolute ${card.position} top-40 z-20 w-72 overflow-hidden rounded-2xl border border-cream-300 bg-white p-3 shadow-xl`}
+            className={`absolute ${card.position} top-40 z-20 w-72 overflow-hidden rounded-2xl border border-[#E8E3DD] bg-white p-3 shadow-xl`}
           >
-            <div className="aspect-[8/5] w-full overflow-hidden rounded-lg bg-cream-100">
+            <div className="aspect-[8/5] w-full overflow-hidden rounded-lg bg-[#F2F4F7]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={card.image} alt="" className="h-full w-full object-cover" />
             </div>
-            <p className="mt-2 text-sm font-semibold leading-snug text-ink-900">{card.title}</p>
-            <p className="mt-1 text-xs text-ink-400">{card.date} · {card.read}</p>
+            <p className="mt-2 text-sm font-semibold leading-snug text-[#141414]">{card.title}</p>
+            <p className="mt-1 text-xs text-[#6B7280]">{card.date} · {card.read}</p>
           </motion.div>
         ))}
 
@@ -184,17 +184,18 @@ export function Hero() {
           initial={prefersReduced ? false : { opacity: 0, y: 60, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ type: "spring", stiffness: 80, damping: 20, delay: 0.5 }}
-          className="relative z-20 mx-auto overflow-hidden rounded-3xl border border-cream-300 bg-white shadow-2xl shadow-ink-900/10"
+          className="relative z-20 mx-auto overflow-hidden rounded-3xl border border-[#E8E3DD] bg-white shadow-2xl shadow-[#141414]/8"
         >
-          <div className="flex items-center justify-between border-b border-cream-200 px-6 py-4">
-            <span className="flex items-center gap-1.5 text-lg font-bold text-ink-900">
-              <span className="h-2 w-2 rounded-full bg-lime-400" />
+          <div className="flex items-center justify-between border-b border-[#E8E3DD] px-6 py-4">
+            <span className="flex items-center gap-1.5 text-lg font-bold text-[#141414]">
+              {/* Logo dot — orange brand */}
+              <span className="h-2 w-2 rounded-full bg-[#FF6A00]" />
               inkly
             </span>
-            <div className="flex items-center gap-4 text-ink-400">
+            <div className="flex items-center gap-4 text-[#6B7280]">
               <Search size={18} />
               <Bookmark size={18} />
-              <div className="h-7 w-7 overflow-hidden rounded-full bg-cream-200">
+              <div className="h-7 w-7 overflow-hidden rounded-full bg-[#F2F4F7]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={avatars[0]} alt="" className="h-full w-full object-cover" />
               </div>
@@ -202,9 +203,9 @@ export function Hero() {
           </div>
 
           <div className="px-6 py-5">
-            <h3 className="text-xl font-bold leading-snug text-ink-900">{featured.title}</h3>
-            <div className="mt-3 flex items-center gap-2 text-sm text-ink-400">
-              <span className="h-6 w-6 overflow-hidden rounded-full bg-cream-200">
+            <h3 className="text-xl font-bold leading-snug text-[#141414]">{featured.title}</h3>
+            <div className="mt-3 flex items-center gap-2 text-sm text-[#6B7280]">
+              <span className="h-6 w-6 overflow-hidden rounded-full bg-[#F2F4F7]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={avatars[0]} alt="" className="h-full w-full object-cover" />
               </span>
@@ -213,34 +214,33 @@ export function Hero() {
               {featured.read_minutes} min o&apos;qish
             </div>
 
-            <div className="mt-4 aspect-[2/1] w-full overflow-hidden rounded-xl bg-cream-100">
+            <div className="mt-4 aspect-[2/1] w-full overflow-hidden rounded-xl bg-[#F2F4F7]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={featured.cover_image_url} alt="" className="h-full w-full object-cover" />
             </div>
-
-            {/* <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-ink-600">{featured.excerpt}</p> */}
           </div>
 
-          <div className="flex items-center justify-between border-t border-cream-200 px-6 py-4">
+          <div className="flex items-center justify-between border-t border-[#E8E3DD] px-6 py-4">
             <div className="flex items-center gap-3">
               <div className="flex -space-x-2">
                 {avatars.map((src) => (
-                  <span key={src} className="h-7 w-7 overflow-hidden rounded-full border-2 border-white bg-cream-200">
+                  <span key={src} className="h-7 w-7 overflow-hidden rounded-full border-2 border-white bg-[#F2F4F7]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={src} alt="" className="h-full w-full object-cover" />
                   </span>
                 ))}
               </div>
               <div className="text-left leading-tight">
-                <p className="text-sm font-bold text-ink-900">10K+</p>
-                <p className="text-xs text-ink-400">Mualliflar biz bilan</p>
+                <p className="text-sm font-bold text-[#141414]">10K+</p>
+                <p className="text-xs text-[#6B7280]">Mualliflar biz bilan</p>
               </div>
             </div>
             <div className="text-right leading-tight">
-              <p className="flex items-center gap-1 text-sm font-bold text-ink-900">
-                <span className="text-lime-500">★</span> 4.9 / 5
+              <p className="flex items-center gap-1 text-sm font-bold text-[#141414]">
+                {/* Star — orange accent */}
+                <span className="text-[#FF6A00]">★</span> 4.9 / 5
               </p>
-              <p className="text-xs text-ink-400">Foydalanuvchilar bahosi</p>
+              <p className="text-xs text-[#6B7280]">Foydalanuvchilar bahosi</p>
             </div>
           </div>
         </motion.div>
@@ -253,21 +253,21 @@ export function Hero() {
         transition={{ type: "spring", stiffness: 80, damping: 20, delay: 0.5 }}
         className="relative z-10 mx-auto mt-16 max-w-xl lg:hidden"
       >
-        <div className="overflow-hidden rounded-3xl border border-cream-300 bg-white shadow-2xl shadow-ink-900/10">
-          <div className="flex items-center justify-between border-b border-cream-200 px-6 py-4">
-            <span className="flex items-center gap-1.5 text-lg font-bold text-ink-900">
-              <span className="h-2 w-2 rounded-full bg-lime-400" />
+        <div className="overflow-hidden rounded-3xl border border-[#E8E3DD] bg-white shadow-2xl shadow-[#141414]/8">
+          <div className="flex items-center justify-between border-b border-[#E8E3DD] px-6 py-4">
+            <span className="flex items-center gap-1.5 text-lg font-bold text-[#141414]">
+              <span className="h-2 w-2 rounded-full bg-[#FF6A00]" />
               inkly
             </span>
-            <div className="h-7 w-7 rounded-full bg-cream-200" />
+            <div className="h-7 w-7 rounded-full bg-[#F2F4F7]" />
           </div>
           <div className="px-6 py-5">
-            <h3 className="text-xl font-bold leading-snug text-ink-900">{featured.title}</h3>
-            <div className="mt-3 flex items-center gap-2 text-sm text-ink-400">
-              <span className="h-6 w-6 rounded-full bg-cream-200" />
+            <h3 className="text-xl font-bold leading-snug text-[#141414]">{featured.title}</h3>
+            <div className="mt-3 flex items-center gap-2 text-sm text-[#6B7280]">
+              <span className="h-6 w-6 rounded-full bg-[#F2F4F7]" />
               {featured.author_name} · {featured.read_minutes} min o&apos;qish
             </div>
-            <div className="mt-4 aspect-[2/1] w-full overflow-hidden rounded-xl bg-cream-100">
+            <div className="mt-4 aspect-[2/1] w-full overflow-hidden rounded-xl bg-[#F2F4F7]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={featured.cover_image_url} alt="" className="h-full w-full object-cover" />
             </div>

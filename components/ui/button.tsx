@@ -10,11 +10,21 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants = {
-  primary: "bg-ink-900 text-cream-100 hover:bg-ink-900/90",
-  accent: "bg-lime-400 text-ink-900 font-semibold hover:bg-lime-500",
-  ghost: "bg-transparent border border-cream-400 text-ink-900 hover:bg-cream-200",
-  destructive: "bg-transparent border border-danger text-danger hover:bg-danger/5",
-  onDark: "bg-transparent border border-ink-600 text-cream-100 hover:bg-cream-100/10",
+  // Primary: Jet Black bg — editorial / secondary CTA
+  primary:
+    "bg-[#141414] text-white hover:bg-[#141414]/90",
+  // Accent: Sunset Orange — main CTA (Boshlash, Yozish, Saqlash)
+  accent:
+    "bg-[#FF6A00] text-white font-semibold hover:bg-[#E85F00]",
+  // Ghost: transparent with border
+  ghost:
+    "bg-transparent border border-[#E8E3DD] text-[#141414] hover:bg-[#FFF3E8] hover:border-[#FF6A00] hover:text-[#FF6A00]",
+  // Destructive: error state
+  destructive:
+    "bg-transparent border border-[#DC2626] text-[#DC2626] hover:bg-[#DC2626]/5",
+  // OnDark: used on dark (navbar/footer) backgrounds
+  onDark:
+    "bg-transparent border border-white/20 text-white hover:bg-white/10",
 }
 
 const sizes = {
@@ -41,7 +51,7 @@ export function Button({
       className={cn(
         "inline-flex items-center justify-center gap-2 rounded-lg font-medium",
         "transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50",
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink-900",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6A00]",
         variants[variant],
         sizes[size],
         className,

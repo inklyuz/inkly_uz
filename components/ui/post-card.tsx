@@ -10,9 +10,9 @@ export function PostCard({ post }: { post: PostListItem }) {
   const url = `/@${post.author.username}/${post.slug}`
 
   return (
-    <article className="group flex flex-col gap-4 rounded-xl border border-cream-300 bg-cream-50 p-5 transition-colors hover:border-cream-400">
+    <article className="group flex flex-col gap-4 rounded-xl border border-[#E8E3DD] bg-white p-5 transition-colors hover:border-[#E8E3DD]">
       {post.cover && (
-        <Link href={url} className="block overflow-hidden rounded-lg bg-cream-200">
+        <Link href={url} className="block overflow-hidden rounded-lg bg-[#F2F4F7]">
           <Image
             src={post.cover || "/placeholder.svg"}
             alt=""
@@ -32,23 +32,23 @@ export function PostCard({ post }: { post: PostListItem }) {
       )}
 
       <div className="flex flex-col gap-2">
-        <h3 className="text-lg font-semibold leading-snug tracking-tight text-pretty text-ink-900">
-          <Link href={url} className="transition-colors group-hover:text-ink-600">
+        <h3 className="text-lg font-semibold leading-snug tracking-tight text-pretty text-[#141414]">
+          <Link href={url} className="transition-colors hover:text-[#FF6A00]">
             {post.title}
           </Link>
         </h3>
-        {post.excerpt && <p className="line-clamp-2 text-sm leading-relaxed text-ink-600">{post.excerpt}</p>}
+        {post.excerpt && <p className="line-clamp-2 text-sm leading-relaxed text-[#36565F]">{post.excerpt}</p>}
       </div>
 
-      <div className="mt-auto flex flex-col gap-3 border-t border-cream-300 pt-4">
+      <div className="mt-auto flex flex-col gap-3 border-t border-[#E8E3DD] pt-4">
         <div className="flex items-center justify-between gap-3">
           <Link href={`/@${post.author.username}`} className="flex min-w-0 items-center gap-2">
             <Avatar src={post.author.avatar} name={post.author.full_name} size={28} />
-            <span className="truncate text-sm text-ink-600 hover:text-ink-900">{post.author.full_name}</span>
+            <span className="truncate text-sm text-[#36565F] hover:text-[#141414]">{post.author.full_name}</span>
             {post.author.is_verified && <VerifiedDot />}
           </Link>
 
-          <div className="flex items-center gap-3 text-xs text-ink-400">
+          <div className="flex items-center gap-3 text-xs text-[#6B7280]">
             <span className="flex items-center gap-1">
               <Heart size={12} /> {formatCount(post.likes_count)}
             </span>
@@ -61,7 +61,7 @@ export function PostCard({ post }: { post: PostListItem }) {
           </div>
         </div>
 
-        <p className="text-xs text-ink-400">{post.published_at ? formatDate(post.published_at) : "Qoralama"}</p>
+        <p className="text-xs text-[#6B7280]">{post.published_at ? formatDate(post.published_at) : "Qoralama"}</p>
       </div>
     </article>
   )

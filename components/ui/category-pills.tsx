@@ -17,7 +17,12 @@ export function CategoryPills({ categories, activeSlug, showAll = true }: Catego
       {showAll && (
         <Link
           href="/posts"
-          className={cn(pill, !activeSlug ? "border-ink-900 bg-ink-900 text-cream-100" : "border-cream-400 text-ink-600 hover:bg-cream-200")}
+          className={cn(
+            pill,
+            !activeSlug
+              ? "border-[#FF6A00] bg-[#FF6A00] text-white"
+              : "border-[#E8E3DD] text-[#36565F] hover:bg-[#FFF3E8] hover:border-[#FF6A00] hover:text-[#FF6A00]",
+          )}
         >
           Barchasi
         </Link>
@@ -28,10 +33,17 @@ export function CategoryPills({ categories, activeSlug, showAll = true }: Catego
           <Link
             key={category.uuid}
             href={`/categories/${category.slug}`}
-            className={cn(pill, active ? "border-ink-900 bg-ink-900 text-cream-100" : "border-cream-400 text-ink-600 hover:bg-cream-200")}
+            className={cn(
+              pill,
+              active
+                ? "border-[#FF6A00] bg-[#FF6A00] text-white"
+                : "border-[#E8E3DD] text-[#36565F] hover:bg-[#FFF3E8] hover:border-[#FF6A00] hover:text-[#FF6A00]",
+            )}
           >
             {category.name}
-            <span className={cn("text-xs", active ? "text-cream-400" : "text-ink-400")}>{category.post_count}</span>
+            <span className={cn("text-xs", active ? "text-white/70" : "text-[#6B7280]")}>
+              {category.post_count}
+            </span>
           </Link>
         )
       })}

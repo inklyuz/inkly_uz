@@ -66,17 +66,17 @@ export default async function PostDetailPage({
         )}
 
         {/* ── Sarlavha ─────────────────────────────────────────────────── */}
-        <h1 className="text-3xl font-bold leading-tight tracking-tight text-balance text-ink-900 sm:text-4xl">
+        <h1 className="text-3xl font-bold leading-tight tracking-tight text-balance text-[#141414] sm:text-4xl">
           {post.title}
         </h1>
 
-        {post.excerpt && <p className="mt-4 text-lg leading-relaxed text-pretty text-ink-600">{post.excerpt}</p>}
+        {post.excerpt && <p className="mt-4 text-lg leading-relaxed text-pretty text-[#36565F]">{post.excerpt}</p>}
 
         {/* ── Meta qator ───────────────────────────────────────────────── */}
-        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 border-y border-cream-300 py-4 text-sm text-ink-600">
+        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 border-y border-[#E8E3DD] py-4 text-sm text-[#36565F]">
           <Link href={`/@${post.author.username}`} className="flex items-center gap-2">
             <Avatar src={post.author.avatar} name={post.author.full_name} size={32} />
-            <span className="font-medium text-ink-900">{post.author.full_name}</span>
+            <span className="font-medium text-[#141414] hover:text-[#FF6A00] transition-colors">{post.author.full_name}</span>
             {post.author.is_verified && <VerifiedDot />}
           </Link>
           <span aria-hidden="true">·</span>
@@ -91,7 +91,7 @@ export default async function PostDetailPage({
 
         {/* ── Cover rasm ───────────────────────────────────────────────── */}
         {post.cover && (
-          <figure className="mt-8 overflow-hidden rounded-xl bg-cream-200">
+          <figure className="mt-8 overflow-hidden rounded-xl bg-[#F2F4F7]">
             <Image
               src={post.cover || "/placeholder.svg"}
               alt={post.title}
@@ -109,7 +109,7 @@ export default async function PostDetailPage({
         </div>
 
         {/* ── Reaksiyalar ──────────────────────────────────────────────── */}
-        <div className="mt-12 border-t border-cream-300 pt-8">
+        <div className="mt-12 border-t border-[#E8E3DD] pt-8">
           <ReactionBar
             slug={post.slug}
             initialLikes={post.likes_count}
@@ -120,23 +120,23 @@ export default async function PostDetailPage({
       </article>
 
       {/* ── Muallif kartasi ─────────────────────────────────────────────── */}
-      <aside className="mt-10 rounded-xl border border-cream-300 bg-cream-50 p-5">
+      <aside className="mt-10 rounded-xl border border-[#E8E3DD] bg-white p-5">
         <div className="flex items-start gap-4">
           <Avatar src={post.author.avatar} name={post.author.full_name} size={48} />
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 href={`/@${post.author.username}`}
-                className="font-semibold tracking-tight text-ink-900 hover:underline"
+                className="font-semibold tracking-tight text-[#141414] hover:text-[#FF6A00] transition-colors"
               >
                 {post.author.full_name}
               </Link>
               {post.author.is_verified && <VerifiedDot />}
             </div>
-            <p className="mt-0.5 text-sm text-ink-400">@{post.author.username}</p>
+            <p className="mt-0.5 text-sm text-[#6B7280]">@{post.author.username}</p>
             <Link
               href={`/@${post.author.username}`}
-              className="mt-2 inline-block text-sm text-ink-600 underline underline-offset-4 hover:text-ink-900"
+              className="mt-2 inline-block text-sm text-[#36565F] underline underline-offset-4 hover:text-[#FF6A00] transition-colors"
             >
               Barcha maqolalarini ko&apos;rish
             </Link>

@@ -12,7 +12,7 @@ export function FeaturedPost({ post, content }: { post: PostListItem; content?: 
   return (
     <article className="grid items-center gap-8 lg:grid-cols-2 lg:gap-14">
       {post.cover ? (
-        <Link href={url} className="block overflow-hidden rounded-2xl bg-cream-200">
+        <Link href={url} className="block overflow-hidden rounded-2xl bg-[#F2F4F7]">
           <Image
             src={post.cover || "/placeholder.svg"}
             alt=""
@@ -26,6 +26,7 @@ export function FeaturedPost({ post, content }: { post: PostListItem; content?: 
 
       <div className="flex flex-col gap-5">
         <div className="flex flex-wrap items-center gap-2">
+          {/* "Tanlangan" badge — orange primary */}
           <Badge variant="lime">Tanlangan</Badge>
           {post.categories.slice(0, 2).map((category) => (
             <Badge key={category.uuid} variant="outline">
@@ -34,16 +35,16 @@ export function FeaturedPost({ post, content }: { post: PostListItem; content?: 
           ))}
         </div>
 
-        <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter text-balance text-ink-900 sm:text-4xl">
+        <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter text-balance text-[#141414] sm:text-4xl">
           <Link href={url}>{post.title}</Link>
         </h2>
 
-        {post.excerpt && <p className="text-lg leading-relaxed text-pretty text-ink-600">{post.excerpt}</p>}
+        {post.excerpt && <p className="text-lg leading-relaxed text-pretty text-[#36565F]">{post.excerpt}</p>}
 
-        <div className="flex flex-wrap items-center gap-3 text-sm text-ink-400">
+        <div className="flex flex-wrap items-center gap-3 text-sm text-[#6B7280]">
           <Link href={`/@${post.author.username}`} className="flex items-center gap-2">
             <Avatar src={post.author.avatar} name={post.author.full_name} size={32} />
-            <span className="font-medium text-ink-900">{post.author.full_name}</span>
+            <span className="font-medium text-[#141414]">{post.author.full_name}</span>
             {post.author.is_verified && <VerifiedDot />}
           </Link>
           <span aria-hidden="true">·</span>
@@ -65,9 +66,9 @@ export function FeaturedPost({ post, content }: { post: PostListItem; content?: 
 
         <Link
           href={url}
-          className="inline-flex w-fit items-center gap-2 text-sm font-medium text-ink-900 underline underline-offset-4 hover:text-ink-600"
+          className="inline-flex w-fit items-center gap-2 text-sm font-medium text-[#FF6A00] underline underline-offset-4 hover:text-[#E85F00]"
         >
-          Maqolani o'qish <ArrowRight size={15} />
+          Maqolani o&apos;qish <ArrowRight size={15} />
         </Link>
       </div>
     </article>

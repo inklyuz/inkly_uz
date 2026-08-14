@@ -48,7 +48,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: 'light',
-  themeColor: '#F5FBFC',
+  themeColor: '#FFF9F3',
 }
 
 export default function RootLayout({
@@ -57,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="uz" className="bg-cream-100">
+    <html lang="uz" className="bg-[#FFF9F3]">
       <body className={`${inter.className} flex min-h-screen flex-col antialiased`}>
         <AuthProvider>
           <Navbar />

@@ -27,9 +27,9 @@ export function AnnouncementBar() {
           transition={{ duration: 0.3, ease: "easeInOut" }}
           className="overflow-hidden"
         >
-          <div className="relative border-b border-lime-400/20 bg-lime-400/10 px-4 py-2.5 text-center text-sm text-ink-800">
+          <div className="relative border-b border-[#FF6A00]/20 bg-[#FFF3E8] px-4 py-2.5 text-center text-sm text-[#141414]">
             <span className="inline-flex items-center gap-2">
-              <Sparkles size={14} className="text-lime-500" />
+              <Sparkles size={14} className="text-[#FF6A00]" />
               <span className="font-medium">
                 Inkly tez kunda ishga tushadi —{" "}
                 <button
@@ -38,18 +38,18 @@ export function AnnouncementBar() {
                       .getElementById("waitlist-section")
                       ?.scrollIntoView({ behavior: "smooth" })
                   }
-                  className="font-semibold underline underline-offset-2 hover:text-lime-700 transition-colors"
+                  className="font-semibold text-[#FF6A00] underline underline-offset-2 hover:text-[#E85F00] transition-colors"
                 >
                   username ni hoziroq band qiling
                 </button>
               </span>
-              <Sparkles size={14} className="text-lime-500" />
+              <Sparkles size={14} className="text-[#FF6A00]" />
             </span>
 
             <button
               onClick={dismiss}
               aria-label="Yopish"
-              className="absolute right-4 top-1/2 -translate-y-1/2 rounded p-1 text-ink-400 hover:text-ink-700 transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded p-1 text-[#6B7280] hover:text-[#141414] transition-colors"
             >
               <X size={14} />
             </button>
