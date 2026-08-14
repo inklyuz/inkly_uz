@@ -6,7 +6,7 @@ import type { NextRequest } from "next/server"
  * ichki sahifalarga kirish bloklansa, / sahifasiga yo'naltiriladi.
  * false qilsangiz — hamma sahifalar odatdagidek ochiladi.
  */
-const COMING_SOON = true
+const COMING_SOON = false
 
 // Ruxsat etilgan yo'llar (COMING_SOON = true bo'lsa ham ochiq)
 const ALLOWED_PATHS = [
