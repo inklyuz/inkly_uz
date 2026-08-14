@@ -1,5 +1,4 @@
-import { apiRequest, withFallback } from "./client"
-import { demoComments, demoPosts, filterDemoPosts, paginate } from "@/lib/demo/data"
+import { apiRequest } from "./client"
 import type {
   CommentResponse,
   Page,
@@ -74,17 +73,29 @@ export const postsApi = {
 
 // ── Server component uchun demo fallback'li o'ramlar ────────────────────────
 
-export function listPostsSafe(params: ListPostsParams = {}): Promise<Page<PostListItem>> {
-  return withFallback(
-    () => postsApi.list(params),
-    paginate(filterDemoPosts(params), params.page ?? 1, params.page_size ?? 20),
-  )
+export async function listPostsSafe(params: ListPostsParams = {}): Promise<Page<PostListItem>> {
+  try {
+    return await postsApi.list(params)
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") console.error("listPostsSafe error:", error)
+    return { items: [], total: 0, page: params.page ?? 1, page_size: params.page_size ?? 20, pages: 0 }
+  }
 }
 
-export function getPostSafe(slug: string): Promise<PostResponse | null> {
-  return withFallback(() => postsApi.get(slug), demoPosts.find((p) => p.slug === slug) ?? null)
+export async function getPostSafe(slug: string): Promise<PostResponse | null> {
+  try {
+    return await postsApi.get(slug)
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") console.error("getPostSafe error:", error)
+    return null
+  }
 }
 
-export function getCommentsSafe(slug: string): Promise<Page<CommentResponse>> {
-  return withFallback(() => postsApi.getComments(slug), paginate(demoComments, 1, 20))
+export async function getCommentsSafe(slug: string): Promise<Page<CommentResponse>> {
+  try {
+    return await postsApi.getComments(slug)
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") console.error("getCommentsSafe error:", error)
+    return { items: [], total: 0, page: 1, page_size: 20, pages: 0 }
+  }
 }

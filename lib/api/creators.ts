@@ -1,5 +1,4 @@
-import { apiRequest, withFallback } from "./client"
-import { demoCreators, paginate } from "@/lib/demo/data"
+import { apiRequest } from "./client"
 import type { CreatorMeResponse, CreatorPublicResponse, Page } from "@/types/api"
 
 export const creatorsApi = {
@@ -18,6 +17,11 @@ export const creatorsApi = {
     apiRequest<CreatorMeResponse>("/creators/apply", { method: "POST", body: data, token }),
 }
 
-export function listCreatorsSafe(params: { page?: number; page_size?: number } = {}): Promise<Page<CreatorPublicResponse>> {
-  return withFallback(() => creatorsApi.list(params), paginate(demoCreators, params.page ?? 1, params.page_size ?? 20))
+export async function listCreatorsSafe(params: { page?: number; page_size?: number } = {}): Promise<Page<CreatorPublicResponse>> {
+  try {
+    return await creatorsApi.list(params)
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") console.error("listCreatorsSafe error:", error)
+    return { items: [], total: 0, page: params.page ?? 1, page_size: params.page_size ?? 20, pages: 0 }
+  }
 }

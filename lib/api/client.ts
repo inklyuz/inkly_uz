@@ -82,17 +82,3 @@ export async function uploadFile<T>(path: string, file: File, fieldName: string,
   return json.data as T
 }
 
-/**
- * Backend hali ishga tushmagan bo'lsa ham sahifa bo'sh qolmasligi uchun:
- * real API ishlamasa demo kontentga qaytadi.
- */
-export async function withFallback<T>(request: () => Promise<T>, fallback: T): Promise<T> {
-  try {
-    return await request()
-  } catch (error) {
-    if (process.env.NODE_ENV !== "production") {
-      console.log("[v0] API fallback:", (error as Error)?.message)
-    }
-    return fallback
-  }
-}

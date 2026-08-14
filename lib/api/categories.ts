@@ -1,5 +1,4 @@
-import { apiRequest, withFallback } from "./client"
-import { demoCategories, paginate } from "@/lib/demo/data"
+import { apiRequest } from "./client"
 import type { CategoryPublicResponse, Page } from "@/types/api"
 
 export const categoriesApi = {
@@ -7,10 +6,20 @@ export const categoriesApi = {
   get: (slug: string) => apiRequest<CategoryPublicResponse>(`/categories/${slug}`),
 }
 
-export function listCategoriesSafe(): Promise<Page<CategoryPublicResponse>> {
-  return withFallback(() => categoriesApi.list(), paginate(demoCategories, 1, 50))
+export async function listCategoriesSafe(): Promise<Page<CategoryPublicResponse>> {
+  try {
+    return await categoriesApi.list()
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") console.error("listCategoriesSafe error:", error)
+    return { items: [], total: 0, page: 1, page_size: 50, pages: 0 }
+  }
 }
 
-export function getCategorySafe(slug: string): Promise<CategoryPublicResponse | null> {
-  return withFallback(() => categoriesApi.get(slug), demoCategories.find((c) => c.slug === slug) ?? null)
+export async function getCategorySafe(slug: string): Promise<CategoryPublicResponse | null> {
+  try {
+    return await categoriesApi.get(slug)
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") console.error("getCategorySafe error:", error)
+    return null
+  }
 }

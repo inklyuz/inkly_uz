@@ -1,5 +1,4 @@
-import { apiRequest, withFallback } from "./client"
-import { demoUsers } from "@/lib/demo/data"
+import { apiRequest } from "./client"
 import type { UserMeResponse, UserPublicResponse } from "@/types/api"
 
 export const usersApi = {
@@ -18,7 +17,12 @@ export const usersApi = {
   ) => apiRequest<UserMeResponse>("/users/me", { method: "PATCH", body: data, token }),
 }
 
-export function getUserSafe(username: string): Promise<UserPublicResponse | null> {
+export async function getUserSafe(username: string): Promise<UserPublicResponse | null> {
   const clean = username.replace(/^@/, "").toLowerCase()
-  return withFallback(() => usersApi.getPublic(clean), demoUsers[clean] ?? null)
+  try {
+    return await usersApi.getPublic(clean)
+  } catch (error) {
+    if (process.env.NODE_ENV !== "production") console.error("getUserSafe error:", error)
+    return null
+  }
 }
