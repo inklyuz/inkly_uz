@@ -8,6 +8,6 @@
  *                      false: sahifalar odatdagidek ishlaydi
  */
 export const siteConfig = {
-  SHOW_ANNOUNCEMENT: true,
-  COMING_SOON: true,
+  SHOW_ANNOUNCEMENT: false,
+  COMING_SOON: false,
 } as const
