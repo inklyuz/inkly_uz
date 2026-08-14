@@ -4,6 +4,12 @@ import type { CategoryPublicResponse, Page } from "@/types/api"
 export const categoriesApi = {
   list: () => apiRequest<Page<CategoryPublicResponse>>("/categories?page_size=50"),
   get: (slug: string) => apiRequest<CategoryPublicResponse>(`/categories/${slug}`),
+  getPosts: (slug: string, params: { page?: number; page_size?: number } = {}) => {
+    const q = new URLSearchParams()
+    if (params.page) q.set("page", String(params.page))
+    if (params.page_size) q.set("page_size", String(params.page_size))
+    return apiRequest<Page<any>>(`/categories/${slug}/posts?${q}`)
+  },
 }
 
 export async function listCategoriesSafe(): Promise<Page<CategoryPublicResponse>> {

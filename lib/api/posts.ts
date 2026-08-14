@@ -68,6 +68,21 @@ export const postsApi = {
     },
   ) => apiRequest<PostResponse>("/posts", { method: "POST", body: data, token }),
 
+  update: (
+    token: string,
+    uuid: string,
+    data: Partial<{
+      title: string
+      content: string
+      excerpt: string
+      cover: string
+      visibility: "public" | "private"
+      categories: string[]
+    }>,
+  ) => apiRequest<PostResponse>(`/posts/me/${uuid}`, { method: "PATCH", body: data, token }),
+
+  delete: (token: string, uuid: string) => apiRequest<void>(`/posts/me/${uuid}`, { method: "DELETE", token }),
+
   publish: (token: string, uuid: string) => apiRequest<PostResponse>(`/posts/me/${uuid}/publish`, { method: "POST", token }),
 
   unpublish: (token: string, uuid: string) => apiRequest<PostResponse>(`/posts/me/${uuid}/unpublish`, { method: "POST", token }),

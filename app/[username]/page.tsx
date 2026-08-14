@@ -8,12 +8,13 @@ import { PostGrid } from "@/components/ui/post-grid"
 import { listPostsSafe } from "@/lib/api/posts"
 import { getUserSafe } from "@/lib/api/users"
 
-/** "@sardor" yoki "%40sardor" → "sardor"; @ bo'lmasa null */
+/** "@sardor", "%40sardor" yoki "sardor" → "sardor" */
 function parseUsername(raw: string): string | null {
-  const decoded = decodeURIComponent(raw)
-  if (!decoded.startsWith("@")) return null
-  const username = decoded.slice(1)
-  return /^[a-zA-Z0-9_]{1,30}$/.test(username) ? username : null
+  let decoded = decodeURIComponent(raw)
+  if (decoded.startsWith("@")) {
+    decoded = decoded.slice(1)
+  }
+  return /^[a-zA-Z0-9_]{1,30}$/.test(decoded) ? decoded : null
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {

@@ -16,7 +16,7 @@ export const authApi = {
   me: (token: string) => apiRequest<UserMeResponse>("/auth/me", { token }),
 
   // Email tasdiqlash
-  verifyEmail: (code: string) => apiRequest<void>("/auth/verify-email", { method: "POST", body: { code } }),
+  verifyEmail: (code: string, token: string) => apiRequest<void>("/auth/verify-email", { method: "POST", body: { code }, token }),
 
   resendVerification: (email: string) =>
     apiRequest<void>("/auth/verify-email/resend", { method: "POST", body: { email } }),

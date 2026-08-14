@@ -10,8 +10,8 @@ import { Input } from "@/components/ui/input"
 
 export default function VerifyEmailPage() {
   const router = useRouter()
-  const { user } = useAuth()
-  
+  const { state: { user, token } } = useAuth()
+
   const [code, setCode] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -37,7 +37,8 @@ export default function VerifyEmailPage() {
     setError(null)
     
     try {
-      await authApi.verifyEmail(code)
+      if (!token) throw new Error("Avtorizatsiya xatosi, iltimos qayta kiring")
+      await authApi.verifyEmail(code, token)
       // Verification successful, redirect to home
       window.location.href = "/" // hard redirect to refresh user state fully
     } catch (err: any) {

@@ -2,7 +2,7 @@ import { apiRequest } from "./client"
 import type { UserMeResponse, UserPublicResponse } from "@/types/api"
 
 export const usersApi = {
-  getPublic: (username: string) => apiRequest<UserPublicResponse>(`/users/${username.replace(/^@/, "")}`),
+  getPublic: (username: string) => apiRequest<UserPublicResponse>(`/users/${username.replace(/^@/, "")}`, { revalidate: 0 }),
 
   updateMe: (
     token: string,
