@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Loader2, Save, User, Globe, MapPin } from "lucide-react"
-import { Twitter, Github } from "@/components/ui/brand-icons"
+import { Twitter, Github, Youtube, Instagram, Telegram } from "@/components/ui/brand-icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar } from "@/components/ui/avatar"
@@ -25,6 +25,9 @@ export default function ProfileSettingsPage() {
     location: "",
     twitter: "",
     github: "",
+    youtube: "",
+    instagram: "",
+    telegram: ""
   })
   const [saving, setSaving] = useState(false)
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
@@ -45,6 +48,9 @@ export default function ProfileSettingsPage() {
         location: user.location ?? "",
         twitter: user.socials?.twitter ?? "",
         github: user.socials?.github ?? "",
+        youtube: user.socials?.youtube ?? "",
+        instagram: user.socials?.instagram ?? "",
+        telegram: user.socials?.telegram ?? ""
       })
     }
   }, [user, loading, router])
@@ -207,7 +213,10 @@ export default function ProfileSettingsPage() {
 
           <Field label="Twitter / X">
             <div className="relative">
-              <Twitter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]" />
+              <Twitter
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
+              />
               <Input
                 value={form.twitter}
                 onChange={handleChange("twitter")}
@@ -219,10 +228,58 @@ export default function ProfileSettingsPage() {
 
           <Field label="GitHub">
             <div className="relative">
-              <Github size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]" />
+              <Github
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
+              />
               <Input
                 value={form.github}
                 onChange={handleChange("github")}
+                className="pl-8"
+                placeholder="username"
+              />
+            </div>
+          </Field>
+
+          <Field label="Telegram">
+            <div className="relative">
+              <Telegram
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
+              />
+              <Input
+                value={form.telegram}
+                onChange={handleChange("telegram")}
+                className="pl-8"
+                placeholder="username"
+              />
+            </div>
+          </Field>
+
+          <Field label="YouTube">
+            <div className="relative">
+              <Youtube
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
+              />
+              <Input
+                value={form.youtube}
+                onChange={handleChange("youtube")}
+                className="pl-8"
+                placeholder="channel"
+              />
+            </div>
+          </Field>
+
+          <Field label="Instagram">
+            <div className="relative">
+              <Instagram
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
+              />
+              <Input
+                value={form.instagram}
+                onChange={handleChange("instagram")}
                 className="pl-8"
                 placeholder="username"
               />

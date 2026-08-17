@@ -26,6 +26,7 @@ export default function DashboardPage() {
 
   const [posts, setPosts]         = useState<PostListItem[]>([])
   const [fetching, setFetching]   = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabKey>("published")
   const [openMenu, setOpenMenu]   = useState<string | null>(null)
 
@@ -36,9 +37,10 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!token) return
     setFetching(true)
+    setFetchError(null)
     postsApi.myList(token, { page_size: 50 })
       .then((d) => setPosts(d.items))
-      .catch(() => {})
+      .catch((err) => setFetchError(err instanceof Error ? err.message : "Maqolalarni yuklab bo'lmadi"))
       .finally(() => setFetching(false))
   }, [token])
 
@@ -181,6 +183,11 @@ export default function DashboardPage() {
         {fetching ? (
           <div className="flex justify-center py-16">
             <Loader2 size={24} className="animate-spin text-[#FF6A00]" />
+          </div>
+        ) : fetchError ? (
+          <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
+            <p className="text-sm text-red-600">{fetchError}</p>
+            <button onClick={() => token && postsApi.myList(token, { page_size: 50 }).then((d) => { setPosts(d.items); setFetchError(null) }).catch((err) => setFetchError(err instanceof Error ? err.message : "Qayta yuklab bo'lmadi"))} className="text-sm font-medium text-[#FF6A00] underline underline-offset-4">Qayta urinish</button>
           </div>
         ) : filtered.length === 0 ? (
           <EmptyState tab={activeTab} />

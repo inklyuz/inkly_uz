@@ -7,33 +7,28 @@
 
 /* ── INKLY Brand Color System ────────────────────────────────────── */
 @theme {
-  /* ── Orange brand scale ── */
-  --color-inkly-orange:       #FF6A00;   /* Primary CTA, logo, active */
-  --color-inkly-coral:        #FF8A3D;   /* Gradient, secondary accent */
-  --color-inkly-peach:        #FFE9D6;   /* Icon bg, soft highlight */
-  --color-inkly-orange-light: #FFF3E8;   /* Badge, selected, soft bg */
-  --color-inkly-hover:        #E85F00;   /* Primary hover */
-
-  /* ── Backgrounds ── */
-  --color-bg-cream:   #FFF9F3;   /* Landing page, section bg */
-  --color-bg-white:   #FFFFFF;   /* Cards, surfaces, inputs */
-  --color-bg-muted:   #F2F4F7;   /* Input, secondary bg, skeleton */
-
-  /* ── Text ── */
-  --color-text-primary:   #141414;   /* H1, H2, H3, nav, main content */
-  --color-text-secondary: #36565F;   /* Subtitle, description, excerpt */
-  --color-text-muted:     #6B7280;   /* Placeholder, date, metadata */
-
-  /* ── Border ── */
-  --color-border-default: #E8E3DD;   /* Card, input, divider */
-
-  /* ── Semantic (unchanged) ── */
-  --color-danger:  #DC2626;
+  --color-inkly-orange: #FF6A00;
+  --color-inkly-coral: #FF8A3D;
+  --color-inkly-peach: #FFE9D6;
+  --color-inkly-orange-light: #FFF3E8;
+  --color-inkly-hover: #E85F00;
+  --color-bg-cream: #FFF9F3;
+  --color-bg-white: #FFFFFF;
+  --color-bg-muted: #F2F4F7;
+  --color-text-primary: #141414;
+  --color-text-secondary: #36565F;
+  --color-text-muted: #6B7280;
+  --color-border-default: #E8E3DD;
+  --color-danger: #DC2626;
   --color-success: #16A34A;
-
-  /* ── Radius ── */
+  --color-warning: #B45309;
+  --radius-control: 0.625rem;
+  --radius-card: 0.75rem;
+  --radius-panel: 1rem;
+  --shadow-card: 0 1px 2px rgb(20 20 20 / 0.04), 0 4px 12px rgb(20 20 20 / 0.04);
+  --shadow-card-hover: 0 8px 24px rgb(20 20 20 / 0.08);
   --tracking-tighter: -0.04em;
-  --tracking-tight:   -0.02em;
+  --tracking-tight: -0.02em;
 }
 
 @theme inline {
@@ -52,6 +47,7 @@
   --color-chart-1:                     var(--chart-1);
   --color-ring:                        var(--ring);
   --color-input:                       var(--input);
+  --color-warning:                     var(--warning);
   --color-border:                      var(--border);
   --color-destructive:                 var(--destructive);
   --color-accent-foreground:           var(--accent-foreground);
@@ -96,6 +92,7 @@
   --accent:                #FFF3E8;   /* Orange Light */
   --accent-foreground:     #FF6A00;
   --destructive:           #DC2626;
+  --warning:               #B45309;
   --border:                #E8E3DD;   /* Border default */
   --input:                 #E8E3DD;
   --ring:                  #FF6A00;   /* Focus ring — orange */
@@ -155,8 +152,8 @@
     @apply border-border outline-ring/50;
   }
   body {
-    background-color: #FFFFFF;
-    color: var(--color-text-primary);
+    background-color: var(--background);
+    color: var(--foreground);
   }
   ::selection {
     background-color: var(--color-inkly-peach);
@@ -177,7 +174,7 @@
   --tw-prose-code:       var(--color-text-primary);
   --tw-prose-pre-code:   var(--color-text-primary);
   --tw-prose-pre-bg:     var(--color-bg-muted);
-  font-family: Inter, "Helvetica Neue", Helvetica, sans-serif;
+  font-family: inherit;
   font-size: 17px;
   line-height: 1.5;
 }

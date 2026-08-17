@@ -6,6 +6,7 @@ import type {
   PostReactionResponse,
   PostResponse,
   PostStatsResponse,
+  PostStatus,
   PostVisibility,
 } from "@/types/api"
 
@@ -15,6 +16,7 @@ export interface ListPostsParams {
   author?: string
   category?: string
   search?: string
+  status?: PostStatus
 }
 
 function buildQuery(params: ListPostsParams) {
@@ -24,6 +26,7 @@ function buildQuery(params: ListPostsParams) {
   if (params.author) q.set("author", params.author)
   if (params.category) q.set("category", params.category)
   if (params.search) q.set("search", params.search)
+  if (params.status) q.set("status", params.status)
   return q.toString()
 }
 

@@ -9,7 +9,7 @@ import { AuthShell } from "@/components/auth/auth-shell"
 // Telegram Login Widget qo'llab-quvvatlash uchun global type
 declare global {
   interface Window {
-    onTelegramAuth: (user: TelegramAuthData) => void
+    onTelegramAuth?: (user: TelegramAuthData) => void
   }
 }
 

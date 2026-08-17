@@ -3,26 +3,24 @@ import { cn } from "@/lib/utils"
 
 interface BadgeProps {
   children: ReactNode
-  variant?: "default" | "lime" | "muted" | "outline"
+  variant?: "default" | "lime" | "muted" | "outline" | "ghost"
   className?: string
 }
 
 const variants = {
   // default: soft orange light bg — category, label
-  default: "bg-[#FFF3E8] text-[#FF6A00]",
-  // lime → orange primary — "Tanlangan", "Tasdiqlangan" kabi
-  lime: "bg-[#FF6A00] text-white",
-  // muted: subtle gray
-  muted: "bg-[#F2F4F7] text-[#6B7280]",
-  // outline: border only
-  outline: "border border-[#E8E3DD] text-[#36565F]",
+  default: "bg-accent text-primary",
+  lime: "bg-primary text-primary-foreground",
+  muted: "bg-muted text-text-muted",
+  outline: "border border-border text-text-secondary",
+  ghost: "bg-transparent text-text-secondary",
 }
 
 export function Badge({ children, variant = "default", className }: BadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-3 py-1 text-xs font-medium",
+        "inline-flex items-center rounded-full px-3 py-1 text-xs font-medium leading-5",
         variants[variant],
         className,
       )}

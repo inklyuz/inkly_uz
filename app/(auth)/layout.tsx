@@ -3,7 +3,7 @@ import { LogoMark } from '@/components/ui/logo'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-[#FFF9F3]">
+    <div className="flex min-h-screen flex-col bg-bg-cream">
       {/* Minimal header */}
       <header className="flex h-14 items-center px-6">
         <Link href="/" className="flex items-center gap-1.5 text-[#141414]">

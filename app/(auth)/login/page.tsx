@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { Suspense, useCallback, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/auth/context"
 import { AuthShell } from "@/components/auth/auth-shell"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { TelegramLoginWidget } from "@/components/auth/telegram-login-widget"
 
 const loginSchema = z.object({
   email: z.string().email("Yaroqli email kiriting"),
@@ -20,9 +21,17 @@ const loginSchema = z.object({
 type LoginData = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
+  return <Suspense fallback={null}><LoginForm /></Suspense>
+}
+
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { login } = useAuth()
   const [error, setError] = useState<string | null>(null)
+  const next = searchParams.get("next")
+  const destination = next?.startsWith("/") && !next.startsWith("//") ? next : "/dashboard"
+  const telegramSuccess = useCallback(() => router.replace(destination), [destination, router])
 
   const {
     register,
@@ -36,7 +45,7 @@ export default function LoginPage() {
       // Login → { tokens: { access_token, refresh_token, ... } }
       const { tokens } = await authApi.login(data)
       await login(tokens)
-      router.push("/")
+      router.replace(destination)
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Email yoki parol noto'g'ri")
     }
@@ -48,7 +57,7 @@ export default function LoginPage() {
       subtitle={
         <>
           Hali akkauntingiz yo'qmi?{" "}
-          <Link href="/register" className="font-medium text-[#FF6A00] hover:underline">
+          <Link href="/register" className="font-medium text-primary hover:underline">
             Ro'yxatdan o'ting
           </Link>
         </>
@@ -56,7 +65,7 @@ export default function LoginPage() {
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         {error && (
-          <div className="rounded-lg bg-[#DC2626]/10 p-3 text-sm text-[#DC2626]">
+          <div className="rounded-control bg-destructive/10 p-3 text-sm text-destructive">
             {error}
           </div>
         )}
@@ -76,7 +85,7 @@ export default function LoginPage() {
               <span>Parolingiz</span>
               <Link
                 href="/forgot-password"
-                className="text-xs font-normal text-[#FF6A00] hover:underline"
+                className="text-xs font-normal text-primary hover:underline"
                 tabIndex={-1}
               >
                 Parolni unutdingizmi?
@@ -97,10 +106,10 @@ export default function LoginPage() {
 
       <div className="relative my-8">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-[#E8E3DD]" />
+          <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="bg-white px-2 text-[#6B7280]">Yoki</span>
+          <span className="bg-background px-2 text-text-muted">Yoki</span>
         </div>
       </div>
 
@@ -127,11 +136,15 @@ export default function LoginPage() {
           Google orqali kirish
         </Button>
 
+        <div className="flex w-full flex-col items-center gap-3 rounded-control border border-border bg-background px-4 py-4">
+          <p className="text-sm font-medium text-foreground">Telegram orqali kirish</p>
+          <TelegramLoginWidget onSuccess={telegramSuccess} />
+        </div>
         <Button
           type="button"
           variant="ghost"
           onClick={() => router.push("/telegram")}
-          className="w-full flex items-center justify-center gap-2"
+          className="hidden w-full items-center justify-center gap-2"
         >
           <svg className="h-5 w-5 text-[#24A1DE]" fill="currentColor" viewBox="0 0 24 24">
             <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>

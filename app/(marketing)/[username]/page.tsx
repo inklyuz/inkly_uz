@@ -25,7 +25,10 @@ import {
 
 import {
   Github,
+  Instagram,
+  Telegram,
   Twitter,
+  Youtube,
 } from "@/components/ui/brand-icons"
 
 import { Avatar } from "@/components/ui/avatar"
@@ -160,7 +163,7 @@ export default async function ProfilePage({
                     href={`https://t.me/${user.socials.telegram}`}
                     label="Telegram"
                   >
-                    <Send size={17} />
+                    <Telegram size={17} />
                   </SocialButton>
                 )}
 
@@ -175,10 +178,28 @@ export default async function ProfilePage({
 
                 {user.socials?.twitter && (
                   <SocialButton
-                    href={`https://twitter.com/${user.socials.twitter}`}
-                    label="Twitter"
+                    href={`https://x.com/${user.socials.twitter}`}
+                    label="Twitter / X"
                   >
                     <Twitter size={17} />
+                  </SocialButton>
+                )}
+
+                {user.socials?.youtube && (
+                  <SocialButton
+                    href={`https://youtube.com/@${user.socials.youtube}`}
+                    label="YouTube"
+                  >
+                    <Youtube size={17} />
+                  </SocialButton>
+                )}
+
+                {user.socials?.instagram && (
+                  <SocialButton
+                    href={`https://instagram.com/${user.socials.instagram}`}
+                    label="Instagram"
+                  >
+                    <Instagram size={17} />
                   </SocialButton>
                 )}
               </div>

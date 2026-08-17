@@ -13,7 +13,7 @@ export function Avatar({ src, name, size = 40, className }: AvatarProps) {
   return (
     <div
       style={{ width: size, height: size }}
-      className={cn("relative flex-shrink-0 overflow-hidden rounded-full bg-[#F2F4F7]", className)}
+      className={cn("relative flex-shrink-0 overflow-hidden rounded-full bg-muted", className)}
     >
       {src ? (
         <Image src={src || "/placeholder.svg"} alt={name ?? "avatar"} fill sizes={`${size}px`} className="object-cover" />
@@ -21,7 +21,7 @@ export function Avatar({ src, name, size = 40, className }: AvatarProps) {
         <span
           aria-hidden="true"
           style={{ fontSize: Math.max(10, size * 0.38) }}
-          className="flex h-full w-full items-center justify-center font-semibold tracking-tight text-[#36565F]"
+          className="flex h-full w-full items-center justify-center font-semibold tracking-tight text-text-secondary"
         >
           {initials(name)}
         </span>

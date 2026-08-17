@@ -87,6 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       localStorage.removeItem(TOKEN_KEY)
       dispatch({ type: "LOGOUT" })
+      throw new Error("Sessiya tiklanmadi")
     }
   }, [])
 

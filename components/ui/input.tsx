@@ -2,7 +2,7 @@ import { forwardRef, type InputHTMLAttributes, type TextareaHTMLAttributes } fro
 import { cn } from "@/lib/utils"
 
 const fieldBase =
-  "w-full rounded-lg border bg-white px-4 py-3 text-sm text-[#141414] placeholder:text-[#6B7280] outline-none transition-colors duration-150"
+  "w-full rounded-control border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-text-muted outline-none transition-colors duration-150 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50"
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: React.ReactNode
@@ -18,7 +18,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={fieldId} className="text-sm font-medium text-[#141414]">
+        <label htmlFor={fieldId} className="text-sm font-medium text-foreground">
           {label}
         </label>
       )}
@@ -30,13 +30,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         className={cn(
           fieldBase,
           error
-            ? "border-[#DC2626] focus:border-[#DC2626]"
-            : "border-[#E8E3DD] focus:border-[#FF6A00]",
+            ? "border-destructive focus:border-destructive focus-visible:ring-destructive/20"
+            : "border-input",
           className,
         )}
       />
-      {hint && !error && <p className="text-xs text-[#6B7280]">{hint}</p>}
-      {error && <p className="text-xs text-[#DC2626]">{error}</p>}
+      {hint && !error && <p className="text-xs text-text-muted">{hint}</p>}
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   )
 })
@@ -54,7 +54,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={fieldId} className="text-sm font-medium text-[#141414]">
+        <label htmlFor={fieldId} className="text-sm font-medium text-foreground">
           {label}
         </label>
       )}
@@ -67,12 +67,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
           fieldBase,
           "resize-y leading-relaxed",
           error
-            ? "border-[#DC2626] focus:border-[#DC2626]"
-            : "border-[#E8E3DD] focus:border-[#FF6A00]",
+            ? "border-destructive focus:border-destructive focus-visible:ring-destructive/20"
+            : "border-input",
           className,
         )}
       />
-      {error && <p className="text-xs text-[#DC2626]">{error}</p>}
+      {error && <p className="text-xs text-destructive">{error}</p>}
     </div>
   )
 })

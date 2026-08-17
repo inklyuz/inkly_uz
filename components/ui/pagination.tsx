@@ -22,7 +22,7 @@ function hrefFor(basePath: string, page: number, query?: Record<string, string |
 }
 
 const arrow =
-  "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#E8E3DD] text-[#141414] transition-colors"
+  "inline-flex size-9 items-center justify-center rounded-control border border-border text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring focus-visible:ring-2 focus-visible:ring-ring/30"
 
 export function Pagination({ page, totalPages, basePath, query }: PaginationProps) {
   if (totalPages <= 1) return null
@@ -39,7 +39,7 @@ export function Pagination({ page, totalPages, basePath, query }: PaginationProp
       ) : (
         <Link
           href={hrefFor(basePath, page - 1, query)}
-          className={cn(arrow, "hover:bg-[#FFF3E8] hover:border-[#FF6A00] hover:text-[#FF6A00]")}
+          className={cn(arrow, "hover:bg-accent hover:border-primary hover:text-primary")}
           aria-label="Oldingi sahifa"
         >
           <ChevronLeft size={16} />
@@ -57,7 +57,7 @@ export function Pagination({ page, totalPages, basePath, query }: PaginationProp
       ) : (
         <Link
           href={hrefFor(basePath, page + 1, query)}
-          className={cn(arrow, "hover:bg-[#FFF3E8] hover:border-[#FF6A00] hover:text-[#FF6A00]")}
+          className={cn(arrow, "hover:bg-accent hover:border-primary hover:text-primary")}
           aria-label="Keyingi sahifa"
         >
           <ChevronRight size={16} />

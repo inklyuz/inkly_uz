@@ -41,7 +41,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="uz" className="bg-[#FFF9F3]">
+    <html lang="uz" className="bg-bg-cream">
       <body className={`${inter.className} antialiased`}>
         <AuthProvider>
           {children}
