@@ -8,11 +8,9 @@ export interface ApiSuccess<T> {
 
 export interface ApiError {
   success: false
-  error: {
-    code: string
-    message: string
-    details: Record<string, unknown> | null
-  }
+  code: string
+  message: string
+  details?: Record<string, unknown>
 }
 
 export type ApiResponse<T> = ApiSuccess<T> | ApiError
@@ -22,7 +20,7 @@ export interface Page<T> {
   page: number
   page_size: number
   total: number
-  total_pages: number
+  pages: number        // backend "pages" deydi, "total_pages" emas
 }
 
 // ─── Enumlar ──────────────────────────────────────────────────────────────
@@ -32,7 +30,6 @@ export type UserStatus = "active" | "blocked"
 export type PostStatus = "draft" | "published" | "archived"
 export type PostVisibility = "public" | "private"
 export type PostReactionType = "like" | "dislike"
-export type CreatorStatus = "pending" | "active" | "rejected" | "suspended"
 export type TelegramPublicationStatus = "pending" | "published" | "failed" | "cancelled"
 export type UploadType = "avatar" | "cover" | "post_image" | "temp"
 
@@ -55,12 +52,6 @@ export interface SessionOut {
   expires_at: string
   is_active: boolean
   is_current: boolean
-}
-
-export interface TelegramStartResponse {
-  verification_id: string
-  token: string
-  expires_at: string
 }
 
 // ─── User ─────────────────────────────────────────────────────────────────
@@ -86,7 +77,16 @@ export interface UserBase {
   is_verified: boolean
 }
 
-export type UserPublicResponse = UserBase
+export interface UserPublicResponse extends UserBase {
+  posts_count?: number
+  created_at?: string
+}
+
+export interface LinkedProvider {
+  provider: "google" | "telegram"
+  provider_email: string | null
+  connected_at: string
+}
 
 export interface UserMeResponse extends UserBase {
   id: number
@@ -94,27 +94,10 @@ export interface UserMeResponse extends UserBase {
   email: string | null
   role: UserRole
   status: UserStatus
+  posts_count: number
   created_at: string
   updated_at: string
-}
-
-// ─── Creator ──────────────────────────────────────────────────────────────
-
-export interface CreatorPublicResponse {
-  uuid: string
-  username: string
-  slug: string
-  full_name: string
-  avatar_url: string | null
-  cover_url: string | null
-  bio: string | null
-  description: string | null
-  is_verified: boolean
-  created_at: string
-}
-
-export interface CreatorMeResponse extends CreatorPublicResponse {
-  status: CreatorStatus
+  linked_providers: LinkedProvider[]
 }
 
 // ─── Post ─────────────────────────────────────────────────────────────────
@@ -132,6 +115,14 @@ export interface PostCategory {
   name: string
   slug: string
   icon: string | null
+}
+
+export interface SharingImage {
+  id: string
+  format: string
+  size: number
+  type: string
+  url: string
 }
 
 export interface PostResponse {
@@ -153,6 +144,12 @@ export interface PostResponse {
   views_count: number
   reacted: PostReactionType | null
   categories: PostCategory[]
+  sharing_image: SharingImage | null
+  is_pinned: boolean
+  allow_comments: boolean
+  allow_reactions: boolean
+  seo_indexable: boolean
+  scheduled_at: string | null
 }
 
 export interface PostListItem {
@@ -172,6 +169,10 @@ export interface PostListItem {
   comments_count: number
   views_count: number
   categories: PostCategory[]
+  is_pinned: boolean
+  allow_comments: boolean
+  allow_reactions: boolean
+  scheduled_at: string | null
 }
 
 export interface PostReactionResponse {
@@ -211,18 +212,16 @@ export interface CategoryPublicResponse {
   slug: string
   description: string | null
   icon: string | null
-  post_count: number
+  posts_count: number   // backend "posts_count" deydi
 }
 
 // ─── Upload ───────────────────────────────────────────────────────────────
 
 export interface UploadResponse {
-  id: number
-  uuid: string
-  path: string
-  url: string
-  type: UploadType
-  mime_type: string
-  size: number
-  created_at: string
+  path: string          // relative: "avatars/abc.webp" — PATCH /users/me ga shu yuboriladi
+  url: string           // to'liq CDN URL (ko'rsatish uchun)
+  width?: number
+  height?: number
+  size?: number
+  format?: string
 }

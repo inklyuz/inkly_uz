@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useCallback, useContext, useEffect, useReducer, type ReactNode } from "react"
+import { createContext, useCallback, useContext, useEffect, useReducer, useRef, type ReactNode } from "react"
 import { authApi } from "@/lib/api/auth"
 import type { TokenPair, UserMeResponse } from "@/types/api"
 
@@ -39,22 +39,39 @@ const AuthContext = createContext<{
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, { user: null, token: null, loading: true })
+  // Race condition oldini olish: parallel refresh chaqiruvlarida faqat bitta ishlaydi
+  const refreshingRef = useRef(false)
 
   const refresh = useCallback(async () => {
+    if (refreshingRef.current) return
+    refreshingRef.current = true
+
     try {
       const stored = typeof window !== "undefined" ? localStorage.getItem(TOKEN_KEY) : null
+
+      // 1. Saqlangan token mavjud bo'lsa — uni sinab ko'ramiz
       if (stored) {
-        const user = await authApi.me(stored)
-        dispatch({ type: "SET_USER", user, token: stored })
-        return
+        try {
+          const user = await authApi.me(stored)
+          dispatch({ type: "SET_USER", user, token: stored })
+          return
+        } catch {
+          // Token muddati o'tgan yoki yaroqsiz — cookie orqali yangilashga urinamiz
+        }
       }
-      const pair = await authApi.refresh()
-      const user = await authApi.me(pair.access_token)
-      localStorage.setItem(TOKEN_KEY, pair.access_token)
-      dispatch({ type: "SET_USER", user, token: pair.access_token })
-    } catch {
-      localStorage.removeItem(TOKEN_KEY)
-      dispatch({ type: "LOGOUT" })
+
+      // 2. httpOnly cookie dagi refresh_token orqali yangi access_token olamiz
+      try {
+        const { tokens } = await authApi.refresh()
+        const user = await authApi.me(tokens.access_token)
+        localStorage.setItem(TOKEN_KEY, tokens.access_token)
+        dispatch({ type: "SET_USER", user, token: tokens.access_token })
+      } catch {
+        localStorage.removeItem(TOKEN_KEY)
+        dispatch({ type: "LOGOUT" })
+      }
+    } finally {
+      refreshingRef.current = false
     }
   }, [])
 
@@ -63,9 +80,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [refresh])
 
   const login = useCallback(async (pair: TokenPair) => {
-    const user = await authApi.me(pair.access_token)
     localStorage.setItem(TOKEN_KEY, pair.access_token)
-    dispatch({ type: "SET_USER", user, token: pair.access_token })
+    try {
+      const user = await authApi.me(pair.access_token)
+      dispatch({ type: "SET_USER", user, token: pair.access_token })
+    } catch {
+      localStorage.removeItem(TOKEN_KEY)
+      dispatch({ type: "LOGOUT" })
+    }
   }, [])
 
   const logout = useCallback(async () => {
@@ -75,7 +97,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     dispatch({ type: "LOGOUT" })
   }, [])
 
-  return <AuthContext.Provider value={{ state, login, logout, refresh }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ state, login, logout, refresh }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth() {

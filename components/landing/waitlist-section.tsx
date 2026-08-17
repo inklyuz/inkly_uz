@@ -139,7 +139,7 @@ export function WaitlistSection() {
                   className={cn(
                     "flex flex-1 items-center justify-center gap-2.5 py-3.5 text-sm font-semibold transition-all",
                     contactType === "gmail"
-                      ? "bg-red-50 text-red-600"
+                      ? "bg-[#FFF3E8] text-[#141414]"
                       : "text-[#6B7280] hover:text-[#141414] hover:bg-[#FFF9F3]",
                   )}
                 >
@@ -156,7 +156,7 @@ export function WaitlistSection() {
                 "flex w-full items-center gap-2 rounded-2xl border bg-white p-1.5 shadow-lg shadow-[#141414]/5 transition-colors",
                 contactType === "telegram"
                   ? "border-[#E8E3DD] focus-within:border-[#FF6A00]"
-                  : "border-[#E8E3DD] focus-within:border-red-400",
+                  : "border-[#E8E3DD] focus-within:border-[#FF6A00]",
               )}>
                 <div className="flex min-w-0 flex-1 items-center gap-2 pl-3">
                   {contactType === "telegram" ? (
@@ -164,7 +164,7 @@ export function WaitlistSection() {
                       <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
                     </svg>
                   ) : (
-                    <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-red-500" fill="currentColor">
+                    <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-[#36565F]" fill="currentColor">
                       <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
                     </svg>
                   )}

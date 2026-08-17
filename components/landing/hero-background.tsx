@@ -23,10 +23,10 @@ export function HeroBackground() {
           prefersReducedMotion
             ? undefined
             : {
-                scale: [1, 1.04, 1],
-                x: [0, -12, 0],
-                y: [0, -8, 0],
-              }
+              scale: [1, 1.04, 1],
+              x: [0, -12, 0],
+              y: [0, -8, 0],
+            }
         }
         transition={{
           duration: 9,

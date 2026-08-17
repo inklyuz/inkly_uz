@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 
 const loginSchema = z.object({
   email: z.string().email("Yaroqli email kiriting"),
-  password: z.string().min(6, "Parol kamida 6ta belgi bo'lishi kerak"),
+  password: z.string().min(1, "Parolni kiriting"),
 })
 
 type LoginData = z.infer<typeof loginSchema>
@@ -28,18 +28,17 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginData>({
-    resolver: zodResolver(loginSchema),
-  })
+  } = useForm<LoginData>({ resolver: zodResolver(loginSchema) })
 
   const onSubmit = async (data: LoginData) => {
     setError(null)
     try {
-      const tokens = await authApi.login(data)
+      // Login → { tokens: { access_token, refresh_token, ... } }
+      const { tokens } = await authApi.login(data)
       await login(tokens)
       router.push("/")
-    } catch (err: any) {
-      setError(err.message || "Email yoki parol noto'g'ri")
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Email yoki parol noto'g'ri")
     }
   }
 
@@ -61,7 +60,7 @@ export default function LoginPage() {
             {error}
           </div>
         )}
-        
+
         <Input
           label="Email manzilingiz"
           type="email"
@@ -70,12 +69,16 @@ export default function LoginPage() {
           error={errors.email?.message}
           {...register("email")}
         />
-        
+
         <Input
           label={
             <div className="flex items-center justify-between">
               <span>Parolingiz</span>
-              <Link href="/forgot-password" className="text-xs font-normal text-[#FF6A00] hover:underline" tabIndex={-1}>
+              <Link
+                href="/forgot-password"
+                className="text-xs font-normal text-[#FF6A00] hover:underline"
+                tabIndex={-1}
+              >
                 Parolni unutdingizmi?
               </Link>
             </div>
@@ -94,7 +97,7 @@ export default function LoginPage() {
 
       <div className="relative my-8">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-[#E8E3DD]"></div>
+          <div className="w-full border-t border-[#E8E3DD]" />
         </div>
         <div className="relative flex justify-center text-sm">
           <span className="bg-white px-2 text-[#6B7280]">Yoki</span>
@@ -102,8 +105,9 @@ export default function LoginPage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <Button 
-          variant="outline" 
+        <Button
+          type="button"
+          variant="ghost"
           onClick={async () => {
             try {
               const res = await authApi.getGoogleUrl()
@@ -122,9 +126,10 @@ export default function LoginPage() {
           </svg>
           Google orqali kirish
         </Button>
-        
-        <Button 
-          variant="outline"
+
+        <Button
+          type="button"
+          variant="ghost"
           onClick={() => router.push("/telegram")}
           className="w-full flex items-center justify-center gap-2"
         >

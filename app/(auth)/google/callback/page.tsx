@@ -28,13 +28,14 @@ function GoogleCallbackContent() {
       return
     }
 
-    authApi.googleCallback(code, state)
-      .then(async (res) => {
-        await login(res.tokens)
+    authApi
+      .googleCallback(code, state)
+      .then(async ({ tokens }) => {
+        await login(tokens)
         router.push("/")
       })
-      .catch((err) => {
-        setError(err.message || "Xatolik yuz berdi")
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : "Xatolik yuz berdi")
         setTimeout(() => router.push("/login"), 3000)
       })
   }, [searchParams, router, login])

@@ -1,67 +1,465 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Eye, Heart, MessageCircle } from "lucide-react"
+import {
+  Bookmark,
+  Eye,
+  Heart,
+  MessageCircle,
+} from "lucide-react"
+
 import { Avatar } from "@/components/ui/avatar"
-import { Badge, VerifiedDot } from "@/components/ui/badge"
-import { formatCount, formatDate } from "@/lib/utils/format"
+import { VerifiedDot } from "@/components/ui/badge"
+import {
+  formatCount,
+  formatDate,
+} from "@/lib/utils/format"
+
 import type { PostListItem } from "@/types/api"
 
-export function PostCard({ post }: { post: PostListItem }) {
+interface PostCardProps {
+  post: PostListItem
+  variant?: "list" | "grid"
+}
+
+export function PostCard({
+  post,
+  variant = "list",
+}: PostCardProps) {
   const url = `/@${post.author.username}/${post.slug}`
+  const category = post.categories?.[0]
+
+  /* ==============================================================
+     GRID
+  ============================================================== */
+
+  if (variant === "grid") {
+    return (
+      <article
+        className="
+          group
+          overflow-hidden
+          rounded-[12px]
+          border
+          border-[#E8E3DD]
+          bg-white
+          transition-all
+          duration-200
+          hover:border-[#DCD5CC]
+          hover:shadow-[0_4px_18px_rgba(20,20,20,0.04)]
+        "
+      >
+        {/* Cover */}
+        <Link
+          href={url}
+          className="
+            relative
+            block
+            aspect-[16/9]
+            overflow-hidden
+            bg-[#F2F0EC]
+          "
+        >
+          {post.cover ? (
+            <Image
+              src={post.cover}
+              alt=""
+              fill
+              sizes="
+                (max-width: 640px) 100vw,
+                50vw
+              "
+              className="
+                object-cover
+                transition-transform
+                duration-500
+                group-hover:scale-[1.035]
+              "
+            />
+          ) : (
+            <div
+              className="
+                flex
+                h-full
+                items-center
+                justify-center
+                text-[#B5B0A9]
+              "
+            >
+              ✦
+            </div>
+          )}
+        </Link>
+
+        <div className="p-4">
+
+          {/* Category */}
+          {category && (
+            <Link
+              href={`/posts?category=${encodeURIComponent(
+                category.slug,
+              )}`}
+              className="
+                text-[11px]
+                font-medium
+                text-[#FF5B0A]
+                hover:text-[#E84F05]
+              "
+            >
+              {category.name}
+            </Link>
+          )}
+
+          {/* Title */}
+          <h3
+            className="
+              mt-1.5
+              line-clamp-2
+              text-[17px]
+              font-semibold
+              leading-[1.3]
+              tracking-[-0.02em]
+              text-[#171717]
+            "
+          >
+            <Link
+              href={url}
+              className="hover:text-[#FF5B0A]"
+            >
+              {post.title}
+            </Link>
+          </h3>
+
+          {/* Excerpt */}
+          {post.excerpt && (
+            <p
+              className="
+                mt-1.5
+                line-clamp-2
+                text-[12px]
+                leading-[1.6]
+                text-[#6C6A67]
+              "
+            >
+              {post.excerpt}
+            </p>
+          )}
+
+          {/* Meta */}
+          <div
+            className="
+              mt-4
+              flex
+              items-center
+              justify-between
+              gap-3
+              border-t
+              border-[#E8E3DD]
+              pt-3
+            "
+          >
+            <Link
+              href={`/@${post.author.username}`}
+              className="
+                flex
+                min-w-0
+                items-center
+                gap-2
+              "
+            >
+              <Avatar
+                src={post.author.avatar}
+                name={post.author.full_name}
+                size={24}
+              />
+
+              <span
+                className="
+                  truncate
+                  text-[10px]
+                  font-medium
+                  text-[#444]
+                "
+              >
+                @{post.author.username}
+              </span>
+
+              {post.author.is_verified && (
+                <VerifiedDot />
+              )}
+            </Link>
+
+            <div
+              className="
+                flex
+                items-center
+                gap-2.5
+                text-[10px]
+                text-[#777]
+              "
+            >
+              <span className="flex items-center gap-1">
+                <Heart size={13} />
+                {formatCount(post.likes_count)}
+              </span>
+
+              <span className="flex items-center gap-1">
+                <Eye size={13} />
+                {formatCount(post.views_count)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </article>
+    )
+  }
+
+  /* ==============================================================
+     LIST
+  ============================================================== */
 
   return (
-    <article className="group flex flex-col gap-4 rounded-xl border border-[#E8E3DD] bg-white p-5 transition-colors hover:border-[#E8E3DD]">
-      {post.cover && (
-        <Link href={url} className="block overflow-hidden rounded-lg bg-[#F2F4F7]">
+    <article
+      className="
+        group
+        relative
+        flex
+        min-h-[156px]
+        overflow-hidden
+        rounded-[12px]
+        border
+        border-[#E8E3DD]
+        bg-white
+        transition-all
+        duration-200
+        hover:border-[#DCD5CC]
+        hover:shadow-[0_4px_18px_rgba(20,20,20,0.04)]
+      "
+    >
+      {/* ==========================================================
+          COVER
+      =========================================================== */}
+
+      <Link
+        href={url}
+        className="
+          relative
+          block
+          w-[205px]
+          shrink-0
+          overflow-hidden
+          bg-[#F2F0EC]
+          sm:w-[220px]
+          lg:w-[232px]
+        "
+      >
+        {post.cover ? (
           <Image
-            src={post.cover || "/placeholder.svg"}
+            src={post.cover}
             alt=""
-            width={600}
-            height={338}
-            className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+            fill
+            sizes="232px"
+            className="
+              object-cover
+              transition-transform
+              duration-500
+              group-hover:scale-[1.035]
+            "
           />
-        </Link>
-      )}
+        ) : (
+          <div
+            className="
+              flex
+              h-full
+              min-h-[156px]
+              items-center
+              justify-center
+              text-[#B5B0A9]
+            "
+          >
+            ✦
+          </div>
+        )}
+      </Link>
 
-      {post.categories.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {post.categories.slice(0, 2).map((category) => (
-            <Badge key={category.uuid}>{category.name}</Badge>
-          ))}
-        </div>
-      )}
+      {/* ==========================================================
+          CONTENT
+      =========================================================== */}
 
-      <div className="flex flex-col gap-2">
-        <h3 className="text-lg font-semibold leading-snug tracking-tight text-pretty text-[#141414]">
-          <Link href={url} className="transition-colors hover:text-[#FF6A00]">
+      <div
+        className="
+          flex
+          min-w-0
+          flex-1
+          flex-col
+          px-5
+          py-4
+        "
+      >
+        {/* Category */}
+        {category && (
+          <Link
+            href={`/posts?category=${encodeURIComponent(
+              category.slug,
+            )}`}
+            className="
+              w-fit
+              text-[11px]
+              font-medium
+              text-[#FF5B0A]
+              hover:text-[#E84F05]
+            "
+          >
+            {category.name}
+          </Link>
+        )}
+
+        {/* Title */}
+        <h3
+          className="
+            mt-2
+            line-clamp-2
+            text-[17px]
+            font-semibold
+            leading-[1.3]
+            tracking-[-0.02em]
+            text-[#171717]
+            sm:text-[18px]
+          "
+        >
+          <Link
+            href={url}
+            className="hover:text-[#FF5B0A]"
+          >
             {post.title}
           </Link>
         </h3>
-        {post.excerpt && <p className="line-clamp-2 text-sm leading-relaxed text-[#36565F]">{post.excerpt}</p>}
-      </div>
 
-      <div className="mt-auto flex flex-col gap-3 border-t border-[#E8E3DD] pt-4">
-        <div className="flex items-center justify-between gap-3">
-          <Link href={`/@${post.author.username}`} className="flex min-w-0 items-center gap-2">
-            <Avatar src={post.author.avatar} name={post.author.full_name} size={28} />
-            <span className="truncate text-sm text-[#36565F] hover:text-[#141414]">{post.author.full_name}</span>
-            {post.author.is_verified && <VerifiedDot />}
-          </Link>
+        {/* Excerpt */}
+        {post.excerpt && (
+          <p
+            className="
+              mt-1.5
+              line-clamp-2
+              max-w-[650px]
+              text-[12px]
+              leading-[1.65]
+              text-[#6C6A67]
+              sm:text-[13px]
+            "
+          >
+            {post.excerpt}
+          </p>
+        )}
 
-          <div className="flex items-center gap-3 text-xs text-[#6B7280]">
-            <span className="flex items-center gap-1">
-              <Heart size={12} /> {formatCount(post.likes_count)}
-            </span>
-            <span className="flex items-center gap-1">
-              <MessageCircle size={12} /> {formatCount(post.comments_count)}
-            </span>
-            <span className="flex items-center gap-1">
-              <Eye size={12} /> {formatCount(post.views_count)}
+        {/* Bottom */}
+        <div
+          className="
+            mt-auto
+            flex
+            items-end
+            justify-between
+            gap-4
+            pt-3
+          "
+        >
+          {/* Author */}
+          <div className="flex min-w-0 items-center gap-3">
+
+            <Link
+              href={`/@${post.author.username}`}
+              className="
+                flex
+                min-w-0
+                items-center
+                gap-2
+              "
+            >
+              <Avatar
+                src={post.author.avatar}
+                name={post.author.full_name}
+                size={24}
+              />
+
+              <span
+                className="
+                  max-w-[120px]
+                  truncate
+                  text-[11px]
+                  font-medium
+                  text-[#333]
+                  hover:text-[#FF5B0A]
+                "
+              >
+                @{post.author.username}
+              </span>
+
+              {post.author.is_verified && (
+                <VerifiedDot />
+              )}
+            </Link>
+
+            <span className="h-3 w-px bg-[#E2DED8]" />
+
+            <span
+              className="
+                whitespace-nowrap
+                text-[10px]
+                text-[#88847E]
+              "
+            >
+              {post.published_at
+                ? formatDate(post.published_at)
+                : "Qoralama"}
             </span>
           </div>
-        </div>
 
-        <p className="text-xs text-[#6B7280]">{post.published_at ? formatDate(post.published_at) : "Qoralama"}</p>
+          {/* Actions */}
+          <div
+            className="
+              flex
+              shrink-0
+              items-center
+              gap-3
+              text-[#68645F]
+            "
+          >
+            <span className="flex items-center gap-1 text-[10px]">
+              <Heart size={14} />
+              {formatCount(post.likes_count)}
+            </span>
+
+            <span className="hidden items-center gap-1 text-[10px] sm:flex">
+              <MessageCircle size={13} />
+              {formatCount(post.comments_count)}
+            </span>
+
+            <span className="hidden items-center gap-1 text-[10px] md:flex">
+              <Eye size={13} />
+              {formatCount(post.views_count)}
+            </span>
+
+            <button
+              type="button"
+              aria-label="Saqlash"
+              className="
+                ml-1
+                flex
+                h-7
+                w-7
+                items-center
+                justify-center
+                rounded-lg
+                hover:bg-[#F5F2EE]
+                hover:text-[#FF5B0A]
+              "
+            >
+              <Bookmark
+                size={14}
+                strokeWidth={1.7}
+              />
+            </button>
+          </div>
+        </div>
       </div>
     </article>
   )

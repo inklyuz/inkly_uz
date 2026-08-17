@@ -1,29 +1,35 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { authApi } from "@/lib/api/auth"
-import { useAuth } from "@/lib/auth/context"
 import { AuthShell } from "@/components/auth/auth-shell"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 const registerSchema = z.object({
-  full_name: z.string().min(2, "Ism kiritilishi shart"),
+  full_name: z.string().min(2, "Ism kamida 2 ta belgi bo'lishi kerak"),
+  username: z
+    .string()
+    .min(6, "Username kamida 6 ta belgi bo'lishi kerak")
+    .max(60, "Username 60 ta belgidan oshmasligi kerak")
+    .regex(/^[a-zA-Z0-9_]+$/, "Username faqat harf, raqam va _ dan iborat bo'lishi kerak"),
   email: z.string().email("Yaroqli email kiriting"),
-  password: z.string().min(6, "Parol kamida 6ta belgi bo'lishi kerak"),
+  password: z.string().min(8, "Parol kamida 8 ta belgi bo'lishi kerak"),
 })
 
 type RegisterData = z.infer<typeof registerSchema>
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { login } = useAuth()
+  const searchParams = useSearchParams()
   const [error, setError] = useState<string | null>(null)
+
+  const defaultUsername = searchParams.get("username") ?? ""
 
   const {
     register,
@@ -31,16 +37,18 @@ export default function RegisterPage() {
     formState: { errors, isSubmitting },
   } = useForm<RegisterData>({
     resolver: zodResolver(registerSchema),
+    defaultValues: { username: defaultUsername },
   })
 
   const onSubmit = async (data: RegisterData) => {
     setError(null)
     try {
-      const res = await authApi.register(data)
-      await login(res.tokens)
-      router.push("/verify-email")
-    } catch (err: any) {
-      setError(err.message || "Ro'yxatdan o'tishda xatolik yuz berdi")
+      // Qadam 1: Ro'yxatdan o'tish → email yuboriladi, token BERMAYDI
+      await authApi.register(data)
+      // Email manzilini verify sahifasiga URLdan o'tkazamiz
+      router.push(`/verify-email?email=${encodeURIComponent(data.email)}`)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Ro'yxatdan o'tishda xatolik yuz berdi")
     }
   }
 
@@ -62,7 +70,7 @@ export default function RegisterPage() {
             {error}
           </div>
         )}
-        
+
         <Input
           label="To'liq ismingiz"
           type="text"
@@ -73,6 +81,15 @@ export default function RegisterPage() {
         />
 
         <Input
+          label="Username"
+          type="text"
+          autoComplete="username"
+          placeholder="diyorbek_99"
+          error={errors.username?.message}
+          {...register("username")}
+        />
+
+        <Input
           label="Email manzilingiz"
           type="email"
           autoComplete="email"
@@ -80,7 +97,7 @@ export default function RegisterPage() {
           error={errors.email?.message}
           {...register("email")}
         />
-        
+
         <Input
           label="Parol"
           type="password"
@@ -97,7 +114,7 @@ export default function RegisterPage() {
 
       <div className="relative my-8">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-[#E8E3DD]"></div>
+          <div className="w-full border-t border-[#E8E3DD]" />
         </div>
         <div className="relative flex justify-center text-sm">
           <span className="bg-white px-2 text-[#6B7280]">Yoki</span>
@@ -105,8 +122,9 @@ export default function RegisterPage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <Button 
-          variant="outline" 
+        <Button
+          type="button"
+          variant="ghost"
           onClick={async () => {
             try {
               const res = await authApi.getGoogleUrl()
@@ -125,9 +143,10 @@ export default function RegisterPage() {
           </svg>
           Google orqali kirish
         </Button>
-        
-        <Button 
-          variant="outline"
+
+        <Button
+          type="button"
+          variant="ghost"
           onClick={() => router.push("/telegram")}
           className="w-full flex items-center justify-center gap-2"
         >

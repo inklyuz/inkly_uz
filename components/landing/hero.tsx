@@ -1,278 +1,107 @@
 "use client"
 
-import { motion, useReducedMotion } from "framer-motion"
-import { ChevronDown, Search, Bookmark } from "lucide-react"
+import { useEffect, useState } from "react"
+import { motion, useReducedMotion, type Variants } from "framer-motion"
+import { ArrowDown, Check, ChevronDown } from "lucide-react"
 import { HandleClaim } from "@/components/ui/handle-claim"
-import { FloatingBadge } from "@/components/ui/floating-badge"
-import { HeroBackground } from "@/components/landing/hero-background"
 
-const IMG = {
-  banner: "w=900&h=450&fit=crop&q=80",
-  card: "w=400&h=520&fit=crop&q=80",
-  avatar: "w=100&h=100&fit=crop&q=80",
-} as const
-
-const demoPosts = [
-  {
-    title: "Sun'iy intellekt davrida yozishning yangi usuli",
-    author_name: "Diyorbek Abdumutalibov",
-    read_minutes: 5,
-    excerpt:
-      "Bugun texnologiya hayotimizning ajralmas qismiga aylandi. Sun'iy intellekt esa yozish jarayonini yanada oson va samarali qilmoqda. Ammo baribir eng muhim narsa — bu inson fikri...",
-    cover_image_url: `https://images.unsplash.com/photo-1517842645767-c639042777db?${IMG.banner}`,
-  },
-  {
-    title: "Ijodkor sifatida auditoriya qanday yig'iladi",
-    author_name: "Malika Yusupova",
-    read_minutes: 4,
-    excerpt:
-      "Har qanday ijodkor yo'lining boshida bir xil savol tug'iladi: o'quvchilarni qanday topish mumkin? Bu maqolada real tajribalar asosida amaliy maslahatlar beramiz...",
-    cover_image_url: `https://images.unsplash.com/photo-1499750310107-5fef28a66643?${IMG.banner}`,
-  },
-  {
-    title: "Har kuni yozish odatini qanday shakllantirish mumkin",
-    author_name: "Aziz Karimov",
-    read_minutes: 6,
-    excerpt:
-      "Muntazamlik — har qanday ijodkorning eng katta ustunligi. Kichik qadamlardan boshlab, katta natijalarga erishish mumkin. Mana shu yo'lda yordam beradigan usullar...",
-    cover_image_url: `https://images.unsplash.com/photo-1455390582262-044cdead277a?${IMG.banner}`,
-  },
-]
-
-function getDemoPost() {
-  return demoPosts[Math.floor(Math.random() * demoPosts.length)]
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
 }
 
-const sideCards = [
-  {
-    title: "Sodda odatlar, katta natijalar",
-    date: "8 avgust, 2026",
-    read: "4 min o'qish",
-    image: `https://images.unsplash.com/photo-1441974231531-c6227db76b6e?${IMG.card}`,
-    rotate: -6,
-    position: "-left-40",
-  },
-  {
-    title: "Sayohat meni nimalarga o'rgatdi",
-    date: "7 avgust, 2026",
-    read: "5 min o'qish",
-    image: `https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?${IMG.card}`,
-    rotate: 6,
-    position: "-right-40",
-  },
-]
-
-const avatars = [
-  `https://images.unsplash.com/photo-1633332755192-727a05c4013d?${IMG.avatar}`,
-  `https://images.unsplash.com/photo-1494790108377-be9c29b29330?${IMG.avatar}`,
-  `https://images.unsplash.com/photo-1500648767791-00dcc994a43e?${IMG.avatar}`,
-  `https://images.unsplash.com/photo-1531123897727-8f129e1688ce?${IMG.avatar}`,
-]
-
-/* ── Animatsiya variantlari ──────────────────────────────────────── */
-const staggerContainer = {
+const container: Variants = {
   hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.15, delayChildren: 0.1 },
-  },
+  visible: { transition: { staggerChildren: 0.08 } },
 }
 
-const fadeSlideUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { type: "spring" as const, stiffness: 100, damping: 20 },
-  },
-}
-
-const noAnimation = {
-  hidden: { opacity: 1 },
-  visible: { opacity: 1 },
+const bounceDown: Variants = {
+  initial: { y: 0, opacity: 0.4 },
+  animate: { y: 6, opacity: 1, transition: { duration: 0.7, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" } },
 }
 
 export function Hero() {
-  const featured = getDemoPost()
-  const prefersReduced = useReducedMotion()
+  const reducedMotion = useReducedMotion()
+  const [mounted, setMounted] = useState(false)
 
-  const container = prefersReduced ? noAnimation : staggerContainer
-  const item = prefersReduced ? noAnimation : fadeSlideUp
+  useEffect(() => { setMounted(true) }, [])
+
+  const initial = !mounted || reducedMotion ? "visible" : "hidden"
 
   return (
-    <section className="relative overflow-x-hidden bg-[#FFF9F3] px-4 pt-16 pb-24 sm:px-6 sm:pt-20 sm:pb-32">
-      <HeroBackground />
+    <section id="hero" aria-labelledby="hero-title" className="relative isolate overflow-hidden border-b border-[#E8E3DD] bg-[#FFF8F0] min-h-screen">
 
-      {/* ── Matn qismi — staggered fade-in + slide-up ────────────── */}
-      <motion.div
-        className="relative z-10 mx-auto max-w-3xl text-center"
-        variants={container}
-        initial="hidden"
-        animate="visible"
-      >
-        {/* Badge — orange accent */}
+      {/* BACKGROUND BANNER — faqat lg+ da */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-none bg-no-repeat bg-[position:center_center] lg:bg-[url('/images/bg-banner.png')] lg:bg-[size:auto_100%] xl:bg-[size:cover]" />
+      </div>
+
+      {/* SOFT OVERLAY — faqat lg+ da */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-[5] lg:bg-gradient-to-r lg:from-[#FFF8F0]/92 lg:via-[#FFF8F0]/30 lg:to-transparent" />
+
+      {/* CONTENT */}
+      <div className="relative mx-auto flex min-h-screen max-w-[1280px] items-center px-5 pb-16 pt-0 sm:px-7 sm:pb-20 lg:px-8 lg:pb-24">
         <motion.div
-          variants={item}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#FF6A00]/25 bg-[#FFF3E8] px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-[#141414]"
+          className="relative z-10 w-full max-w-[580px] lg:max-w-[620px]"
+          variants={container}
+          initial={initial}
+          animate="visible"
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-[#FF6A00]" />
-          O&apos;zbekistonlik mualliflar uchun
-        </motion.div>
-
-        <motion.h1
-          variants={item}
-          className="text-5xl font-extrabold leading-[1.05] tracking-tight text-balance text-[#141414] sm:text-7xl"
-        >
-          Yozing. Nashr qiling.
-          <br />
-          O&apos;zingizni <span className="text-[#FF6A00]">ifoda eting.</span>
-        </motion.h1>
-
-        <motion.p
-          variants={item}
-          className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-pretty text-[#36565F]"
-        >
-          Maqola, blog va g&apos;oyalaringizni bitta zamonaviy platformada yarating, nashr qiling va
-          auditoriyangiz bilan ulashing.
-        </motion.p>
-
-        <motion.div variants={item} className="mt-10 flex justify-center">
-          <HandleClaim className="w-full max-w-md" />
-        </motion.div>
-
-        <motion.div variants={item} className="mt-4 flex flex-col items-center gap-0">
-          <ChevronDown size={20} className="text-[#6B7280]" strokeWidth={2.5} />
-          <ChevronDown size={20} className="-mt-2 text-[#E8E3DD]" strokeWidth={2.5} />
-          <span className="mt-2 text-xs text-[#6B7280]">
-            Bepul boshlang. Bir necha daqiqada o&apos;z sahifangizga ega bo&apos;ling.
-          </span>
-        </motion.div>
-      </motion.div>
-
-      {/* ── Desktop mockup ───────────────────────────────────────── */}
-      <div className="relative z-10 mx-auto mt-20 hidden max-w-xl lg:block">
-
-        {sideCards.map((card, i) => (
-          <motion.div
-            key={card.title}
-            aria-hidden
-            initial={prefersReduced ? false : { opacity: 0, x: i === 0 ? -70 : 70, rotate: card.rotate * 2 }}
-            animate={{ opacity: 1, x: 0, rotate: card.rotate }}
-            transition={{ type: "spring", stiffness: 70, damping: 16, delay: 0.7 + i * 0.15 }}
-            className={`absolute ${card.position} top-40 z-20 w-72 overflow-hidden rounded-2xl border border-[#E8E3DD] bg-white p-3 shadow-xl`}
-          >
-            <div className="aspect-[8/5] w-full overflow-hidden rounded-lg bg-[#F2F4F7]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={card.image} alt="" className="h-full w-full object-cover" />
-            </div>
-            <p className="mt-2 text-sm font-semibold leading-snug text-[#141414]">{card.title}</p>
-            <p className="mt-1 text-xs text-[#6B7280]">{card.date} · {card.read}</p>
+          {/* BADGE */}
+          <motion.div variants={fadeUp} className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#FF6A00]/25 bg-white/85 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#FF5A00] shadow-sm backdrop-blur-sm sm:mb-6 sm:text-[11px]">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF5A00]" />
+            O&apos;zbekistonlik mualliflar uchun
           </motion.div>
-        ))}
 
-        {/* Badges — side carddan TASHQARIDA, chap */}
-        <FloatingBadge className="-left-[305px] top-15" icon="heart" label="128" sub="Yoqdi" entranceDelay={0.8} floatDuration={3.2} floatOffset={6} />
-        <FloatingBadge className="-left-[312px] top-59" icon="users" label="2.4K" sub="O'quvchilar" href="/creators" entranceDelay={1.0} floatDuration={3.8} floatOffset={9} />
-        <FloatingBadge className="-left-[305px] top-95" icon="clock" label="5 min" sub="O'qish vaqti" entranceDelay={1.2} floatDuration={3.5} floatOffset={7} />
+          {/* TITLE */}
+          <motion.h1 id="hero-title" variants={fadeUp} className="text-[38px] font-extrabold leading-[0.94] tracking-[-0.05em] text-[#151515] sm:text-[56px] lg:text-[80px] xl:text-[90px]">
+            Yozing.
+            <br />
+            Nashr qiling.
+            <br />
+            O&apos;zingizni{" "}
+            <span className="text-[#FF5A00]">ifoda eting.</span>
+          </motion.h1>
 
-        {/* Badges — side carddan TASHQARIDA, o'ng */}
-        <FloatingBadge className="-right-[305px] top-15" icon="trending" label="+2.4K" sub="O'qildi" entranceDelay={0.9} floatDuration={3.4} floatOffset={7} />
-        <FloatingBadge className="-right-[312px] top-59" icon="share" label="Ulashish" entranceDelay={1.1} floatDuration={4.0} floatOffset={8} />
-        <FloatingBadge className="-right-[305px] top-95" icon="pen" label="Yangi maqola" href="/write" entranceDelay={1.3} floatDuration={3.6} floatOffset={6} />
+          {/* DESCRIPTION */}
+          <motion.p variants={fadeUp} className="mt-4 max-w-[480px] text-[14px] leading-[1.65] text-[#4F555B] sm:mt-7 sm:text-[17px]">
+            Maqola, blog va g&apos;oyalaringizni bitta zamonaviy platformada yarating, nashr qiling va auditoriyangiz bilan ulashing.
+          </motion.p>
 
-        {/* Markaziy mockup */}
-        <motion.div
-          initial={prefersReduced ? false : { opacity: 0, y: 60, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ type: "spring", stiffness: 80, damping: 20, delay: 0.5 }}
-          className="relative z-20 mx-auto overflow-hidden rounded-3xl border border-[#E8E3DD] bg-white shadow-2xl shadow-[#141414]/8"
-        >
-          <div className="flex items-center justify-between border-b border-[#E8E3DD] px-6 py-4">
-            <span className="flex items-center gap-1.5 text-lg font-bold text-[#141414]">
-              {/* Logo dot — orange brand */}
-              <span className="h-2 w-2 rounded-full bg-[#FF6A00]" />
-              inkly
+          {/* USERNAME CLAIM */}
+          <motion.div variants={fadeUp} className="mt-5 w-full max-w-[500px] sm:mt-8">
+            <HandleClaim className="w-full" />
+          </motion.div>
+
+          {/* TRUST */}
+          <motion.div variants={fadeUp} className="mt-3 flex items-center gap-2 text-[11px] leading-5 text-[#77736D] sm:mt-4">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
+              <Check size={11} strokeWidth={2.5} className="text-[#FF5A00]" />
             </span>
-            <div className="flex items-center gap-4 text-[#6B7280]">
-              <Search size={18} />
-              <Bookmark size={18} />
-              <div className="h-7 w-7 overflow-hidden rounded-full bg-[#F2F4F7]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={avatars[0]} alt="" className="h-full w-full object-cover" />
-              </div>
-            </div>
-          </div>
+            <span>Bepul boshlang. Bir necha daqiqada o&apos;z sahifangizga ega bo&apos;ling.</span>
+          </motion.div>
 
-          <div className="px-6 py-5">
-            <h3 className="text-xl font-bold leading-snug text-[#141414]">{featured.title}</h3>
-            <div className="mt-3 flex items-center gap-2 text-sm text-[#6B7280]">
-              <span className="h-6 w-6 overflow-hidden rounded-full bg-[#F2F4F7]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={avatars[0]} alt="" className="h-full w-full object-cover" />
-              </span>
-              {featured.author_name}
-              <span>·</span>
-              {featured.read_minutes} min o&apos;qish
-            </div>
-
-            <div className="mt-4 aspect-[2/1] w-full overflow-hidden rounded-xl bg-[#F2F4F7]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={featured.cover_image_url} alt="" className="h-full w-full object-cover" />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-[#E8E3DD] px-6 py-4">
-            <div className="flex items-center gap-3">
-              <div className="flex -space-x-2">
-                {avatars.map((src) => (
-                  <span key={src} className="h-7 w-7 overflow-hidden rounded-full border-2 border-white bg-[#F2F4F7]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={src} alt="" className="h-full w-full object-cover" />
-                  </span>
-                ))}
-              </div>
-              <div className="text-left leading-tight">
-                <p className="text-sm font-bold text-[#141414]">10K+</p>
-                <p className="text-xs text-[#6B7280]">Mualliflar biz bilan</p>
-              </div>
-            </div>
-            <div className="text-right leading-tight">
-              <p className="flex items-center gap-1 text-sm font-bold text-[#141414]">
-                {/* Star — orange accent */}
-                <span className="text-[#FF6A00]">★</span> 4.9 / 5
-              </p>
-              <p className="text-xs text-[#6B7280]">Foydalanuvchilar bahosi</p>
-            </div>
-          </div>
+          {/* MINI BENEFITS */}
+          <motion.div variants={fadeUp} className="mt-4 flex items-center gap-3 text-[10px] text-[#77736D] sm:mt-5 sm:gap-4 sm:text-[11px]">
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#FF6A00]" />
+              Shaxsiy sahifa
+            </span>
+            <span className="h-3 w-px bg-[#D9D2C9]" />
+            <span>Bepul boshlash</span>
+            <span className="h-3 w-px bg-[#D9D2C9]" />
+            <span>Oson nashr</span>
+          </motion.div>
         </motion.div>
       </div>
 
-      {/* ── Mobil mockup ─────────────────────────────────────────── */}
-      <motion.div
-        initial={prefersReduced ? false : { opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 80, damping: 20, delay: 0.5 }}
-        className="relative z-10 mx-auto mt-16 max-w-xl lg:hidden"
-      >
-        <div className="overflow-hidden rounded-3xl border border-[#E8E3DD] bg-white shadow-2xl shadow-[#141414]/8">
-          <div className="flex items-center justify-between border-b border-[#E8E3DD] px-6 py-4">
-            <span className="flex items-center gap-1.5 text-lg font-bold text-[#141414]">
-              <span className="h-2 w-2 rounded-full bg-[#FF6A00]" />
-              inkly
-            </span>
-            <div className="h-7 w-7 rounded-full bg-[#F2F4F7]" />
-          </div>
-          <div className="px-6 py-5">
-            <h3 className="text-xl font-bold leading-snug text-[#141414]">{featured.title}</h3>
-            <div className="mt-3 flex items-center gap-2 text-sm text-[#6B7280]">
-              <span className="h-6 w-6 rounded-full bg-[#F2F4F7]" />
-              {featured.author_name} · {featured.read_minutes} min o&apos;qish
-            </div>
-            <div className="mt-4 aspect-[2/1] w-full overflow-hidden rounded-xl bg-[#F2F4F7]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={featured.cover_image_url} alt="" className="h-full w-full object-cover" />
-            </div>
-          </div>
-        </div>
+      {/* SCROLL INDICATOR */}
+      <motion.div aria-hidden="true" className="absolute bottom-6 left-1/2 z-20 hidden -translate-x-1/2 flex-col items-center lg:flex">
+        <span className="text-[9px] font-medium uppercase tracking-[0.22em] text-[#8A867F]">Pastga</span>
+        <motion.div variants={bounceDown} initial="initial" animate={reducedMotion ? "initial" : "animate"} className="mt-2 flex flex-col items-center">
+          <ChevronDown size={25} className="text-red" strokeWidth={2} />
+          <ChevronDown size={25} className="-mt-2.5 text-red/40" strokeWidth={2} />
+        </motion.div>
       </motion.div>
     </section>
   )

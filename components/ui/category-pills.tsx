@@ -42,7 +42,7 @@ export function CategoryPills({ categories, activeSlug, showAll = true }: Catego
           >
             {category.name}
             <span className={cn("text-xs", active ? "text-white/70" : "text-[#6B7280]")}>
-              {category.post_count}
+              {category.posts_count}
             </span>
           </Link>
         )

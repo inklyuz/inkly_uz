@@ -19,6 +19,7 @@ export function FeaturedPost({ post, content }: { post: PostListItem; content?: 
             width={900}
             height={600}
             priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
             className="aspect-[4/3] w-full object-cover transition-transform duration-500 hover:scale-[1.02]"
           />
         </Link>
@@ -29,7 +30,7 @@ export function FeaturedPost({ post, content }: { post: PostListItem; content?: 
           {/* "Tanlangan" badge — orange primary */}
           <Badge variant="lime">Tanlangan</Badge>
           {post.categories.slice(0, 2).map((category) => (
-            <Badge key={category.uuid} variant="outline">
+            <Badge key={category.uuid} variant="ghost">
               {category.name}
             </Badge>
           ))}

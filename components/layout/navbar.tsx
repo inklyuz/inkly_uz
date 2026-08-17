@@ -1,296 +1,299 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
-import { ArrowRight, Menu, PenLine, Sparkles, X } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useEffect, useState } from "react"
+import { ChevronDown, Menu, PenLine, Search, X } from "lucide-react"
+import { AnimatePresence, motion, type Variants } from "framer-motion"
+
 import { Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { LogoMark } from "@/components/ui/logo"
 import { useAuth } from "@/lib/auth/context"
-import { siteConfig } from "@/lib/site-config"
 import { cn } from "@/lib/utils"
 
 const links = [
-  { href: "/posts",    label: "Maqolalar"    },
-  { href: "/creators", label: "Mualliflar"   },
-  { href: "/features", label: "Imkoniyatlar" },
-  { href: "/pricing",  label: "Narxlar"      },
-  { href: "/faq",      label: "FAQ"           },
+  { href: "/", label: "Bosh sahifa" },
+  { href: "/posts", label: "Maqolalar" },
+  // { href: "/creators", label: "Yozuvchilar" },
+  // { href: "/pricing", label: "Pricing" },
+  { href: "/about", label: "Haqida" },
 ]
 
-// Animation variants
-const menuVariants = {
+const menuVariants: Variants = {
   closed: {
     opacity: 0,
     height: 0,
     transition: {
-      duration: 0.25,
+      duration: 0.2,
       ease: [0.4, 0, 0.2, 1],
-      when: "afterChildren",
-      staggerChildren: 0.03,
-      staggerDirection: -1,
     },
   },
   open: {
     opacity: 1,
     height: "auto",
     transition: {
-      duration: 0.3,
+      duration: 0.25,
       ease: [0.4, 0, 0.2, 1],
-      when: "beforeChildren",
-      staggerChildren: 0.05,
-      delayChildren: 0.05,
     },
   },
 }
 
-const itemVariants = {
-  closed: { opacity: 0, x: -10 },
-  open:   { opacity: 1, x: 0, transition: { duration: 0.22, ease: [0.4, 0, 0.2, 1] } },
-}
-
-const iconVariants = {
-  closed: { rotate: 0,  scale: 1 },
-  open:   { rotate: 90, scale: 1 },
+const itemVariants: Variants = {
+  closed: {
+    opacity: 0,
+    y: -8,
+  },
+  open: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.2,
+    },
+  },
 }
 
 export function Navbar() {
-  const { state }         = useAuth()
+  const { state } = useAuth()
   const { user, loading } = state
-  const pathname          = usePathname()
-  const [open, setOpen]   = useState(false)
+  const pathname = usePathname()
+
+  const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
+    }
+
+    handleScroll()
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/"
+    return pathname === href || pathname.startsWith(`${href}/`)
+  }
 
   return (
-    <>
-      {/* ── Dark navbar — #141414 background ── */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#141414]/95 backdrop-blur-md">
-        <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-[100] w-full transition-all duration-300",
+        scrolled
+          ? "border-b border-[#E8E3DD]/80 bg-[#FFFDFC]/90 shadow-[0_4px_20px_rgba(0,0,0,0.04)] backdrop-blur-md"
+          : "bg-transparent"
+      )}
+    >
+      <div className="mx-auto flex h-[76px] w-full max-w-[1400px] items-center px-6 sm:px-8 lg:px-10">
+        <Link href="/" className="flex shrink-0 items-center">
+          <Image
+            src="/header.png"
+            alt="Inkly"
+            width={110}
+            height={36}
+            priority
+            className="h-9 w-auto object-contain"
+          />
+        </Link>
 
-          {/* ── Logo ── */}
-          <Link href="/" className="flex items-center gap-1.5 text-white">
-            <LogoMark />
-            <span className="text-xl font-bold tracking-tighter">inkly</span>
-          </Link>
+        <nav className="ml-[88px] hidden h-full items-center gap-[36px] lg:flex">
+          {links.map((link) => {
+            const active = isActive(link.href)
 
-          {/* ── Markaziy zona ── */}
-          {siteConfig.SHOW_ANNOUNCEMENT ? (
-            <div className="relative hidden overflow-hidden rounded-full border border-[#FF6A00]/25 bg-white/5 px-5 py-1.5 lg:flex">
-              {/* Shimmer — orange */}
-              <motion.div
-                aria-hidden
-                className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-[#FF6A00]/20 to-transparent"
-                animate={{ x: ["-100%", "260%"] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", repeatDelay: 2 }}
-              />
-              <span className="relative flex items-center gap-2 text-sm font-medium text-white/90">
-                <Sparkles size={13} className="shrink-0 text-[#FF6A00]" />
-                Inkly tez kunda ishga tushadi —{" "}
-                <button
-                  onClick={() =>
-                    document.getElementById("waitlist-section")?.scrollIntoView({ behavior: "smooth" })
-                  }
-                  className="font-semibold text-[#FF6A00] underline underline-offset-2 transition-colors hover:text-[#FF8A3D]"
-                >
-                  username ni hoziroq band qiling
-                </button>
-                <Sparkles size={13} className="shrink-0 text-[#FF6A00]" />
-              </span>
-            </div>
-          ) : (
-            <div className="hidden items-center gap-8 lg:flex">
-              {links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "text-sm font-medium transition-colors",
-                    pathname === link.href ? "text-white" : "text-white/60 hover:text-white",
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          )}
-
-          {/* ── O'ng taraf ── */}
-          <div className="flex items-center justify-end gap-3 sm:gap-4">
-            {loading ? (
-              <div className="h-8 w-8 animate-pulse rounded-full bg-white/10" />
-            ) : user ? (
-              <>
-                <Link href="/write" className="hidden sm:block">
-                  <Button variant="accent" size="sm" className="rounded-full">
-                    <PenLine size={14} /> Yozish
-                  </Button>
-                </Link>
-                <Link href={`/@${user.username}`} aria-label="Profilim">
-                  <Avatar src={user.avatar} name={user.full_name} size={32} />
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="hidden text-sm font-medium text-white/60 transition-colors hover:text-white sm:block"
-                >
-                  Kirish
-                </Link>
-                {/* Register — Orange CTA */}
-                <Link href="/register">
-                  <Button
-                    size="sm"
-                    className="gap-1.5 rounded-full bg-[#FF6A00] px-5 font-semibold text-white hover:bg-[#E85F00]"
-                  >
-                    Boshlash <ArrowRight size={14} />
-                  </Button>
-                </Link>
-              </>
-            )}
-
-            {/* Mobil menyu toggle */}
-            <motion.button
-              type="button"
-              onClick={() => setOpen((v) => !v)}
-              aria-expanded={open}
-              aria-label="Menyu"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white lg:hidden"
-              whileTap={{ scale: 0.9 }}
-            >
-              <motion.div
-                variants={iconVariants}
-                animate={open ? "open" : "closed"}
-                transition={{ duration: 0.2 }}
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  "relative flex h-full items-center text-[13px] font-medium tracking-[-0.01em] transition-colors",
+                  active
+                    ? "text-[#FF5A00]"
+                    : "text-[#1C1C1C] hover:text-[#FF5A00]"
+                )}
               >
-                {open ? <X size={18} /> : <Menu size={18} />}
-              </motion.div>
-            </motion.button>
-          </div>
+                {link.label}
+
+                {active && (
+                  <span className="absolute bottom-[11px] left-0 right-0 h-[2px] rounded-full bg-[#FF5A00]" />
+                )}
+              </Link>
+            )
+          })}
         </nav>
 
-        {/* ── Mobil menyu ── */}
-        <AnimatePresence initial={false}>
-          {open && (
-            <motion.div
-              key="mobile-menu"
-              variants={menuVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
-              className="overflow-hidden border-t border-white/10 bg-[#141414] lg:hidden"
-            >
-              <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4">
+        <div className="ml-auto hidden items-center gap-4 lg:flex">
+          <Link
+            href="/search"
+            aria-label="Qidirish"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-[#252525] transition-colors hover:bg-[#FFF3E8] hover:text-[#FF5A00]"
+          >
+            <Search size={20} strokeWidth={1.8} />
+          </Link>
 
-                {/* Announcement (mobil) */}
-                {siteConfig.SHOW_ANNOUNCEMENT && (
-                  <motion.div
-                    variants={itemVariants}
-                    className="mb-3 rounded-xl border border-[#FF6A00]/20 bg-[#FF6A00]/8 px-4 py-3"
-                  >
-                    <p className="text-sm font-medium text-white/80">
-                      <Sparkles size={12} className="mr-1.5 inline text-[#FF6A00]" />
-                      Inkly tez kunda ishga tushadi —{" "}
-                      <button
-                        onClick={() => {
-                          setOpen(false)
-                          setTimeout(
-                            () =>
-                              document
-                                .getElementById("waitlist-section")
-                                ?.scrollIntoView({ behavior: "smooth" }),
-                            150,
-                          )
-                        }}
-                        className="font-semibold text-[#FF6A00] underline underline-offset-2"
-                      >
-                        username band qiling
-                      </button>
-                    </p>
-                  </motion.div>
-                )}
+          {loading ? (
+            <div className="h-9 w-[130px] animate-pulse rounded-full bg-[#F1EEEA]" />
+          ) : user ? (
+            <>
+              <Link href="/write">
+                <Button className="h-[38px] gap-2 rounded-[9px] bg-[#FF5A00] px-[15px] text-[12px] font-semibold text-white shadow-none hover:bg-[#E95000]">
+                  <PenLine size={14} strokeWidth={1.9} />
+                  Maqola yozish
+                </Button>
+              </Link>
 
-                {/* Nav links */}
-                {!siteConfig.SHOW_ANNOUNCEMENT &&
-                  links.map((link) => (
-                    <motion.div key={link.href} variants={itemVariants}>
-                      <Link
-                        href={link.href}
-                        onClick={() => setOpen(false)}
-                        className={cn(
-                          "flex items-center rounded-xl px-3 py-3 text-sm font-medium transition-colors",
-                          pathname === link.href
-                            ? "bg-white/10 text-white"
-                            : "text-white/60 hover:bg-white/5 hover:text-white",
-                        )}
-                      >
-                        {link.label}
-                      </Link>
-                    </motion.div>
-                  ))}
+              <Link
+                href={`/@${user.username}`}
+                className="group flex items-center gap-2 rounded-lg py-1 pl-1 pr-1.5 transition-colors hover:bg-[#FFF3E8]"
+              >
+                <Avatar
+                  src={user.avatar}
+                  name={user.full_name}
+                  size={32}
+                />
 
-                {/* User: logged in */}
-                {user && (
-                  <motion.div
-                    variants={itemVariants}
-                    className="mt-2 border-t border-white/10 pt-3"
-                  >
-                    <Link href="/write" onClick={() => setOpen(false)}>
-                      <Button
-                        size="sm"
-                        className="w-full gap-2 rounded-xl bg-white/10 font-medium text-white hover:bg-white/15"
-                      >
-                        <PenLine size={14} /> Yozish
-                      </Button>
-                    </Link>
-                  </motion.div>
-                )}
+                <span className="max-w-[145px] truncate text-[12px] font-medium text-[#252525]">
+                  inkly.uz/@{user.username}
+                </span>
 
-                {/* User: logged out */}
-                {!user && (
-                  <motion.div
-                    variants={itemVariants}
-                    className="mt-2 flex flex-col gap-2 border-t border-white/10 pt-3"
-                  >
-                    <Link
-                      href="/login"
-                      onClick={() => setOpen(false)}
-                      className="rounded-xl px-3 py-3 text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white"
-                    >
-                      Kirish
-                    </Link>
-                    <Link href="/register" onClick={() => setOpen(false)}>
-                      {/* Orange CTA — mobil */}
-                      <Button
-                        size="sm"
-                        className="w-full gap-1.5 rounded-xl bg-[#FF6A00] font-semibold text-white hover:bg-[#E85F00]"
-                      >
-                        Boshlash <ArrowRight size={14} />
-                      </Button>
-                    </Link>
-                  </motion.div>
-                )}
-              </div>
-            </motion.div>
+                <ChevronDown
+                  size={15}
+                  strokeWidth={1.8}
+                  className="shrink-0 text-[#444]"
+                />
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-[13px] font-medium text-[#252525] transition-colors hover:text-[#FF5A00]"
+              >
+                Kirish
+              </Link>
+
+              <Link href="/register">
+                <Button className="h-[38px] rounded-[9px] bg-[#FF5A00] px-4 text-[12px] font-semibold text-white shadow-none hover:bg-[#E95000]">
+                  Boshlash
+                </Button>
+              </Link>
+            </>
           )}
-        </AnimatePresence>
-      </header>
+        </div>
 
-      {/* ── Backdrop overlay ── */}
-      <AnimatePresence>
+        <div className="ml-auto flex items-center gap-2 lg:hidden">
+          {user && (
+            <Link href={`/@${user.username}`} aria-label="Profilim">
+              <Avatar
+                src={user.avatar}
+                name={user.full_name}
+                size={32}
+              />
+            </Link>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            aria-controls="mobile-navbar"
+            aria-label="Menyu"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-[#222] transition-colors hover:bg-[#FFF3E8] hover:text-[#FF5A00]"
+          >
+            {open ? (
+              <X size={20} strokeWidth={1.8} />
+            ) : (
+              <Menu size={20} strokeWidth={1.8} />
+            )}
+          </button>
+        </div>
+      </div>
+
+      <AnimatePresence initial={false}>
         {open && (
           <motion.div
-            key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-[#141414]/40 backdrop-blur-sm lg:hidden"
-            onClick={() => setOpen(false)}
-          />
+            id="mobile-navbar"
+            variants={menuVariants}
+            initial="closed"
+            animate="open"
+            exit="closed"
+            className="overflow-hidden border-t border-[#F0ECE7] bg-[#FFFDFC]/95 backdrop-blur-md lg:hidden"
+          >
+            <nav className="mx-auto flex max-w-[1400px] flex-col px-6 py-4 sm:px-8">
+              {links.map((link) => {
+                const active = isActive(link.href)
+
+                return (
+                  <motion.div
+                    key={link.href}
+                    variants={itemVariants}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className={cn(
+                        "flex items-center justify-between rounded-xl px-4 py-3 text-[14px] font-medium transition-colors",
+                        active
+                          ? "bg-[#FFF3E8] text-[#FF5A00]"
+                          : "text-[#222] hover:bg-[#FFF8F0]"
+                      )}
+                    >
+                      {link.label}
+
+                      {active && (
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#FF5A00]" />
+                      )}
+                    </Link>
+                  </motion.div>
+                )
+              })}
+
+              {user && (
+                <motion.div
+                  variants={itemVariants}
+                  className="mt-3 border-t border-[#F0ECE7] pt-3"
+                >
+                  <Link
+                    href="/write"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-[#FF5A00] px-4 py-3 text-[13px] font-semibold text-white hover:bg-[#E95000]"
+                  >
+                    <PenLine size={15} />
+                    Maqola yozish
+                  </Link>
+                </motion.div>
+              )}
+
+              {!user && !loading && (
+                <motion.div
+                  variants={itemVariants}
+                  className="mt-3 grid grid-cols-2 gap-2 border-t border-[#F0ECE7] pt-3"
+                >
+                  <Link
+                    href="/login"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center rounded-xl border border-[#E8E3DD] px-4 py-3 text-[13px] font-medium text-[#222]"
+                  >
+                    Kirish
+                  </Link>
+
+                  <Link
+                    href="/register"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center rounded-xl bg-[#FF5A00] px-4 py-3 text-[13px] font-semibold text-white"
+                  >
+                    Boshlash
+                  </Link>
+                </motion.div>
+              )}
+            </nav>
+          </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </header>
   )
 }

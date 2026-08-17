@@ -81,7 +81,7 @@
   color-scheme: light;
 
   /* ── shadcn semantic → Inkly palette mapping ── */
-  --background:            #FFF9F3;   /* Cream — page bg */
+  --background:            #FFFFFF;   /* White — page bg */
   --foreground:            #141414;   /* Jet Black — main text */
   --card:                  #FFFFFF;   /* Pure White — cards */
   --card-foreground:       #141414;
@@ -155,7 +155,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    background-color: var(--color-bg-cream);
+    background-color: #FFFFFF;
     color: var(--color-text-primary);
   }
   ::selection {
