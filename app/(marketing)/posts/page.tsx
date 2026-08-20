@@ -45,8 +45,8 @@ export default async function PostsPage({
   const categories = categoriesPage.items
 
   return (
-    <main className="min-h-screen bg-[#FFFDFC] pt-[76px]">
-      <div className="mx-auto w-full max-w-[1280px] px-5 py-7 sm:px-7 lg:px-8">
+    <main className="min-h-screen bg-background pt-16 sm:pt-[76px]">
+      <div className="mx-auto w-full max-w-[1280px] px-4 py-5 sm:px-7 sm:py-7 lg:px-8">
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_276px]">
           <section className="min-w-0">
             <PostsHeader
@@ -61,8 +61,8 @@ export default async function PostsPage({
             />
 
             {search && (
-              <div className="mt-5 text-[13px] text-[#77736D]">
-                <strong className="text-[#222]">
+              <div className="mt-5 text-[13px] text-muted-foreground">
+                <strong className="text-foreground">
                   {postsPage.total}
                 </strong>{" "}
                 ta natija —{" "}
@@ -74,11 +74,11 @@ export default async function PostsPage({
               <PostView posts={postsPage.items} />
             </div>
 
-            {postsPage.pages > 1 && (
+            {postsPage.total_pages > 1 && (
               <div className="mt-8">
                 <Pagination
                   page={postsPage.page}
-                  totalPages={postsPage.pages}
+                  totalPages={postsPage.total_pages}
                   basePath="/posts"
                   query={{ search, category, sort }}
                 />
@@ -122,27 +122,27 @@ function PostsHeader({
 
   return (
     <div className="flex items-center justify-between gap-4">
-      <h1 className="text-[30px] font-bold tracking-[-0.035em] text-[#171717] sm:text-[32px]">
+      <h1 className="text-[30px] font-bold tracking-[-0.035em] text-foreground sm:text-[32px]">
         Maqolalar
       </h1>
 
       <details className="relative">
-        <summary className="flex h-10 cursor-pointer list-none items-center gap-2 rounded-[10px] border border-[#E5E1DB] bg-transparent px-3.5 text-[13px] font-medium text-[#292929]">
+        <summary className="flex h-10 cursor-pointer list-none items-center gap-2 rounded-[10px] border border-border bg-transparent px-3.5 text-[13px] font-medium text-[#292929]">
           {sort === "oldest" ? "Eski" : "Eng yangi"}
           <ChevronDown size={15} />
         </summary>
 
-        <div className="absolute right-0 top-12 z-30 w-36 rounded-xl border border-[#E5E1DB] bg-white p-1 shadow-lg">
+        <div className="absolute right-0 top-12 z-30 w-36 rounded-xl border border-border bg-background p-1 shadow-lg">
           <a
             href={newestUrl}
-            className="block rounded-lg px-3 py-2 text-[13px] hover:bg-[#F5F3F0]"
+            className="block rounded-lg px-3 py-2 text-[13px] hover:bg-muted"
           >
             Eng yangi
           </a>
 
           <a
             href={oldestUrl}
-            className="block rounded-lg px-3 py-2 text-[13px] hover:bg-[#F5F3F0]"
+            className="block rounded-lg px-3 py-2 text-[13px] hover:bg-muted"
           >
             Eski
           </a>
@@ -160,7 +160,7 @@ function CategoryNavigation({
   active?: string
 }) {
   return (
-    <nav className="scrollbar-none mt-5 flex gap-1 overflow-x-auto border-b border-[#E7E2DC] pb-3">
+    <nav className="scrollbar-none mt-5 flex gap-1 overflow-x-auto border-b border-border pb-3">
       <CategoryLink
         name="Barchasi"
         href="/posts"
@@ -202,8 +202,8 @@ function CategoryLink({
     <a
       href={href}
       className={`flex shrink-0 items-center gap-1 rounded-[9px] px-4 py-2 text-[12px] font-medium transition ${active
-          ? "border border-[#FFB58D] bg-[#FFF4ED] text-[#FF5B0A]"
-          : "border border-transparent text-[#343434] hover:bg-[#F3F0EC]"
+          ? "border border-primary/30 bg-primary/10 text-primary"
+          : "border border-transparent text-foreground hover:bg-muted"
         }`}
     >
       {name}

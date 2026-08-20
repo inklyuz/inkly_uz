@@ -36,6 +36,8 @@ import {
   useState,
 } from "react"
 
+import { toast } from "sonner"
+
 import { uploadsApi } from "@/lib/api/uploads"
 
 interface InklyEditorProps {
@@ -80,7 +82,7 @@ function ToolbarButton({
         "disabled:pointer-events-none",
         "disabled:opacity-35",
         active
-          ? "bg-[#FFF1EA] text-[#FF5A00]"
+          ? "bg-[#FFF3E8] text-[#FF6A00]"
           : "",
       ].join(" ")}
     >
@@ -309,12 +311,7 @@ export function InklyEditorV2({
       content &&
       content !== currentHTML
     ) {
-      editor.commands.setContent(
-        content,
-        {
-          emitUpdate: false,
-        },
-      )
+      editor.commands.setContent(content, false)
     }
 
     /*
@@ -410,7 +407,7 @@ export function InklyEditorV2({
       <div className="flex min-h-[560px] items-center justify-center">
         <Loader2
           size={22}
-          className="animate-spin text-[#FF5A00]"
+          className="animate-spin text-[#FF6A00]"
         />
       </div>
     )
@@ -424,10 +421,7 @@ export function InklyEditorV2({
     file: File,
   ) {
     if (!token) {
-      alert(
-        "Rasm yuklash uchun tizimga kirishingiz kerak.",
-      )
-
+      toast.error("Rasm yuklash uchun tizimga kirishingiz kerak.")
       return
     }
 
@@ -443,13 +437,11 @@ export function InklyEditorV2({
       file.size >
       5 * 1024 * 1024
     ) {
-      alert(
-        "Rasm hajmi 5MB dan oshmasligi kerak.",
-      )
-
+      toast.error("Rasm hajmi 5MB dan oshmasligi kerak.")
       return
     }
 
+    if (!editor) return
     setUploadingImage(true)
 
     try {
@@ -472,7 +464,7 @@ export function InklyEditorV2({
         error,
       )
 
-      alert(
+      toast.error(
         error instanceof Error
           ? error.message
           : "Rasm yuklashda xatolik yuz berdi.",
@@ -499,6 +491,7 @@ export function InklyEditorV2({
   ========================================================= */
 
   function setLink() {
+    if (!editor) return
     const previousUrl =
       editor.getAttributes(
         "link",
@@ -565,6 +558,7 @@ export function InklyEditorV2({
   function setHeading(
     level: 2 | 3 | 4,
   ) {
+    if (!editor) return
     editor
       .chain()
       .focus()
@@ -707,7 +701,7 @@ export function InklyEditorV2({
         <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 rounded-xl border border-[#E8E3DD] bg-white px-4 py-3 text-sm shadow-xl">
           <Loader2
             size={15}
-            className="animate-spin text-[#FF5A00]"
+            className="animate-spin text-[#FF6A00]"
           />
 
           <span>
@@ -785,7 +779,7 @@ export function InklyEditorV2({
                         level: 2,
                       },
                     )
-                      ? "bg-[#FFF1EA] text-[#FF5A00]"
+                      ? "bg-[#FFF3E8] text-[#FF6A00]"
                       : "text-[#30363B]",
                   ].join(" ")}
                 >
@@ -815,7 +809,7 @@ export function InklyEditorV2({
                         level: 3,
                       },
                     )
-                      ? "bg-[#FFF1EA] text-[#FF5A00]"
+                      ? "bg-[#FFF3E8] text-[#FF6A00]"
                       : "text-[#30363B]",
                   ].join(" ")}
                 >
@@ -845,7 +839,7 @@ export function InklyEditorV2({
                         level: 4,
                       },
                     )
-                      ? "bg-[#FFF1EA] text-[#FF5A00]"
+                      ? "bg-[#FFF3E8] text-[#FF6A00]"
                       : "text-[#30363B]",
                   ].join(" ")}
                 >

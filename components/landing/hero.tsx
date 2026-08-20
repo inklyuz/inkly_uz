@@ -29,7 +29,7 @@ export function Hero() {
   const initial = !mounted || reducedMotion ? "visible" : "hidden"
 
   return (
-    <section id="hero" aria-labelledby="hero-title" className="relative isolate overflow-hidden border-b border-[#E8E3DD] bg-[#FFF8F0] min-h-screen">
+    <section id="hero" aria-labelledby="hero-title" className="relative isolate overflow-hidden border-b border-[#E8E3DD] bg-white min-h-screen">
 
       {/* BACKGROUND BANNER — faqat lg+ da */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
@@ -37,7 +37,7 @@ export function Hero() {
       </div>
 
       {/* SOFT OVERLAY — faqat lg+ da */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-[5] lg:bg-gradient-to-r lg:from-[#FFF8F0]/92 lg:via-[#FFF8F0]/30 lg:to-transparent" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-[5] lg:bg-gradient-to-r lg:from-white/95 lg:via-white/40 lg:to-transparent" />
 
       {/* CONTENT */}
       <div className="relative mx-auto flex min-h-screen max-w-[1280px] items-center px-5 pb-16 pt-0 sm:px-7 sm:pb-20 lg:px-8 lg:pb-24">
@@ -48,8 +48,8 @@ export function Hero() {
           animate="visible"
         >
           {/* BADGE */}
-          <motion.div variants={fadeUp} className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#FF6A00]/25 bg-white/85 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#FF5A00] shadow-sm backdrop-blur-sm sm:mb-6 sm:text-[11px]">
-            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF5A00]" />
+          <motion.div variants={fadeUp} className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#FF6A00]/25 bg-white/85 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#FF6A00] shadow-sm backdrop-blur-sm sm:mb-6 sm:text-[11px]">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF6A00]" />
             O&apos;zbekistonlik mualliflar uchun
           </motion.div>
 
@@ -60,7 +60,7 @@ export function Hero() {
             Nashr qiling.
             <br />
             O&apos;zingizni{" "}
-            <span className="text-[#FF5A00]">ifoda eting.</span>
+            <span className="text-[#FF6A00]">ifoda eting.</span>
           </motion.h1>
 
           {/* DESCRIPTION */}
@@ -76,7 +76,7 @@ export function Hero() {
           {/* TRUST */}
           <motion.div variants={fadeUp} className="mt-3 flex items-center gap-2 text-[11px] leading-5 text-[#77736D] sm:mt-4">
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
-              <Check size={11} strokeWidth={2.5} className="text-[#FF5A00]" />
+              <Check size={11} strokeWidth={2.5} className="text-[#FF6A00]" />
             </span>
             <span>Bepul boshlang. Bir necha daqiqada o&apos;z sahifangizga ega bo&apos;ling.</span>
           </motion.div>

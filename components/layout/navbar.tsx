@@ -85,7 +85,7 @@ export function Navbar() {
       className={cn(
         "fixed inset-x-0 top-0 z-[100] w-full transition-all duration-300",
         scrolled
-          ? "border-b border-[#E8E3DD]/80 bg-[#FFFDFC]/90 shadow-[0_4px_20px_rgba(0,0,0,0.04)] backdrop-blur-md"
+          ? "border-b border-[#E8E3DD]/80 bg-white/90 shadow-[0_4px_20px_rgba(0,0,0,0.04)] backdrop-blur-md"
           : "bg-transparent"
       )}
     >
@@ -112,14 +112,14 @@ export function Navbar() {
                 className={cn(
                   "relative flex h-full items-center text-[13px] font-medium tracking-[-0.01em] transition-colors",
                   active
-                    ? "text-[#FF5A00]"
-                    : "text-[#1C1C1C] hover:text-[#FF5A00]"
+                    ? "text-[#FF6A00]"
+                    : "text-[#1C1C1C] hover:text-[#FF6A00]"
                 )}
               >
                 {link.label}
 
                 {active && (
-                  <span className="absolute bottom-[11px] left-0 right-0 h-[2px] rounded-full bg-[#FF5A00]" />
+                  <span className="absolute bottom-[11px] left-0 right-0 h-[2px] rounded-full bg-[#FF6A00]" />
                 )}
               </Link>
             )
@@ -130,7 +130,7 @@ export function Navbar() {
           <Link
             href="/search"
             aria-label="Qidirish"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-[#252525] transition-colors hover:bg-[#FFF3E8] hover:text-[#FF5A00]"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-[#252525] transition-colors hover:bg-[#FFF3E8] hover:text-[#FF6A00]"
           >
             <Search size={20} strokeWidth={1.8} />
           </Link>
@@ -140,14 +140,14 @@ export function Navbar() {
           ) : user ? (
             <>
               <Link href="/write">
-                <Button className="h-[38px] gap-2 rounded-[9px] bg-[#FF5A00] px-[15px] text-[12px] font-semibold text-white shadow-none hover:bg-[#E95000]">
+                <Button className="h-[38px] gap-2 rounded-[9px] bg-[#FF6A00] px-[15px] text-[12px] font-semibold text-white shadow-none hover:bg-[#E85F00]">
                   <PenLine size={14} strokeWidth={1.9} />
                   Maqola yozish
                 </Button>
               </Link>
 
               <Link
-                href={`/@${user.username}`}
+                href={user?.username ? `/@${user.username}` : "#"}
                 className="group flex items-center gap-2 rounded-lg py-1 pl-1 pr-1.5 transition-colors hover:bg-[#FFF3E8]"
               >
                 <Avatar
@@ -171,13 +171,13 @@ export function Navbar() {
             <>
               <Link
                 href="/login"
-                className="text-[13px] font-medium text-[#252525] transition-colors hover:text-[#FF5A00]"
+                className="text-[13px] font-medium text-[#252525] transition-colors hover:text-[#FF6A00]"
               >
                 Kirish
               </Link>
 
               <Link href="/register">
-                <Button className="h-[38px] rounded-[9px] bg-[#FF5A00] px-4 text-[12px] font-semibold text-white shadow-none hover:bg-[#E95000]">
+                <Button className="h-[38px] rounded-[9px] bg-[#FF6A00] px-4 text-[12px] font-semibold text-white shadow-none hover:bg-[#E85F00]">
                   Boshlash
                 </Button>
               </Link>
@@ -187,7 +187,7 @@ export function Navbar() {
 
         <div className="ml-auto flex items-center gap-2 lg:hidden">
           {user && (
-            <Link href={`/@${user.username}`} aria-label="Profilim">
+            <Link href={user?.username ? `/@${user.username}` : "#"} aria-label="Profilim">
               <Avatar
                 src={user.avatar}
                 name={user.full_name}
@@ -202,7 +202,7 @@ export function Navbar() {
             aria-expanded={open}
             aria-controls="mobile-navbar"
             aria-label="Menyu"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-[#222] transition-colors hover:bg-[#FFF3E8] hover:text-[#FF5A00]"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-[#222] transition-colors hover:bg-[#FFF3E8] hover:text-[#FF6A00]"
           >
             {open ? (
               <X size={20} strokeWidth={1.8} />
@@ -221,7 +221,7 @@ export function Navbar() {
             initial="closed"
             animate="open"
             exit="closed"
-            className="overflow-hidden border-t border-[#F0ECE7] bg-[#FFFDFC]/95 backdrop-blur-md lg:hidden"
+            className="overflow-hidden border-t border-[#F0ECE7] bg-white/95 backdrop-blur-md lg:hidden"
           >
             <nav className="mx-auto flex max-w-[1400px] flex-col px-6 py-4 sm:px-8">
               {links.map((link) => {
@@ -238,14 +238,14 @@ export function Navbar() {
                       className={cn(
                         "flex items-center justify-between rounded-xl px-4 py-3 text-[14px] font-medium transition-colors",
                         active
-                          ? "bg-[#FFF3E8] text-[#FF5A00]"
+                          ? "bg-[#FFF3E8] text-[#FF6A00]"
                           : "text-[#222] hover:bg-[#FFF8F0]"
                       )}
                     >
                       {link.label}
 
                       {active && (
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#FF5A00]" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#FF6A00]" />
                       )}
                     </Link>
                   </motion.div>
@@ -260,7 +260,7 @@ export function Navbar() {
                   <Link
                     href="/write"
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-[#FF5A00] px-4 py-3 text-[13px] font-semibold text-white hover:bg-[#E95000]"
+                    className="flex items-center justify-center gap-2 rounded-xl bg-[#FF6A00] px-4 py-3 text-[13px] font-semibold text-white hover:bg-[#E85F00]"
                   >
                     <PenLine size={15} />
                     Maqola yozish
@@ -284,7 +284,7 @@ export function Navbar() {
                   <Link
                     href="/register"
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-center rounded-xl bg-[#FF5A00] px-4 py-3 text-[13px] font-semibold text-white"
+                    className="flex items-center justify-center rounded-xl bg-[#FF6A00] px-4 py-3 text-[13px] font-semibold text-white"
                   >
                     Boshlash
                   </Link>

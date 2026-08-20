@@ -19,7 +19,7 @@ export default function ContactPage() {
       </section>
 
       {/* Main Content */}
-      <section className="border-t border-[#E8E3DD] bg-[#FAFAFA]">
+      <section className="border-t border-[#E8E3DD] bg-white">
         <div className="mx-auto max-w-4xl px-5 py-20 md:py-28">
           
           <div className="grid md:grid-cols-2 gap-8 md:gap-12">

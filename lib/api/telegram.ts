@@ -1,4 +1,6 @@
 import { apiRequest } from "./client"
+import { createSafeItemWrapper } from "./safe-wrapper"
+import type { Page } from "@/types/api"
 
 export interface TelegramVerificationStartResponse {
   verification_id: string
@@ -7,26 +9,37 @@ export interface TelegramVerificationStartResponse {
 }
 
 export interface TelegramAccountResponse {
-  telegram_user_id: number
-  username: string | null
-  first_name: string
+  uuid: string
+  telegram_user_id: string
+  telegram_username: string | null
+  first_name: string | null
   last_name: string | null
-  linked_at: string
+  photo_url: string | null
+  is_verified: boolean
+  verified_at: string | null
+  created_at: string
+  updated_at: string
 }
 
 export interface TelegramChannelResponse {
   uuid: string
-  channel_username: string
+  telegram_channel_id: string
+  username: string | null
   title: string
+  photo_url: string | null
+  status: string
+  is_active: boolean
   is_verified: boolean
+  verified_at: string | null
   created_at: string
+  updated_at: string
 }
 
 // Linking a Telegram account to an ALREADY-LOGGED-IN user's profile.
 // Distinct from `authApi.telegramStart/telegramVerify`, which is the
 // unauthenticated *login* flow used on /login/telegram.
 export const telegramApi = {
-  getAccount: (token: string) => apiRequest<TelegramAccountResponse | null>("/telegram/account", { token }),
+  getAccount: (token: string) => apiRequest<TelegramAccountResponse>("/telegram/account", { token }),
 
   unlinkAccount: (token: string) => apiRequest<void>("/telegram/account", { method: "DELETE", token }),
 
@@ -39,7 +52,12 @@ export const telegramApi = {
   completeVerification: (token: string, data: { verification_id: string; token: string }) =>
     apiRequest<TelegramAccountResponse>("/telegram/verification/complete", { method: "POST", body: data, token }),
 
-  listChannels: (token: string) => apiRequest<TelegramChannelResponse[]>("/telegram/channels", { token }),
+  listChannels: (token: string, params: { page?: number; page_size?: number } = {}) => {
+    const q = new URLSearchParams()
+    if (params.page) q.set("page", String(params.page))
+    if (params.page_size) q.set("page_size", String(params.page_size))
+    return apiRequest<Page<TelegramChannelResponse>>(`/telegram/channels?${q}`)
+  },
 
   addChannel: (token: string, channelUsername: string) =>
     apiRequest<TelegramChannelResponse>("/telegram/channels", {
@@ -54,3 +72,20 @@ export const telegramApi = {
   publishToChannel: (token: string, channelUuid: string, postUuid: string) =>
     apiRequest<void>(`/telegram/channels/${channelUuid}/posts/${postUuid}/publish`, { method: "POST", token }),
 }
+
+// ── Safe wrappers for server components ────────────────────────────────────
+
+export const getTelegramAccountSafe = createSafeItemWrapper(
+  (token: string) => telegramApi.getAccount(token),
+  { errorPrefix: "TELEGRAM_ACCOUNT" }
+)
+
+export const listTelegramChannelsSafe = createSafeItemWrapper(
+  (token: string) => telegramApi.listChannels(token),
+  { errorPrefix: "TELEGRAM_CHANNELS" }
+)
+
+export const getTelegramVerificationStatusSafe = createSafeItemWrapper(
+  (token: string) => telegramApi.verificationStatus(token),
+  { errorPrefix: "TELEGRAM_VERIFICATION_STATUS" }
+)

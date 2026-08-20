@@ -11,12 +11,12 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error(error)
+    // Xatolikni tizimga yozish uchun (faqat development log)
   }, [error])
 
   return (
     <html lang="uz">
-      <body style={{ margin: 0, backgroundColor: "#F5FBFC", fontFamily: "system-ui, sans-serif" }}>
+      <body style={{ margin: 0, backgroundColor: "#FFFFFF", fontFamily: "system-ui, sans-serif" }}>
         <main
           style={{
             minHeight: "100vh",
@@ -36,17 +36,17 @@ export default function GlobalError({
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: "16px",
-                backgroundColor: "rgba(9,60,93,0.06)",
-                color: "#093C5D",
+                backgroundColor: "rgba(255,106,0,0.08)",
+                color: "#FF6A00",
               }}
             >
               <AlertTriangle size={30} strokeWidth={1.75} />
             </div>
 
-            <h1 style={{ marginBottom: "12px", fontSize: "24px", fontWeight: 700, letterSpacing: "-0.02em", color: "#093C5D" }}>
+            <h1 style={{ marginBottom: "12px", fontSize: "24px", fontWeight: 700, letterSpacing: "-0.02em", color: "#141414" }}>
               Tizim xatoligi yuz berdi
             </h1>
-            <p style={{ marginBottom: "32px", fontSize: "16px", lineHeight: 1.6, color: "#3B7597" }}>
+            <p style={{ marginBottom: "32px", fontSize: "16px", lineHeight: 1.6, color: "#6B7280" }}>
               Ilova yuklanishida kutilmagan muammo yuzaga keldi. Iltimos, sahifani qayta yuklab ko&apos;ring.
             </p>
 
@@ -58,7 +58,7 @@ export default function GlobalError({
                 gap: "8px",
                 borderRadius: "8px",
                 border: "none",
-                backgroundColor: "#093C5D",
+                backgroundColor: "#FF6A00",
                 color: "#FFFFFF",
                 padding: "10px 24px",
                 fontSize: "14px",
@@ -71,7 +71,7 @@ export default function GlobalError({
             </button>
 
             {error?.digest && (
-              <p style={{ marginTop: "24px", fontSize: "12px", color: "#6FD1D7" }}>Xatolik kodi: {error.digest}</p>
+              <p style={{ marginTop: "24px", fontSize: "12px", color: "#9CA3AF" }}>Xatolik kodi: {error.digest}</p>
             )}
           </div>
         </main>

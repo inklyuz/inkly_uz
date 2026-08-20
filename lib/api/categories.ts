@@ -1,4 +1,5 @@
 import { apiRequest } from "./client"
+import { createSafePageWrapper, createSafeItemWrapper } from "./safe-wrapper"
 import type { CategoryPublicResponse, Page, PostListItem } from "@/types/api"
 
 export const categoriesApi = {
@@ -21,22 +22,21 @@ export const categoriesApi = {
   },
 }
 
-export async function listCategoriesSafe(
-  params: { page?: number; page_size?: number; search?: string } = {}
-): Promise<Page<CategoryPublicResponse>> {
-  try {
-    return await categoriesApi.list(params)
-  } catch (error) {
-    if (process.env.NODE_ENV !== "production") console.error("listCategoriesSafe error:", error)
-    return { items: [], total: 0, page: 1, page_size: params.page_size ?? 50, pages: 0 }
-  }
-}
+// ── Server component uchun safe o'ramlar (unified pattern) ──────────────────
 
-export async function getCategorySafe(slug: string): Promise<CategoryPublicResponse | null> {
-  try {
-    return await categoriesApi.get(slug)
-  } catch (error) {
-    if (process.env.NODE_ENV !== "production") console.error("getCategorySafe error:", error)
-    return null
-  }
-}
+export const listCategoriesSafe = createSafePageWrapper(
+  (params: { page?: number; page_size?: number; search?: string } = {}) => categoriesApi.list(params),
+  50,
+  { errorPrefix: "CATEGORIES_LIST" }
+)
+
+export const getCategorySafe = createSafeItemWrapper(
+  (slug: string) => categoriesApi.get(slug),
+  { errorPrefix: "CATEGORY_GET" }
+)
+
+export const getCategoryPostsSafe = createSafePageWrapper(
+  (slug: string, params: { page?: number; page_size?: number } = {}) => categoriesApi.getPosts(slug, params),
+  20,
+  { errorPrefix: "CATEGORY_POSTS" }
+)

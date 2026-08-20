@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import {
   LayoutDashboard, PenLine, Settings, BookOpen,
-  LogOut, ChevronRight, ExternalLink,
+  LogOut, ChevronRight, ExternalLink, Send,
 } from "lucide-react"
 import { LogoMark } from "@/components/ui/logo"
 import { Avatar } from "@/components/ui/avatar"
@@ -16,6 +16,7 @@ const navItems = [
   { href: "/write",              icon: PenLine,         label: "Yozish",       badge: "new" },
   { href: "/dashboard/posts",    icon: BookOpen,        label: "Maqolalarim"  },
   { href: "/settings/profile",   icon: Settings,        label: "Sozlamalar"   },
+  { href: "/telegram/account",   icon: Send,            label: "Telegram"     },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

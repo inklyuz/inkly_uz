@@ -49,7 +49,7 @@ export function PostView({ posts }: PostViewProps) {
               transition-colors
               ${
                 view === "list"
-                  ? "bg-[#FFF1E8] text-[#FF5B0A]"
+                  ? "bg-[#FFF3E8] text-[#FF6A00]"
                   : "text-[#777] hover:bg-[#F7F5F2]"
               }
             `}
@@ -75,7 +75,7 @@ export function PostView({ posts }: PostViewProps) {
               transition-colors
               ${
                 view === "grid"
-                  ? "bg-[#FFF1E8] text-[#FF5B0A]"
+                  ? "bg-[#FFF3E8] text-[#FF6A00]"
                   : "text-[#777] hover:bg-[#F7F5F2]"
               }
             `}

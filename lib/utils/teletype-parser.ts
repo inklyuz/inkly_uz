@@ -1,7 +1,24 @@
 /**
- * Teletype'dan keladigan <document> formatidagi XML/HTML ni 
+ * Teletype'dan keladigan <document> formatidagi XML/HTML ni
  * bizning TipTap va tizimimiz tushunadigan standart HTML formatiga o'zgartiradi.
+ * XSS himoya uchun DOMPurify bilan sanitizatsiya qilinadi.
  */
+import DOMPurify from "isomorphic-dompurify"
+
+const ALLOWED_TAGS = [
+  "p", "br", "strong", "em", "u", "s", "code", "pre", "blockquote",
+  "h1", "h2", "h3", "h4", "h5", "h6",
+  "ul", "ol", "li",
+  "a", "img", "figure", "figcaption",
+  "div", "span",
+  "hr", "b", "i",
+]
+
+const ALLOWED_ATTR = [
+  "href", "src", "alt", "title", "class", "id",
+  "target", "rel",
+]
+
 export function parseTeletypeToHtml(text: string): string {
   if (!text) return ""
 
@@ -12,7 +29,7 @@ export function parseTeletypeToHtml(text: string): string {
   html = html.replace(/<\/document>/g, '</div>')
 
   // 2. <image src="..."><caption>...</caption></image> ni <figure><img><figcaption></figure> ga o'tkazish
-  html = html.replace(/<image([^>]*)>([\s\S]*?)<\/image>/g, (match, attrs, content) => {
+  html = html.replace(/<image([^>]*)>([\s\S]*?)<\/image>/g, (_match, attrs, content) => {
     const srcMatch = attrs.match(/src="([^"]+)"/)
     const src = srcMatch ? srcMatch[1] : ""
 
@@ -36,5 +53,13 @@ export function parseTeletypeToHtml(text: string): string {
   // 4. Anchor attributlarini tozalash
   html = html.replace(/\sanchor="[^"]+"/g, '')
 
-  return html
+  // 5. XSS himoya: DOMPurify bilan sanitizatsiya
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS,
+    ALLOWED_ATTR,
+    ALLOW_DATA_ATTR: false,
+    RETURN_DOM: false,
+    RETURN_DOM_FRAGMENT: false,
+    RETURN_TRUSTED_TYPE: false,
+  })
 }

@@ -94,7 +94,7 @@ function CategoriesCard({
             {categories.length > 8 && (
                 <Link
                     href="/categories"
-                    className="mt-3 flex items-center gap-1 text-sm font-medium text-[#FF5A00] transition-colors hover:text-[#E94F00]"
+                    className="mt-3 flex items-center gap-1 text-sm font-medium text-[#FF6A00] transition-colors hover:text-[#E94F00]"
                 >
                     Barcha kategoriyalar
                     <ArrowUpRight size={14} />
@@ -125,7 +125,7 @@ function CategoryItem({
                 "rounded-lg px-2 py-1.5 text-sm",
                 "transition-colors",
                 active
-                    ? "bg-[#FFF0E8] text-[#FF5A00]"
+                    ? "bg-[#FFF3E8] text-[#FF6A00]"
                     : "text-[#30343B] hover:bg-[#F8F7F5]",
             ].join(" ")}
         >
@@ -152,7 +152,7 @@ function CategoryItem({
                         "rounded-full px-2 py-0.5",
                         "text-[11px] font-medium",
                         active
-                            ? "bg-white text-[#FF5A00]"
+                            ? "bg-white text-[#FF6A00]"
                             : "bg-[#F4F4F3] text-[#6B7280]",
                     ].join(" ")}
                 >
@@ -169,7 +169,7 @@ function TrendingCard() {
             <div className="mb-4 flex items-center gap-2">
                 <TrendingUp
                     size={17}
-                    className="text-[#FF5A00]"
+                    className="text-[#FF6A00]"
                 />
 
                 <h2 className="text-base font-semibold tracking-tight text-[#141414]">
@@ -181,12 +181,12 @@ function TrendingCard() {
                 href="/posts"
                 className="group flex gap-3"
             >
-                <span className="w-4 shrink-0 text-sm font-medium text-[#FF5A00]">
+                <span className="w-4 shrink-0 text-sm font-medium text-[#FF6A00]">
                     1
                 </span>
 
                 <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-[#30343B] group-hover:text-[#FF5A00]">
+                    <p className="truncate text-sm font-medium text-[#30343B] group-hover:text-[#FF6A00]">
                         Test
                     </p>
 
@@ -201,7 +201,7 @@ function TrendingCard() {
 
 function SubscribeCard() {
     return (
-        <section className="rounded-xl border border-[#F3D5C2] bg-[#FFF1E8] p-4">
+        <section className="rounded-xl border border-[#FFE8D0] bg-[#FFF3E8] p-4">
             <p className="text-sm font-medium leading-5 text-[#30343B]">
                 Yangi maqolalar va imkoniyatlar haqida
                 birinchilardan bo‘lib biling.
@@ -226,7 +226,7 @@ function SubscribeCard() {
                     className={[
                         "flex h-10 items-center",
                         "justify-center gap-2",
-                        "rounded-lg bg-[#FF5A00]",
+                        "rounded-lg bg-[#FF6A00]",
                         "px-4 text-sm font-semibold",
                         "text-white transition-colors",
                         "hover:bg-[#E94F00]",

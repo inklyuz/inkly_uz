@@ -133,20 +133,19 @@ export default async function CreatorsPage({
   })
 
   /*
-   * Hozircha statistikalar.
-   * Keyinchalik creator API'dan olinadi.
+   * Real stats from posts data.
    */
   const stats = {
-    creators: "1,243+",
-    posts: "5,412+",
-    views: "250K+",
-    likes: "18K+",
+    creators: String(creatorMap.size),
+    posts: String(postsPage.total),
+    views: String(postsPage.items.reduce((sum, p) => sum + (p.views_count ?? 0), 0)),
+    likes: String(postsPage.items.reduce((sum, p) => sum + (p.likes_count ?? 0), 0)),
   }
 
   const recommendedCreator = creators[0] ?? null
 
   return (
-    <main className="min-h-screen bg-[#FFFDFC] pt-[76px]">
+    <main className="min-h-screen bg-white pt-[76px]">
       <div className="mx-auto w-full max-w-[1280px] px-5 py-8 sm:px-7 lg:px-8 lg:py-9">
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_290px]">
           {/* =========================================================
@@ -235,8 +234,8 @@ export default async function CreatorsPage({
                     rounded-md
                     text-[#56616D]
                     transition
-                    hover:bg-[#FFF3EA]
-                    hover:text-[#FF5A00]
+                    hover:bg-[#FFF3E8]
+                    hover:text-[#FF6A00]
                   "
                 >
                   <Search size={16} strokeWidth={1.8} />
@@ -280,11 +279,11 @@ export default async function CreatorsPage({
             )}
 
             {/* Pagination */}
-            {postsPage.pages > 1 && (
+            {postsPage.total_pages > 1 && (
               <div className="mt-6 flex justify-center">
                 <CreatorsPagination
                   page={postsPage.page}
-                  totalPages={postsPage.pages}
+                  totalPages={postsPage.total_pages}
                   search={search}
                   category={category}
                   sort={sort}
@@ -404,7 +403,7 @@ function CreatorSort({
             py-2
             text-[12px]
             text-[#333]
-            hover:bg-[#FFF3EA]
+            hover:bg-[#FFF3E8]
           "
         >
           Eng faol
@@ -419,7 +418,7 @@ function CreatorSort({
             py-2
             text-[12px]
             text-[#333]
-            hover:bg-[#FFF3EA]
+            hover:bg-[#FFF3E8]
           "
         >
           Eng yangi
@@ -487,8 +486,8 @@ function CategoryNavigation({
             className={[
               "flex h-[35px] shrink-0 items-center rounded-[9px] border px-4 text-[12px] font-medium transition",
               isActive
-                ? "border-[#FF9A68] bg-[#FFF8F3] text-[#FF5A00]"
-                : "border-[#E8E4DE] bg-white text-[#292929] hover:border-[#FFB58D] hover:bg-[#FFF8F3]",
+                ? "border-[#FF9A68] bg-[#FFF3E8] text-[#FF6A00]"
+                : "border-[#E8E4DE] bg-white text-[#292929] hover:border-[#FFB58D] hover:bg-[#FFF3E8]",
             ].join(" ")}
           >
             {item}
@@ -588,7 +587,7 @@ function CreatorStats({
             <Icon
               size={27}
               strokeWidth={1.8}
-              className="shrink-0 text-[#FF5A00]"
+              className="shrink-0 text-[#FF6A00]"
             />
 
             <div>
@@ -673,7 +672,7 @@ function CreatorCard({
                 text-[14px]
                 font-bold
                 text-[#191919]
-                hover:text-[#FF5A00]
+                hover:text-[#FF6A00]
               "
             >
               {creator.full_name}
@@ -689,7 +688,7 @@ function CreatorCard({
                   items-center
                   justify-center
                   rounded-full
-                  bg-[#FF5A00]
+                  bg-[#FF6A00]
                 "
               >
                 <Check
@@ -749,9 +748,9 @@ function CreatorCard({
             border-[#FFBFA1]
             text-[11px]
             font-semibold
-            text-[#FF5A00]
+            text-[#FF6A00]
             transition
-            hover:bg-[#FFF4ED]
+            hover:bg-[#FFF3E8]
           "
         >
           Profilni ko&apos;rish
@@ -850,7 +849,7 @@ function CreatorFilters({
         <label className="flex cursor-pointer items-start gap-2">
           <input
             type="checkbox"
-            className="mt-0.5 h-3.5 w-3.5 accent-[#FF5A00]"
+            className="mt-0.5 h-3.5 w-3.5 accent-[#FF6A00]"
           />
 
           <span>
@@ -964,7 +963,7 @@ function FilterSelect({
                   px-2.5
                   py-2
                   text-[11px]
-                  hover:bg-[#FFF3EA]
+                  hover:bg-[#FFF3E8]
                 "
               >
                 {option}
@@ -992,7 +991,7 @@ function RecommendedCreator({
         rounded-xl
         border
         border-[#F1D7C8]
-        bg-[#FFF5ED]
+        bg-[#FFF3E8]
         p-5
       "
     >
@@ -1003,7 +1002,7 @@ function RecommendedCreator({
 
         <span
           aria-hidden="true"
-          className="text-[20px] font-bold text-[#FF5A00]"
+          className="text-[20px] font-bold text-[#FF6A00]"
         >
           ✳
         </span>
@@ -1057,12 +1056,12 @@ function RecommendedCreator({
             items-center
             justify-center
             rounded-[8px]
-            bg-[#FF5A00]
+            bg-[#FF6A00]
             text-[11px]
             font-semibold
             text-white
             transition
-            hover:bg-[#E95000]
+            hover:bg-[#E85F00]
           "
         >
           Profilni ko&apos;rish
@@ -1111,9 +1110,9 @@ function JoinCreatorCard() {
           px-4
           text-[11px]
           font-semibold
-          text-[#FF5A00]
+          text-[#FF6A00]
           transition
-          hover:bg-[#FFF3EA]
+          hover:bg-[#FFF3E8]
         "
       >
         Boshlash
@@ -1172,7 +1171,7 @@ function EmptyCreators({
             h-9
             items-center
             rounded-lg
-            bg-[#FF5A00]
+            bg-[#FF6A00]
             px-4
             text-[12px]
             font-semibold
@@ -1265,7 +1264,7 @@ function CreatorsPagination({
           "flex h-[32px] w-[32px] items-center justify-center rounded-[8px] border border-[#E6E1DB] bg-white",
           page <= 1
             ? "pointer-events-none opacity-40"
-            : "hover:bg-[#FFF4ED]",
+            : "hover:bg-[#FFF3E8]",
         ].join(" ")}
       >
         <ChevronLeft size={15} />
@@ -1294,8 +1293,8 @@ function CreatorsPagination({
             className={[
               "flex h-[32px] min-w-[32px] items-center justify-center rounded-[8px] px-2 text-[11px] font-medium transition",
               item === page
-                ? "bg-[#FF5A00] text-white"
-                : "border border-transparent text-[#242424] hover:bg-[#FFF3EA]",
+                ? "bg-[#FF6A00] text-white"
+                : "border border-transparent text-[#242424] hover:bg-[#FFF3E8]",
             ].join(" ")}
           >
             {item}
@@ -1312,7 +1311,7 @@ function CreatorsPagination({
           "flex h-[32px] w-[32px] items-center justify-center rounded-[8px] border border-[#E6E1DB] bg-white",
           page >= totalPages
             ? "pointer-events-none opacity-40"
-            : "hover:bg-[#FFF4ED]",
+            : "hover:bg-[#FFF3E8]",
         ].join(" ")}
       >
         <ChevronRight size={15} />

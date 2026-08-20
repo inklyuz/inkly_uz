@@ -1,4 +1,5 @@
 import { apiRequest } from "./client"
+import { createSafeItemWrapper } from "./safe-wrapper"
 import type { UserMeResponse, UserPublicResponse } from "@/types/api"
 
 export const usersApi = {
@@ -65,12 +66,19 @@ export const usersApi = {
     apiRequest<void>("/users/me", { method: "DELETE", token }),
 }
 
-export async function getUserSafe(username: string): Promise<UserPublicResponse | null> {
-  const clean = username.replace(/^@/, "").toLowerCase()
-  try {
-    return await usersApi.getPublic(clean)
-  } catch (error) {
-    if (process.env.NODE_ENV !== "production") console.error("getUserSafe error:", error)
-    return null
-  }
-}
+// ── Server component uchun safe o'ramlar (unified pattern) ──────────────────
+
+export const getUserSafe = createSafeItemWrapper(
+  (username: string) => usersApi.getPublic(username),
+  { errorPrefix: "USER_GET" }
+)
+
+export const getMeSafe = createSafeItemWrapper(
+  (token: string) => usersApi.getMe(token),
+  { errorPrefix: "USER_ME" }
+)
+
+export const checkUsernameSafe = createSafeItemWrapper(
+  (username: string) => usersApi.checkUsername(username),
+  { errorPrefix: "USERNAME_CHECK" }
+)

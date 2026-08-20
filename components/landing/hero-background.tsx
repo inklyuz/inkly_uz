@@ -64,7 +64,7 @@ export function HeroBackground() {
           borderRadius: "60px",
           transform: "rotate(-14deg)",
           background:
-            "linear-gradient(135deg, rgba(255,233,214,0.60) 0%, rgba(255,249,243,0.30) 50%, transparent 70%)",
+            "linear-gradient(135deg, rgba(255,233,214,0.50) 0%, rgba(255,255,255,0.20) 50%, transparent 70%)",
           filter: "blur(28px)",
           opacity: 0.8,
         }}

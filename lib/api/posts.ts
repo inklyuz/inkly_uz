@@ -1,4 +1,5 @@
 import { apiRequest } from "./client"
+import { createSafePageWrapper, createSafeItemWrapper } from "./safe-wrapper"
 import type {
   CommentResponse,
   Page,
@@ -147,31 +148,26 @@ export const postsApi = {
     apiRequest<PostResponse>(`/posts/me/${uuid}/unarchive`, { method: "POST", token }),
 }
 
-// ── Server component uchun safe o'ramlar ──────────────────────────────────
+// ── Server component uchun safe o'ramlar (unified pattern) ──────────────────
 
-export async function listPostsSafe(params: ListPostsParams = {}): Promise<Page<PostListItem>> {
-  try {
-    return await postsApi.list(params)
-  } catch (error) {
-    if (process.env.NODE_ENV !== "production") console.error("listPostsSafe error:", error)
-    return { items: [], total: 0, page: params.page ?? 1, page_size: params.page_size ?? 20, pages: 0 }
-  }
-}
+export const listPostsSafe = createSafePageWrapper(
+  (params: ListPostsParams = {}) => postsApi.list(params),
+  20,
+  { errorPrefix: "POSTS_LIST" }
+)
 
-export async function getPostSafe(slug: string, token?: string): Promise<PostResponse | null> {
-  try {
-    return await postsApi.get(slug, token)
-  } catch (error) {
-    if (process.env.NODE_ENV !== "production") console.error("getPostSafe error:", error)
-    return null
-  }
-}
+export const getPostSafe = createSafeItemWrapper(
+  (slug: string, token?: string) => postsApi.get(slug, token),
+  { errorPrefix: "POST_GET" }
+)
 
-export async function getCommentsSafe(slug: string): Promise<Page<CommentResponse>> {
-  try {
-    return await postsApi.getComments(slug)
-  } catch (error) {
-    if (process.env.NODE_ENV !== "production") console.error("getCommentsSafe error:", error)
-    return { items: [], total: 0, page: 1, page_size: 20, pages: 0 }
-  }
-}
+export const getCommentsSafe = createSafePageWrapper(
+  (slug: string) => postsApi.getComments(slug),
+  20,
+  { errorPrefix: "COMMENTS_LIST" }
+)
+
+export const getPostStatsSafe = createSafeItemWrapper(
+  (slug: string, token?: string) => postsApi.getStats(slug, token),
+  { errorPrefix: "POST_STATS" }
+)

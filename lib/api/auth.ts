@@ -1,4 +1,5 @@
 import { apiRequest } from "./client"
+import { createSafeItemWrapper } from "./safe-wrapper"
 import type { SessionOut, TokenPair, UserMeResponse } from "@/types/api"
 
 export const authApi = {
@@ -59,6 +60,20 @@ export const authApi = {
     hash: string
   }) => apiRequest<{ tokens: TokenPair }>("/auth/telegram", { method: "POST", body: data }),
 
+  // ── Telegram Bot fallback login ──────────────────────────────────────────
+  telegramBotStart: () =>
+    apiRequest<{
+      verification_id: string
+      token: string
+      deep_link: string | null
+      expires_at: string
+    }>("/auth/telegram/bot/start", { method: "POST", body: {} }),
+
+  telegramBotCallback: (token: string) =>
+    apiRequest<{ tokens: TokenPair }>(
+      `/auth/telegram/bot/callback?token=${encodeURIComponent(token)}`,
+    ),
+
   // ── Provider ulash / uzish ────────────────────────────────────────────────
   linkGoogleStart: (token: string) =>
     apiRequest<{ authorization_url: string; state: string }>("/auth/link/google", { token }),
@@ -79,3 +94,15 @@ export const authApi = {
   deleteSession: (token: string, sessionId: string) =>
     apiRequest<void>(`/auth/sessions/${sessionId}`, { method: "DELETE", token }),
 }
+
+// ── Safe wrappers for server components ────────────────────────────────────
+
+export const getSessionsSafe = createSafeItemWrapper(
+  (token: string) => authApi.getSessions(token),
+  { errorPrefix: "AUTH_SESSIONS" }
+)
+
+export const meSafe = createSafeItemWrapper(
+  (token: string) => authApi.me(token),
+  { errorPrefix: "AUTH_ME" }
+)

@@ -97,7 +97,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
       {/* Muallif bio */}
       {author?.bio && (
-        <div className="mt-12 rounded-2xl border border-[#E8E3DD] bg-[#FFF9F3] p-6">
+        <div className="mt-12 rounded-2xl border border-[#E8E3DD] bg-[#FFF3E8] p-6">
           <Link href={`/@${author.username}`} className="flex items-center gap-3 mb-3">
             <Avatar src={author.avatar} name={author.full_name} size={48} />
             <div>

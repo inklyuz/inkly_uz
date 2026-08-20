@@ -19,7 +19,7 @@ export default function PrivacyPage() {
       </section>
 
       {/* Main Content */}
-      <section className="border-t border-[#E8E3DD] bg-[#FAFAFA]">
+      <section className="border-t border-[#E8E3DD] bg-white">
         <div className="mx-auto max-w-4xl px-5 py-20 flex flex-col md:flex-row gap-12">
           
           {/* Sidebar / Quick Links (Hidden on small screens) */}

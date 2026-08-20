@@ -25,10 +25,7 @@ import {
 
 import {
   Github,
-  Instagram,
-  Telegram,
   Twitter,
-  Youtube,
 } from "@/components/ui/brand-icons"
 
 import { Avatar } from "@/components/ui/avatar"
@@ -48,17 +45,20 @@ interface ProfilePageProps {
 export default async function ProfilePage({
   params,
 }: ProfilePageProps) {
+
   const { username: rawUsername } = await params
   const username = decodeURIComponent(rawUsername).replace(/^@/, "")
+
+  // Fayl kengaytmali yoki tizim yo'llari — darhol 404
+  if (/\.[a-zA-Z0-9]{1,5}$/.test(username) || username.startsWith("_")) {
+    notFound()
+  }
 
   const user =
     (await getUserSafe(username)) ??
     (await getUserSafe(`@${username}`))
 
-  if (!user) {
-    notFound()
-  }
-
+  if (!user) notFound()
   const postsData = await listPostsSafe({
     author: user.username,
     page_size: 12,
@@ -67,7 +67,7 @@ export default async function ProfilePage({
   const articleCount = postsData.total
 
   return (
-    <main className="min-h-screen bg-[#FFFDFC] pt-[76px]">
+    <main className="min-h-screen bg-white pt-[76px]">
       {/* =========================================================
           PAGE
       ========================================================= */}
@@ -79,7 +79,7 @@ export default async function ProfilePage({
         <div className="flex h-[58px] items-center gap-2 text-[12px] text-[#77736C]">
           <Link
             href="/"
-            className="transition hover:text-[#FF5A00]"
+            className="transition hover:text-[#FF6A00]"
           >
             Bosh sahifa
           </Link>
@@ -95,19 +95,7 @@ export default async function ProfilePage({
             PROFILE HERO
         ======================================================== */}
 
-        <section className="relative min-h-[274px] overflow-hidden rounded-[19px] border border-[#F2D6C3] bg-[#FFF1E4]">
-
-          {/* Background decoration */}
-
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute -right-[70px] -top-[160px] h-[480px] w-[650px] rounded-full bg-[#FFF9F4] opacity-90" />
-
-            <div className="absolute right-[280px] -top-[100px] h-[430px] w-[430px] rounded-full border-[90px] border-[#FCE7D6] opacity-50" />
-
-            <div className="absolute right-[120px] bottom-[-230px] h-[520px] w-[520px] rounded-full border-[100px] border-[#F9DDC9] opacity-40" />
-
-            <div className="absolute right-[45px] top-[42px] h-[210px] w-[210px] rounded-full bg-[#FFF8F1] opacity-70" />
-          </div>
+        <section className="relative min-h-[274px] overflow-hidden rounded-[19px] border border-[#E8E3DD] bg-white">
 
           <div className="relative z-10 flex min-h-[274px] items-center px-7 py-8 sm:px-10 lg:px-11">
 
@@ -141,7 +129,7 @@ export default async function ProfilePage({
                   {user.full_name}
                 </span>
 
-                <span className="rounded-[6px] border border-[#FFB891] bg-[#FFF0E5] px-2.5 py-1 text-[11px] font-semibold text-[#FF5A00]">
+                <span className="rounded-[6px] border border-[#FFB891] bg-[#FFF3E8] px-2.5 py-1 text-[11px] font-semibold text-[#FF6A00]">
                   Yozuvchi
                 </span>
 
@@ -151,8 +139,7 @@ export default async function ProfilePage({
               </div>
 
               <p className="mt-4 max-w-[610px] text-[14px] leading-[1.7] text-[#343A40]">
-                {user.bio ||
-                  "Texnologiya, dasturlash va mahsuldorlik haqida yozaman. Fikr almashish va o‘rganish — mening hayot tarzım."}
+                {user.bio || "Haqida ma'lumot kiritilmagan."}
               </p>
 
               {/* Social buttons */}
@@ -163,7 +150,7 @@ export default async function ProfilePage({
                     href={`https://t.me/${user.socials.telegram}`}
                     label="Telegram"
                   >
-                    <Telegram size={17} />
+                    <Send size={17} />
                   </SocialButton>
                 )}
 
@@ -178,28 +165,10 @@ export default async function ProfilePage({
 
                 {user.socials?.twitter && (
                   <SocialButton
-                    href={`https://x.com/${user.socials.twitter}`}
-                    label="Twitter / X"
+                    href={`https://twitter.com/${user.socials.twitter}`}
+                    label="Twitter"
                   >
                     <Twitter size={17} />
-                  </SocialButton>
-                )}
-
-                {user.socials?.youtube && (
-                  <SocialButton
-                    href={`https://youtube.com/@${user.socials.youtube}`}
-                    label="YouTube"
-                  >
-                    <Youtube size={17} />
-                  </SocialButton>
-                )}
-
-                {user.socials?.instagram && (
-                  <SocialButton
-                    href={`https://instagram.com/${user.socials.instagram}`}
-                    label="Instagram"
-                  >
-                    <Instagram size={17} />
                   </SocialButton>
                 )}
               </div>
@@ -209,7 +178,7 @@ export default async function ProfilePage({
 
             <div className="pointer-events-none absolute right-8 top-1/2 hidden -translate-y-1/2 lg:block">
               <div className="relative flex h-[190px] w-[190px] items-center justify-center">
-                <div className="absolute h-[125px] w-[125px] rotate-[12deg] rounded-[25%] bg-[#FF6500] opacity-95 [clip-path:polygon(45%_0%,55%_0%,61%_30%,82%_10%,89%_18%,70%_39%,100%_45%,100%_55%,70%_61%,89%_82%,82%_89%,61%_70%,55%_100%,45%_100%,39%_70%,18%_89%,10%_82%,30%_61%,0%_55%,0%_45%,30%_39%,10%_18%,18%_10%,39%_30%)]" />
+                <div className="absolute h-[125px] w-[125px] rotate-[12deg] rounded-[25%] bg-[#FF6A00] opacity-95 [clip-path:polygon(45%_0%,55%_0%,61%_30%,82%_10%,89%_18%,70%_39%,100%_45%,100%_55%,70%_61%,89%_82%,82%_89%,61%_70%,55%_100%,45%_100%,39%_70%,18%_89%,10%_82%,30%_61%,0%_55%,0%_45%,30%_39%,10%_18%,18%_10%,39%_30%)]" />
               </div>
             </div>
           </div>
@@ -234,20 +203,6 @@ export default async function ProfilePage({
               </ProfileTab>
 
               <ProfileTab
-                href="#saved"
-                icon={<Bookmark size={17} strokeWidth={1.8} />}
-              >
-                Saqlanganlar
-              </ProfileTab>
-
-              <ProfileTab
-                href="#liked"
-                icon={<Heart size={17} strokeWidth={1.8} />}
-              >
-                Yoqtirilganlar
-              </ProfileTab>
-
-              <ProfileTab
                 href="#about"
                 icon={<UserRound size={17} strokeWidth={1.8} />}
               >
@@ -256,28 +211,20 @@ export default async function ProfilePage({
             </nav>
 
             <div className="ml-4 hidden items-center gap-2 sm:flex">
-
               <button
                 type="button"
-                className="flex h-[34px] w-[38px] items-center justify-center rounded-[8px] border border-[#E6E1DB] bg-white text-[#333] transition hover:bg-[#FFF7F1]"
-              >
-                <MoreHorizontal size={18} />
-              </button>
-
-              <button
-                type="button"
-                className="flex h-[34px] items-center justify-center rounded-[8px] border border-[#FFB997] px-4 text-[11px] font-semibold text-[#FF5A00] transition hover:bg-[#FFF5ED]"
-              >
-                Obuna bo‘lish
-              </button>
-
-              <button
-                type="button"
-                className="flex h-[34px] w-[38px] items-center justify-center rounded-[8px] border border-[#E6E1DB] bg-white text-[#333] transition hover:bg-[#FFF7F1]"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(window.location.href)
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                aria-label="Havolani nusxalash"
+                className="flex h-[34px] w-[38px] items-center justify-center rounded-[8px] border border-[#E6E1DB] bg-white text-[#333] transition hover:bg-[#FFF3E8]"
               >
                 <Share2 size={16} />
               </button>
-
             </div>
           </div>
 
@@ -324,20 +271,6 @@ export default async function ProfilePage({
 
                 </div>
               )}
-
-              {/* Load more */}
-
-              {postsData.items.length > 5 && (
-                <div className="mt-3 flex justify-center">
-                  <button
-                    type="button"
-                    className="flex h-[35px] items-center gap-2 rounded-[9px] border border-[#E7E0D8] bg-white px-6 text-[11px] font-semibold text-[#292929] transition hover:bg-[#FFF8F2]"
-                  >
-                    Yana yuklash
-                    <ChevronDown size={14} />
-                  </button>
-                </div>
-              )}
             </div>
 
             {/* =================================================
@@ -350,7 +283,7 @@ export default async function ProfilePage({
 
               <div
                 id="about"
-                className="rounded-[14px] border border-[#EEE7DE] bg-[#FFFDFB] p-4"
+                className="rounded-[14px] border border-[#EEE7DE] bg-white p-4"
               >
                 <div className="flex items-center gap-2">
                   <UserRound
@@ -391,7 +324,7 @@ export default async function ProfilePage({
                 </div>
               </div>
 
-              {/* Stats */}
+              {/* Stats - Real data only (article count from API) */}
 
               <div className="grid grid-cols-3 overflow-hidden rounded-[14px] border border-[#EEE7DE] bg-white">
 
@@ -401,47 +334,17 @@ export default async function ProfilePage({
                 />
 
                 <MiniStat
-                  value="12.4K"
+                  value={postsData.items.reduce((sum, p) => sum + (p.views_count ?? 0), 0)}
                   label="O‘qishlar"
                   bordered
                 />
 
                 <MiniStat
-                  value="1.2K"
+                  value={postsData.items.reduce((sum, p) => sum + (p.likes_count ?? 0), 0)}
                   label="Yoqtirilganlar"
                   bordered
                 />
 
-              </div>
-
-              {/* Subscribe */}
-
-              <div className="rounded-[14px] border border-[#EEE7DE] bg-white p-4">
-
-                <h3 className="text-[15px] font-bold text-[#202020]">
-                  Obuna bo‘ling
-                </h3>
-
-                <p className="mt-2 text-[11px] leading-5 text-[#626A72]">
-                  Yangi maqolalar va fikrlarim haqida
-                  birinchi bo‘lib xabardor bo‘ling.
-                </p>
-
-                <form className="mt-3">
-                  <input
-                    type="email"
-                    placeholder="Email manzilingiz"
-                    className="h-[34px] w-full rounded-[7px] border border-[#E3DED7] bg-white px-3 text-[11px] outline-none placeholder:text-[#999]"
-                  />
-
-                  <button
-                    type="submit"
-                    className="mt-2 flex h-[34px] w-full items-center justify-center gap-2 rounded-[7px] bg-[#FF5A00] text-[11px] font-semibold text-white transition hover:bg-[#EA5200]"
-                  >
-                    Obuna bo‘lish
-                    <Send size={13} />
-                  </button>
-                </form>
               </div>
 
               {/* Categories */}
@@ -481,7 +384,7 @@ function SocialButton({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="flex h-[35px] w-[35px] items-center justify-center rounded-full border border-[#E7DFD6] bg-white/80 text-[#252B31] transition hover:border-[#FFB58F] hover:bg-white hover:text-[#FF5A00]"
+      className="flex h-[35px] w-[35px] items-center justify-center rounded-full border border-[#E7DFD6] bg-white/80 text-[#252B31] transition hover:border-[#FFB58F] hover:bg-white hover:text-[#FF6A00]"
     >
       {children}
     </a>
@@ -509,15 +412,15 @@ function ProfileTab({
       className={[
         "relative flex h-[54px] shrink-0 items-center gap-2 text-[11px] font-medium transition",
         active
-          ? "font-semibold text-[#FF5A00]"
-          : "text-[#525960] hover:text-[#FF5A00]",
+          ? "font-semibold text-[#FF6A00]"
+          : "text-[#525960] hover:text-[#FF6A00]",
       ].join(" ")}
     >
       {icon}
       {children}
 
       {active && (
-        <span className="absolute bottom-[-1px] left-0 right-0 h-[2px] rounded-full bg-[#FF5A00]" />
+        <span className="absolute bottom-[-1px] left-0 right-0 h-[2px] rounded-full bg-[#FF6A00]" />
       )}
     </a>
   )
@@ -565,7 +468,7 @@ function ProfilePostCard({
 
       <div className="flex min-w-0 flex-1 flex-col py-1">
 
-        <h3 className="line-clamp-2 text-[17px] font-bold leading-[1.35] tracking-[-0.025em] text-[#151B20] transition group-hover:text-[#FF5A00]">
+        <h3 className="line-clamp-2 text-[17px] font-bold leading-[1.35] tracking-[-0.025em] text-[#151B20] transition group-hover:text-[#FF6A00]">
           {post.title || "Nomsiz maqola"}
         </h3>
 
@@ -684,7 +587,7 @@ function CategoriesSidebar() {
             className="flex items-center justify-between"
           >
             <div className="flex items-center gap-2">
-              <span className="flex h-5 w-5 items-center justify-center rounded-[6px] bg-[#FFF1E6] text-[#FF6500]">
+              <span className="flex h-5 w-5 items-center justify-center rounded-[6px] bg-[#FFF3E8] text-[#FF6A00]">
                 <Sparkles size={11} />
               </span>
 
@@ -748,7 +651,7 @@ function PopularPosts({
             </div>
 
             <div className="min-w-0">
-              <p className="line-clamp-2 text-[9px] font-semibold leading-4 text-[#24282C] group-hover:text-[#FF5A00]">
+              <p className="line-clamp-2 text-[9px] font-semibold leading-4 text-[#24282C] group-hover:text-[#FF6A00]">
                 {post.title || "Nomsiz maqola"}
               </p>
 
@@ -774,7 +677,7 @@ function EmptyArticles() {
   return (
     <div className="rounded-[12px] border border-[#EEE7DE] bg-white p-14 text-center">
 
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF0E5] text-[#FF6500]">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#FFF3E8] text-[#FF6A00]">
         <PenLine size={21} />
       </div>
 

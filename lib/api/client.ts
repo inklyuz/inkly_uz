@@ -1,6 +1,21 @@
 export const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000/api/v1"
 const TOKEN_KEY = "inkly_token"
 
+function getTokenStorage(): Storage | null {
+  if (typeof window === "undefined") return null
+  return sessionStorage
+}
+
+function setStoredToken(token: string): void {
+  const storage = getTokenStorage()
+  if (storage) storage.setItem(TOKEN_KEY, token)
+}
+
+function clearStoredToken(): void {
+  const storage = getTokenStorage()
+  if (storage) storage.removeItem(TOKEN_KEY)
+}
+
 export class ApiRequestError extends Error {
   code: string
   details: Record<string, unknown> | null
@@ -24,33 +39,9 @@ type RequestOptions = {
   _retry?: boolean
 }
 
-// ── Token yangilash — race condition oldini olish ────────────────────────────
-let isRefreshing = false
-type QueueItem = { resolve: (token: string) => void; reject: (err: unknown) => void }
-let failedQueue: QueueItem[] = []
-
-function flushQueue(token: string | null, err: unknown = null) {
-  failedQueue.forEach((item) => (token ? item.resolve(token) : item.reject(err)))
-  failedQueue = []
-}
-
-async function refreshAccessToken(): Promise<string> {
-  const res = await fetch(`${BASE_URL}/auth/refresh`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({}),
-    credentials: "include",
-  })
-  const json = (await res.json()) as { success?: boolean; data?: { tokens?: { access_token?: string } } }
-  const newToken = json?.data?.tokens?.access_token
-  if (!newToken) throw new ApiRequestError("SESSION_EXPIRED", "Sessiya muddati tugadi")
-  if (typeof window !== "undefined") localStorage.setItem(TOKEN_KEY, newToken)
-  return newToken
-}
-
 // Backend response format:
 // Muvaffaqiyat: { success: true, message: string, data: T }
-// Xatolik:      { success: false, code: string, message: string, details?: object }
+// Xatolik:      { success: false, error: { code: string, message: string, details?: object } }
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = "GET", body, token, headers = {}, revalidate, _retry } = options
 
@@ -80,56 +71,25 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
     throw new ApiRequestError("INVALID_RESPONSE", "Serverdan noto'g'ri javob keldi")
   }
 
-  const payload = json as {
-    success?: boolean
-    data?: T
-    message?: string
-    code?: string
-    details?: Record<string, unknown>
-  }
+  // Response validation using zod
+  const { validateApiResponse } = await import("./schemas")
+  const validated = validateApiResponse<T>(json)
 
-  if (!payload?.success) {
-    const code = payload?.code ?? "UNKNOWN_ERROR"
-    const message = payload?.message ?? "Noma'lum xatolik yuz berdi"
+  if (!validated.success) {
+    const code = validated.code ?? "UNKNOWN_ERROR"
+    const message = validated.message ?? "Noma'lum xatolik yuz berdi"
 
-    // 401 → token yangilash va qayta urinish (faqat client-side va birinchi urinishda)
-    if (
-      code === "UNAUTHORIZED" &&
-      !_retry &&
-      typeof window !== "undefined"
-    ) {
-      if (isRefreshing) {
-        // Boshqa so'rovlar refresh tugashini kutadi
-        return new Promise<T>((resolve, reject) => {
-          failedQueue.push({
-            resolve: (newToken) =>
-              resolve(apiRequest<T>(path, { ...options, token: newToken, _retry: true })),
-            reject,
-          })
-        })
-      }
-
-      isRefreshing = true
-      try {
-        const newToken = await refreshAccessToken()
-        flushQueue(newToken)
-        return await apiRequest<T>(path, { ...options, token: newToken, _retry: true })
-      } catch (refreshErr) {
-        flushQueue(null, refreshErr)
-        if (typeof window !== "undefined") {
-          localStorage.removeItem(TOKEN_KEY)
-          window.location.href = "/login"
-        }
-        throw new ApiRequestError("SESSION_EXPIRED", "Iltimos, qayta kiring")
-      } finally {
-        isRefreshing = false
-      }
+    // 401: mark the stored access token invalid. Route-level redirect belongs
+    // to AuthProvider/ProtectedRoute so callback and public pages don't loop.
+    if (code === "UNAUTHORIZED" && !_retry && typeof window !== "undefined") {
+      clearStoredToken()
+      throw new ApiRequestError("SESSION_EXPIRED", "Iltimos, qayta kiring")
     }
 
-    throw new ApiRequestError(code, message, payload?.details ?? null)
+    throw new ApiRequestError(code, message, validated.details ?? null)
   }
 
-  return payload.data as T
+  return validated.data as T
 }
 
 // ── Multipart upload (rasm yuklash) ──────────────────────────────────────────
@@ -137,26 +97,35 @@ export async function uploadFile<T>(path: string, file: File, fieldName: string,
   const form = new FormData()
   form.append(fieldName, file)
 
-  const res = await fetch(`${BASE_URL}${path}`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
-    body: form,
-    credentials: "include",
-  })
-
-  const json = (await res.json()) as {
-    success?: boolean
-    data?: T
-    code?: string
-    message?: string
+  let res: Response
+  try {
+    res = await fetch(`${BASE_URL}${path}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+      credentials: "include",
+    })
+  } catch {
+    throw new ApiRequestError("NETWORK_ERROR", "Serverga ulanib bo'lmadi")
   }
 
-  if (!json?.success) {
+  let json: unknown
+  try {
+    json = await res.json()
+  } catch {
+    throw new ApiRequestError("INVALID_RESPONSE", "Serverdan noto'g'ri javob keldi")
+  }
+
+  const { validateApiResponse } = await import("./schemas")
+  const validated = validateApiResponse<T>(json)
+
+  if (!validated.success) {
     throw new ApiRequestError(
-      json?.code ?? "UPLOAD_FAILED",
-      json?.message ?? "Yuklab bo'lmadi",
+      validated.code ?? "UPLOAD_FAILED",
+      validated.message ?? "Yuklab bo'lmadi",
+      validated.details ?? null,
     )
   }
 
-  return json.data as T
+  return validated.data as T
 }

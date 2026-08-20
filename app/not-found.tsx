@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 
 export default function NotFound() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#FFF9F3] px-6">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-6">
       {/* ── Orqa fon: yumshoq radial nur ─────────────────────────── */}
       <div
         aria-hidden="true"

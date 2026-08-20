@@ -101,7 +101,7 @@ export function PostCard({
               className="
                 text-[11px]
                 font-medium
-                text-[#FF5B0A]
+                text-[#FF6A00]
                 hover:text-[#E84F05]
               "
             >
@@ -123,7 +123,7 @@ export function PostCard({
           >
             <Link
               href={url}
-              className="hover:text-[#FF5B0A]"
+              className="hover:text-[#FF6A00]"
             >
               {post.title}
             </Link>
@@ -305,7 +305,7 @@ export function PostCard({
               w-fit
               text-[11px]
               font-medium
-              text-[#FF5B0A]
+              text-[#FF6A00]
               hover:text-[#E84F05]
             "
           >
@@ -328,7 +328,7 @@ export function PostCard({
         >
           <Link
             href={url}
-            className="hover:text-[#FF5B0A]"
+            className="hover:text-[#FF6A00]"
           >
             {post.title}
           </Link>
@@ -387,7 +387,7 @@ export function PostCard({
                   text-[11px]
                   font-medium
                   text-[#333]
-                  hover:text-[#FF5B0A]
+                  hover:text-[#FF6A00]
                 "
               >
                 @{post.author.username}
@@ -450,7 +450,7 @@ export function PostCard({
                 justify-center
                 rounded-lg
                 hover:bg-[#F5F2EE]
-                hover:text-[#FF5B0A]
+                hover:text-[#FF6A00]
               "
             >
               <Bookmark

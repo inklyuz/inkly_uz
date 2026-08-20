@@ -36,12 +36,12 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: 'light',
-  themeColor: '#FFF9F3',
+  themeColor: '#FFFFFF',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="uz" className="bg-bg-cream">
+    <html lang="uz" className="bg-white">
       <body className={`${inter.className} antialiased`}>
         <AuthProvider>
           {children}

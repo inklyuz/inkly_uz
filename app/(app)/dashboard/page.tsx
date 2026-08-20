@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import {
   PenLine, Eye, Heart, MessageCircle, Loader2, Lock, Trash2,
   Archive, MoreHorizontal, FileText, ExternalLink,
-  RotateCcw, Sparkles, TrendingUp, Users, BookMarked,
+  RotateCcw, Sparkles, TrendingUp, Users, BookMarked, Send,
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { useAuth } from "@/lib/auth/context"
@@ -39,7 +39,7 @@ export default function DashboardPage() {
     setFetching(true)
     setFetchError(null)
     postsApi.myList(token, { page_size: 50 })
-      .then((d) => setPosts(d.items))
+      .then((d) => setPosts(d?.items ?? []))
       .catch((err) => setFetchError(err instanceof Error ? err.message : "Maqolalarni yuklab bo'lmadi"))
       .finally(() => setFetching(false))
   }, [token])
@@ -56,6 +56,30 @@ export default function DashboardPage() {
     : activeTab === "drafts"  ? p.status === "draft"
     : p.status === "archived",
   )
+
+  const handlePublish = async (uuid: string) => {
+    if (!token) return
+    try {
+      const updated = await postsApi.publish(token, uuid)
+      setPosts((prev) => prev.map((p) => p.uuid === uuid ? { ...p, ...updated } : p))
+      toast.success("Maqola nashr qilindi")
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Nashr qilishda xatolik")
+    }
+    setOpenMenu(null)
+  }
+
+  const handleUnpublish = async (uuid: string) => {
+    if (!token) return
+    try {
+      const updated = await postsApi.unpublish(token, uuid)
+      setPosts((prev) => prev.map((p) => p.uuid === uuid ? { ...p, ...updated } : p))
+      toast.success("Maqola qoralamaga qaytarildi")
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Qoralamaga qaytarishda xatolik")
+    }
+    setOpenMenu(null)
+  }
 
   const handleArchive = async (uuid: string) => {
     if (!token) return
@@ -81,7 +105,9 @@ export default function DashboardPage() {
     setOpenMenu(null)
   }
   const handleDelete = async (uuid: string) => {
-    if (!token || !confirm("Maqolani o'chirishni tasdiqlaysizmi?")) return
+    if (!token) return
+    const ok = window.confirm("Maqolani o'chirishni tasdiqlaysizmi?")
+    if (!ok) return
     try {
       await postsApi.delete(token, uuid)
       setPosts((prev) => prev.filter((p) => p.uuid !== uuid))
@@ -105,7 +131,7 @@ export default function DashboardPage() {
   if (loading || !user) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 size={28} className="animate-spin text-[#FF6A00]" />
+        <Loader2 size={28} className="animate-spin text-primary" />
       </div>
     )
   }
@@ -121,9 +147,9 @@ export default function DashboardPage() {
 
       {/* ── Sarlavha ─────────────────────────────────────────────────── */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-[#141414]">Dashboard</h1>
-        <p className="mt-1 text-sm text-[#6B7280]">
-          Xush kelibsiz, <span className="font-medium text-[#141414]">{user.full_name}</span>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Dashboard</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Xush kelibsiz, <span className="font-medium text-foreground">{user.full_name}</span>
         </p>
       </div>
 
@@ -137,14 +163,14 @@ export default function DashboardPage() {
 
       {/* ── Qoralama banner ──────────────────────────────────────────── */}
       {!fetching && counts.drafts > 0 && activeTab === "published" && (
-        <div className="mb-6 flex items-center gap-2 rounded-xl border border-[#E8E3DD] bg-white px-4 py-3">
-          <Sparkles size={14} className="shrink-0 text-[#FF6A00]" />
-          <p className="text-sm text-[#36565F]">
-            <span className="font-semibold text-[#141414]">{counts.drafts} ta qoralama</span> nashr kutmoqda.
+        <div className="mb-6 flex items-center gap-2 rounded-xl border border-border bg-white px-4 py-3">
+          <Sparkles size={14} className="shrink-0 text-primary" />
+          <p className="text-sm text-muted-foreground">
+            <span className="font-semibold text-foreground">{counts.drafts} ta qoralama</span> nashr kutmoqda.
           </p>
           <button
             onClick={() => setActiveTab("drafts")}
-            className="ml-auto shrink-0 text-sm font-medium text-[#FF6A00] hover:underline underline-offset-4"
+            className="ml-auto shrink-0 text-sm font-medium text-primary hover:underline underline-offset-4"
           >
             Ko'rish →
           </button>
@@ -152,10 +178,10 @@ export default function DashboardPage() {
       )}
 
       {/* ── Maqolalar jadvali ────────────────────────────────────────── */}
-      <div className="rounded-2xl border border-[#E8E3DD] bg-white">
+      <div className="rounded-2xl border border-border bg-white">
 
         {/* Tab bar */}
-        <div className="flex gap-1 border-b border-[#E8E3DD] p-1.5">
+        <div className="flex gap-1 border-b border-border p-1.5">
           {tabs.map((tab) => (
             <button
               key={tab.key}
@@ -163,16 +189,16 @@ export default function DashboardPage() {
               className={cn(
                 "flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-all",
                 activeTab === tab.key
-                  ? "bg-[#FFF3E8] text-[#FF6A00]"
-                  : "text-[#6B7280] hover:bg-[#F2F4F7] hover:text-[#141414]",
+                  ? "bg-[#FFF3E8] text-primary"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
               {tab.label}
               <span className={cn(
                 "rounded-full px-1.5 py-0.5 text-xs font-semibold",
                 activeTab === tab.key
-                  ? "bg-[#FF6A00]/15 text-[#FF6A00]"
-                  : "bg-[#F2F4F7] text-[#6B7280]",
+                  ? "bg-[primary]/15 text-primary"
+                  : "bg-muted text-muted-foreground",
               )}>
                 {counts[tab.key]}
               </span>
@@ -182,17 +208,17 @@ export default function DashboardPage() {
 
         {fetching ? (
           <div className="flex justify-center py-16">
-            <Loader2 size={24} className="animate-spin text-[#FF6A00]" />
+            <Loader2 size={24} className="animate-spin text-primary" />
           </div>
         ) : fetchError ? (
           <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
             <p className="text-sm text-red-600">{fetchError}</p>
-            <button onClick={() => token && postsApi.myList(token, { page_size: 50 }).then((d) => { setPosts(d.items); setFetchError(null) }).catch((err) => setFetchError(err instanceof Error ? err.message : "Qayta yuklab bo'lmadi"))} className="text-sm font-medium text-[#FF6A00] underline underline-offset-4">Qayta urinish</button>
+            <button onClick={() => token && postsApi.myList(token, { page_size: 50 }).then((d) => { setPosts(d.items); setFetchError(null) }).catch((err) => setFetchError(err instanceof Error ? err.message : "Qayta yuklab bo'lmadi"))} className="text-sm font-medium text-primary underline underline-offset-4">Qayta urinish</button>
           </div>
         ) : filtered.length === 0 ? (
           <EmptyState tab={activeTab} />
         ) : (
-          <div className="divide-y divide-[#E8E3DD]">
+          <div className="divide-y divide-[border]">
             {filtered.map((post) => (
               <PostRow
                 key={post.uuid}
@@ -200,6 +226,8 @@ export default function DashboardPage() {
                 username={user.username}
                 openMenu={openMenu}
                 setOpenMenu={setOpenMenu}
+                onPublish={handlePublish}
+                onUnpublish={handleUnpublish}
                 onArchive={handleArchive}
                 onUnarchive={handleUnarchive}
                 onDelete={handleDelete}
@@ -220,44 +248,45 @@ function StatCard({ icon, label, value, accent = false }: {
   return (
     <div className={cn(
       "flex flex-col gap-3 rounded-xl border p-5",
-      accent ? "border-[#FF6A00]/20 bg-[#FFF3E8]" : "border-[#E8E3DD] bg-white",
+      accent ? "border-primary/20 bg-[#FFF3E8]" : "border-border bg-white",
     )}>
       <span className={cn(
         "flex h-8 w-8 items-center justify-center rounded-lg",
-        accent ? "bg-[#FF6A00]/15 text-[#FF6A00]" : "bg-[#F2F4F7] text-[#6B7280]",
+        accent ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground",
       )}>
         {icon}
       </span>
       <div>
-        <p className="text-2xl font-bold tracking-tight text-[#141414]">{value}</p>
-        <p className="text-xs text-[#6B7280]">{label}</p>
+        <p className="text-2xl font-bold tracking-tight text-foreground">{value}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
       </div>
     </div>
   )
 }
 
 // ── PostRow ───────────────────────────────────────────────────────────────
-function PostRow({ post, username, openMenu, setOpenMenu, onArchive, onUnarchive, onDelete, tab }: {
+function PostRow({ post, username, openMenu, setOpenMenu, onPublish, onUnpublish, onArchive, onUnarchive, onDelete, tab }: {
   post: PostListItem; username: string; openMenu: string | null
   setOpenMenu: (id: string | null) => void
+  onPublish: (uuid: string) => void; onUnpublish: (uuid: string) => void
   onArchive: (uuid: string) => void; onUnarchive: (uuid: string) => void
   onDelete: (uuid: string) => void; tab: TabKey
 }) {
   const postUrl = `/@${post.author.username}/${post.slug}`
 
   return (
-    <div className="group flex items-start gap-3 px-5 py-4 transition-colors hover:bg-[#FFF9F3] sm:items-center">
+    <div className="group flex items-start gap-3 px-5 py-4 transition-colors hover:bg-[#FFF3E8] sm:items-center">
       {/* Cover */}
       {post.cover ? (
         <Link href={postUrl} className="hidden shrink-0 sm:block">
-          <div className="h-14 w-20 overflow-hidden rounded-lg bg-[#F2F4F7]">
+          <div className="h-14 w-20 overflow-hidden rounded-lg bg-muted">
             <Image src={post.cover} alt="" width={80} height={56}
               className="h-full w-full object-cover" sizes="80px" />
           </div>
         </Link>
       ) : (
-        <div className="hidden h-14 w-20 shrink-0 items-center justify-center rounded-lg bg-[#F2F4F7] sm:flex">
-          <FileText size={18} className="text-[#E8E3DD]" />
+        <div className="hidden h-14 w-20 shrink-0 items-center justify-center rounded-lg bg-muted sm:flex">
+          <FileText size={18} className="text-border" />
         </div>
       )}
 
@@ -265,11 +294,11 @@ function PostRow({ post, username, openMenu, setOpenMenu, onArchive, onUnarchive
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <Link
           href={postUrl}
-          className="line-clamp-1 font-semibold leading-snug text-[#141414] transition-colors hover:text-[#FF6A00]"
+          className="line-clamp-1 font-semibold leading-snug text-foreground transition-colors hover:text-primary"
         >
           {post.title || "Sarlavsiz"}
         </Link>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#6B7280]">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           {post.published_at && <span>{formatDate(post.published_at)}</span>}
           {post.status === "draft" && post.updated_at && <span>Yangilangan: {formatDate(post.updated_at)}</span>}
           {post.status === "published" && (
@@ -280,7 +309,7 @@ function PostRow({ post, username, openMenu, setOpenMenu, onArchive, onUnarchive
             </>
           )}
           {post.visibility === "private" && (
-            <span className="flex items-center gap-1 text-[#FF6A00]"><Lock size={11} /> Maxfiy</span>
+            <span className="flex items-center gap-1 text-primary"><Lock size={11} /> Maxfiy</span>
           )}
           {post.categories.slice(0, 2).map((cat) => (
             <Badge key={cat.uuid} variant="ghost" className="text-[10px]">{cat.name}</Badge>
@@ -291,47 +320,59 @@ function PostRow({ post, username, openMenu, setOpenMenu, onArchive, onUnarchive
       {/* Actions */}
       <div className="relative flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
         <Link href={`/write?edit=${post.uuid}`} title="Tahrirlash"
-          className="rounded-lg p-2 text-[#6B7280] hover:bg-[#F2F4F7] hover:text-[#141414] transition-colors">
+          className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
           <PenLine size={14} />
         </Link>
         {tab === "published" && (
           <Link href={postUrl} target="_blank" title="Ko'rish"
-            className="rounded-lg p-2 text-[#6B7280] hover:bg-[#F2F4F7] hover:text-[#141414] transition-colors">
+            className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
             <ExternalLink size={14} />
           </Link>
         )}
         <button
           onClick={(e) => { e.stopPropagation(); setOpenMenu(openMenu === post.uuid ? null : post.uuid) }}
-          className="rounded-lg p-2 text-[#6B7280] hover:bg-[#F2F4F7] hover:text-[#141414] transition-colors"
+          className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         >
           <MoreHorizontal size={14} />
         </button>
 
         {openMenu === post.uuid && (
-          <div className="absolute right-0 top-full z-30 mt-1 w-48 rounded-xl border border-[#E8E3DD] bg-white p-1 shadow-lg"
+          <div className="absolute right-0 top-full z-30 mt-1 w-48 rounded-xl border border-border bg-white p-1 shadow-lg"
             onClick={(e) => e.stopPropagation()}>
             <Link href={`/write?edit=${post.uuid}`}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#36565F] hover:bg-[#F2F4F7]">
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
               <PenLine size={13} /> Tahrirlash
             </Link>
             {tab === "published" && (
               <Link href={postUrl} target="_blank"
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#36565F] hover:bg-[#F2F4F7]">
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
                 <ExternalLink size={13} /> Ko&apos;rish
               </Link>
             )}
+            {post.status === "draft" && (
+              <button onClick={() => onPublish(post.uuid)}
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
+                <Send size={13} /> Nashr qilish
+              </button>
+            )}
+            {post.status === "published" && (
+              <button onClick={() => onUnpublish(post.uuid)}
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
+                <RotateCcw size={13} /> Nashrdan olish
+              </button>
+            )}
             {tab !== "archived" ? (
               <button onClick={() => onArchive(post.uuid)}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#36565F] hover:bg-[#F2F4F7]">
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
                 <Archive size={13} /> Arxivlash
               </button>
             ) : (
               <button onClick={() => onUnarchive(post.uuid)}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-[#36565F] hover:bg-[#F2F4F7]">
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted">
                 <RotateCcw size={13} /> Arxivdan chiqarish
               </button>
             )}
-            <div className="my-1 h-px bg-[#E8E3DD]" />
+            <div className="my-1 h-px bg-border" />
             <button onClick={() => onDelete(post.uuid)}
               className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-500 hover:bg-red-50">
               <Trash2 size={13} /> O&apos;chirish
@@ -353,12 +394,12 @@ function EmptyState({ tab }: { tab: TabKey }) {
   const { text, cta } = msgs[tab]
   return (
     <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F2F4F7]">
-        <FileText size={20} className="text-[#6B7280]" />
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+        <FileText size={20} className="text-muted-foreground" />
       </div>
-      <p className="text-sm text-[#36565F]">{text}</p>
+      <p className="text-sm text-muted-foreground">{text}</p>
       {cta && (
-        <Link href="/write" className="text-sm font-medium text-[#FF6A00] underline underline-offset-4 hover:text-[#E85F00]">
+        <Link href="/write" className="text-sm font-medium text-primary underline underline-offset-4 hover:text-inkly-hover">
           {cta} →
         </Link>
       )}

@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { BookOpen, Loader2, Plus, Search } from "lucide-react"
+import { BookOpen, Loader2, Plus, Search, Eye, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -85,7 +85,7 @@ function DashboardPostsContent() {
   }
 
   return (
-    <main className="flex flex-col gap-6 p-6 lg:p-8">
+    <main className="flex flex-col gap-5 p-4 sm:gap-6 sm:p-6 lg:p-8">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium text-primary">Kontent boshqaruvi</p>
@@ -124,13 +124,35 @@ function DashboardPostsContent() {
         )}
       </section>
 
-      {data && <Pagination page={data.page} totalPages={data.pages} basePath="/dashboard/posts" query={{ search: search || undefined, status: status === "all" ? undefined : status }} />}
+      {data && <Pagination page={data.page} totalPages={data.total_pages} basePath="/dashboard/posts" query={{ search: search || undefined, status: status === "all" ? undefined : status }} />}
     </main>
   )
 }
 
 function PostRow({ post }: { post: PostListItem }) {
-  return <article className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-muted/40">
+  const { state } = useAuth()
+  const { token } = state
+  const [deleting, setDeleting] = useState(false)
+
+  const handleDelete = async () => {
+    if (!token) return
+    const ok = window.confirm(`"${post.title || "Sarlavsiz"}" maqolasini o'chirishni tasdiqlaysizmi?`)
+    if (!ok) return
+    setDeleting(true)
+    try {
+      await postsApi.delete(token, post.uuid)
+      toast.success("Maqola o'chirildi")
+      // The list will refresh via router.refresh() in the parent or we could update local state
+      // For now, let the parent handle refresh
+    } catch (err) {
+      console.error("Delete failed:", err)
+      toast.error("O'chirishda xatolik")
+    } finally {
+      setDeleting(false)
+    }
+  }
+
+  return <article className="flex flex-col gap-3 px-4 py-4 transition-colors hover:bg-muted/40 sm:flex-row sm:items-center sm:gap-4 sm:px-5">
     <div className="flex min-w-0 flex-1 flex-col gap-1">
       <Link href={`/write?edit=${post.uuid}`} className="truncate font-semibold text-foreground hover:text-primary">{post.title || "Sarlavsiz"}</Link>
       <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -139,6 +161,29 @@ function PostRow({ post }: { post: PostListItem }) {
         {post.status === "published" && <span>{formatCount(post.views_count)} ko'rish</span>}
       </div>
     </div>
-    <Link href={`/write?edit=${post.uuid}`} className="inline-flex items-center justify-center rounded-control border border-border px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:border-primary hover:text-primary">Tahrirlash</Link>
+    <div className="flex items-center gap-2 sm:ml-auto">
+      {post.status === "published" && post.slug && (
+        <a
+          href={`/@${post.author?.username}/${post.slug}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-control border border-border px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary hover:bg-accent hover:text-primary"
+          title="Ko'rish"
+        >
+          <Eye size={14} /> Ko'rish
+        </a>
+      )}
+      <Link href={`/write?edit=${post.uuid}`} className="inline-flex items-center justify-center rounded-control border border-border px-3 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary hover:bg-accent hover:text-primary">Tahrirlash</Link>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleDelete}
+        disabled={deleting}
+        className="text-red-500 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+        title="O'chirish"
+      >
+        {deleting ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+      </Button>
+    </div>
   </article>
 }

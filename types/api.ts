@@ -6,11 +6,15 @@ export interface ApiSuccess<T> {
   data: T
 }
 
-export interface ApiError {
-  success: false
+export interface ApiErrorDetail {
   code: string
   message: string
-  details?: Record<string, unknown>
+  details?: Record<string, unknown> | null
+}
+
+export interface ApiError {
+  success: false
+  error: ApiErrorDetail
 }
 
 export type ApiResponse<T> = ApiSuccess<T> | ApiError
@@ -20,7 +24,7 @@ export interface Page<T> {
   page: number
   page_size: number
   total: number
-  pages: number        // backend "pages" deydi, "total_pages" emas
+  total_pages: number
 }
 
 // ─── Enumlar ──────────────────────────────────────────────────────────────
@@ -28,7 +32,7 @@ export interface Page<T> {
 export type UserRole = "user" | "admin"
 export type UserStatus = "active" | "blocked"
 export type PostStatus = "draft" | "published" | "archived"
-export type PostVisibility = "public" | "private"
+export type PostVisibility = "public" | "hidden" | "private"
 export type PostReactionType = "like" | "dislike"
 export type TelegramPublicationStatus = "pending" | "published" | "failed" | "cancelled"
 export type UploadType = "avatar" | "cover" | "post_image" | "temp"
@@ -79,7 +83,19 @@ export interface UserBase {
 
 export interface UserPublicResponse extends UserBase {
   posts_count?: number
+  followers_count?: number
+  following_count?: number
+  is_following?: boolean
   created_at?: string
+}
+
+/** Legacy UI shape retained for the unsupported creators stub. */
+export interface CreatorPublicResponse {
+  username: string
+  full_name: string
+  avatar_url: string | null
+  bio: string | null
+  is_verified: boolean
 }
 
 export interface LinkedProvider {
@@ -92,12 +108,20 @@ export interface UserMeResponse extends UserBase {
   id: number
   uuid: string
   email: string | null
+  email_verified?: boolean
   role: UserRole
   status: UserStatus
   posts_count: number
   created_at: string
   updated_at: string
   linked_providers: LinkedProvider[]
+  telegram_username?: string | null
+  instagram_username?: string | null
+  youtube_username?: string | null
+  github_username?: string | null
+  twitter_username?: string | null
+  followers_count?: number
+  following_count?: number
 }
 
 // ─── Post ─────────────────────────────────────────────────────────────────
@@ -128,6 +152,7 @@ export interface SharingImage {
 export interface PostResponse {
   uuid: string
   slug: string
+  url?: string
   title: string
   excerpt: string | null
   content: string
@@ -218,10 +243,12 @@ export interface CategoryPublicResponse {
 // ─── Upload ───────────────────────────────────────────────────────────────
 
 export interface UploadResponse {
+  id: number
+  uuid: string
   path: string          // relative: "avatars/abc.webp" — PATCH /users/me ga shu yuboriladi
   url: string           // to'liq CDN URL (ko'rsatish uchun)
-  width?: number
-  height?: number
-  size?: number
-  format?: string
+  type: UploadType
+  mime_type: string
+  size: number
+  created_at: string
 }

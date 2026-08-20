@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Loader2, Save, User, Globe, MapPin } from "lucide-react"
-import { Twitter, Github, Youtube, Instagram, Telegram } from "@/components/ui/brand-icons"
+import { Twitter, Github } from "@/components/ui/brand-icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar } from "@/components/ui/avatar"
@@ -25,9 +25,9 @@ export default function ProfileSettingsPage() {
     location: "",
     twitter: "",
     github: "",
-    youtube: "",
     instagram: "",
-    telegram: ""
+    youtube: "",
+    telegram: "",
   })
   const [saving, setSaving] = useState(false)
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
@@ -48,9 +48,9 @@ export default function ProfileSettingsPage() {
         location: user.location ?? "",
         twitter: user.socials?.twitter ?? "",
         github: user.socials?.github ?? "",
-        youtube: user.socials?.youtube ?? "",
         instagram: user.socials?.instagram ?? "",
-        telegram: user.socials?.telegram ?? ""
+        youtube: user.socials?.youtube ?? "",
+        telegram: user.socials?.telegram ?? "",
       })
     }
   }, [user, loading, router])
@@ -75,6 +75,9 @@ export default function ProfileSettingsPage() {
         location: form.location,
         twitter_username: form.twitter || null,
         github_username: form.github || null,
+        instagram_username: form.instagram || null,
+        youtube_username: form.youtube || null,
+        telegram_username: form.telegram || null,
       })
       await refresh()
       setSuccess(true)
@@ -116,15 +119,15 @@ export default function ProfileSettingsPage() {
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
-      <h1 className="mb-8 text-2xl font-bold tracking-tight text-[#141414]">Profil sozlamalari</h1>
+    <main className="mx-auto w-full max-w-2xl px-4 py-6 sm:px-6 sm:py-12">
+      <h1 className="mb-8 text-2xl font-bold tracking-tight text-foreground">Profil sozlamalari</h1>
 
-      <div className="space-y-8">
+      <div className="flex flex-col gap-6 sm:gap-8">
         {/* Avatar */}
-        <section className="flex items-center gap-5 rounded-2xl border border-[#E8E3DD] bg-white p-6">
+        <section className="flex items-center gap-5 rounded-panel border border-border bg-background p-4 sm:p-6">
           <Avatar src={user?.avatar} name={user?.full_name} size={72} />
           <div>
-            <p className="font-medium text-[#141414]">Profil rasmi</p>
+            <p className="font-medium text-foreground">Profil rasmi</p>
             <input
               ref={avatarInputRef}
               type="file"
@@ -146,8 +149,8 @@ export default function ProfileSettingsPage() {
         </section>
 
         {/* Asosiy ma'lumotlar */}
-        <section className="space-y-4 rounded-2xl border border-[#E8E3DD] bg-white p-6">
-          <h2 className="flex items-center gap-2 font-semibold text-[#141414]">
+        <section className="space-y-4 rounded-panel border border-border bg-background p-4 sm:p-6">
+          <h2 className="flex items-center gap-2 font-semibold text-foreground">
             <User size={16} /> Asosiy ma'lumotlar
           </h2>
 
@@ -177,7 +180,7 @@ export default function ProfileSettingsPage() {
               onChange={handleChange("bio")}
               rows={3}
               placeholder="O'zingiz haqingizda qisqacha..."
-              className="w-full resize-none rounded-xl border border-[#E8E3DD] bg-[#FFF9F3] px-4 py-3 text-sm text-[#141414] placeholder:text-[#6B7280] focus:border-[#FF6A00] focus:outline-none focus:ring-2 focus:ring-[#FF6A00]/20 transition"
+              className="w-full resize-none rounded-xl border border-[#E8E3DD] bg-white px-4 py-3 text-sm text-foreground placeholder:text-[#6B7280] focus:border-[#FF6A00] focus:outline-none focus:ring-2 focus:ring-[#FF6A00]/20 transition"
             />
           </Field>
 
@@ -208,15 +211,12 @@ export default function ProfileSettingsPage() {
         </section>
 
         {/* Ijtimoiy tarmoqlar */}
-        <section className="space-y-4 rounded-2xl border border-[#E8E3DD] bg-white p-6">
-          <h2 className="font-semibold text-[#141414]">Ijtimoiy tarmoqlar</h2>
+        <section className="space-y-4 rounded-panel border border-border bg-background p-4 sm:p-6">
+          <h2 className="font-semibold text-foreground">Ijtimoiy tarmoqlar</h2>
 
           <Field label="Twitter / X">
             <div className="relative">
-              <Twitter
-                size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
-              />
+              <Twitter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]" />
               <Input
                 value={form.twitter}
                 onChange={handleChange("twitter")}
@@ -228,10 +228,7 @@ export default function ProfileSettingsPage() {
 
           <Field label="GitHub">
             <div className="relative">
-              <Github
-                size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
-              />
+              <Github size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]" />
               <Input
                 value={form.github}
                 onChange={handleChange("github")}
@@ -240,50 +237,16 @@ export default function ProfileSettingsPage() {
               />
             </div>
           </Field>
-
-          <Field label="Telegram">
-            <div className="relative">
-              <Telegram
-                size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
-              />
-              <Input
-                value={form.telegram}
-                onChange={handleChange("telegram")}
-                className="pl-8"
-                placeholder="username"
-              />
-            </div>
+          <Field label="Instagram">
+            <Input value={form.instagram} onChange={handleChange("instagram")} placeholder="username" />
           </Field>
 
           <Field label="YouTube">
-            <div className="relative">
-              <Youtube
-                size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
-              />
-              <Input
-                value={form.youtube}
-                onChange={handleChange("youtube")}
-                className="pl-8"
-                placeholder="channel"
-              />
-            </div>
+            <Input value={form.youtube} onChange={handleChange("youtube")} placeholder="kanal nomi" />
           </Field>
 
-          <Field label="Instagram">
-            <div className="relative">
-              <Instagram
-                size={14}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
-              />
-              <Input
-                value={form.instagram}
-                onChange={handleChange("instagram")}
-                className="pl-8"
-                placeholder="username"
-              />
-            </div>
+          <Field label="Telegram">
+            <Input value={form.telegram} onChange={handleChange("telegram")} placeholder="username" />
           </Field>
         </section>
 
@@ -296,7 +259,7 @@ export default function ProfileSettingsPage() {
           <Button
             onClick={handleSubmit}
             disabled={saving}
-            className="gap-2 rounded-full bg-[#FF6A00] px-6 font-semibold text-white hover:bg-[#E85F00] disabled:opacity-50"
+            className="gap-2 rounded-control px-6 font-semibold disabled:opacity-50"
           >
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
             Saqlash
@@ -310,7 +273,7 @@ export default function ProfileSettingsPage() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium text-[#141414]">{label}</label>
+      <label className="text-sm font-medium text-foreground">{label}</label>
       {children}
     </div>
   )

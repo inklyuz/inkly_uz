@@ -118,7 +118,7 @@ function CategoryItem({
           </span>
 
           <div className="min-w-0">
-            <h2 className="text-[19px] font-semibold tracking-[-0.02em] text-[#222] transition-colors group-hover:text-[#FF5A00]">
+            <h2 className="text-[19px] font-semibold tracking-[-0.02em] text-[#222] transition-colors group-hover:text-[#FF6A00]">
               {category.name}
             </h2>
 
@@ -132,7 +132,7 @@ function CategoryItem({
 
         <ArrowUpRight
           size={17}
-          className="mt-1 shrink-0 text-[#AAA59D] transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#FF5A00]"
+          className="mt-1 shrink-0 text-[#AAA59D] transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#FF6A00]"
         />
       </div>
 
@@ -141,7 +141,7 @@ function CategoryItem({
           {category.posts_count} maqola
         </span>
 
-        <span className="text-[11px] text-[#AAA59D] transition-colors group-hover:text-[#FF5A00]">
+        <span className="text-[11px] text-[#AAA59D] transition-colors group-hover:text-[#FF6A00]">
           Ko‘rish
         </span>
       </div>

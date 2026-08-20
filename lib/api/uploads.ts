@@ -1,4 +1,5 @@
 import { apiRequest, uploadFile } from "./client"
+import { createSafeItemWrapper } from "./safe-wrapper"
 import type { UploadResponse } from "@/types/api"
 
 export const uploadsApi = {
@@ -20,3 +21,25 @@ export const uploadsApi = {
   remove: (token: string, path: string) =>
     apiRequest<void>("/uploads", { method: "DELETE", body: { path }, token }),
 }
+
+// ── Safe wrappers for server components ────────────────────────────────────
+
+export const uploadAvatarSafe = createSafeItemWrapper(
+  (token: string, file: File) => uploadsApi.avatar(token, file),
+  { errorPrefix: "UPLOAD_AVATAR" }
+)
+
+export const uploadCoverSafe = createSafeItemWrapper(
+  (token: string, file: File) => uploadsApi.cover(token, file),
+  { errorPrefix: "UPLOAD_COVER" }
+)
+
+export const uploadPostImageSafe = createSafeItemWrapper(
+  (token: string, file: File) => uploadsApi.postImage(token, file),
+  { errorPrefix: "UPLOAD_POST_IMAGE" }
+)
+
+export const uploadTempSafe = createSafeItemWrapper(
+  (token: string, file: File) => uploadsApi.temp(token, file),
+  { errorPrefix: "UPLOAD_TEMP" }
+)

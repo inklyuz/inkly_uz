@@ -45,20 +45,16 @@ export default function ForgotPasswordPage() {
       subtitle={
         <>
           Esingizga tushdimi?{" "}
-          <Link href="/login" className="font-medium text-[#FF6A00] hover:underline">
+          <Link href="/login" className="font-medium text-primary hover:underline">
             Tizimga kiring
           </Link>
         </>
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
-        {error && (
-          <div className="rounded-lg bg-[#DC2626]/10 p-3 text-sm text-[#DC2626]">
-            {error}
-          </div>
-        )}
-        
-        <p className="text-sm text-[#36565F]">
+        {error && <div role="alert" className="rounded-control bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
+
+        <p className="text-sm leading-relaxed text-muted-foreground">
           Elektron pochtangizni kiriting, biz sizga parolni tiklash uchun 6 xonali kod yuboramiz.
         </p>
 

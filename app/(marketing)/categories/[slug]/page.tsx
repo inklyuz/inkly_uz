@@ -111,11 +111,11 @@ export default async function CategoryPage({
               />
             </div>
 
-            {postsPage.pages > 1 && (
+            {postsPage.total_pages > 1 && (
               <div className="mt-8">
                 <Pagination
                   page={postsPage.page}
-                  totalPages={postsPage.pages}
+                  totalPages={postsPage.total_pages}
                   basePath={`/categories/${slug}`}
                 />
               </div>
@@ -320,8 +320,8 @@ function CategoryLink({
           ? `
               border
               border-[#FFB58D]
-              bg-[#FFF4ED]
-              text-[#FF5B0A]
+              bg-[#FFF3E8]
+              text-[#FF6A00]
             `
           : `
               border

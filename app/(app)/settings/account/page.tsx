@@ -10,6 +10,7 @@ import { usersApi } from "@/lib/api/users"
 import { authApi } from "@/lib/api/auth"
 import type { SessionOut } from "@/types/api"
 import { formatDate } from "@/lib/utils/format"
+import { toast } from "sonner"
 
 export default function AccountSettingsPage() {
   const { state, logout } = useAuth()
@@ -71,7 +72,9 @@ export default function AccountSettingsPage() {
   }
 
   const handleDeleteOtherSessions = async () => {
-    if (!token || !confirm("Barcha boshqa qurilmalardan chiqishni tasdiqlaysizmi?")) return
+    if (!token) return
+    const ok = window.confirm("Barcha boshqa qurilmalardan chiqishni tasdiqlaysizmi?")
+    if (!ok) return
     try {
       await authApi.deleteOtherSessions(token)
       setSessions((prev) => prev.filter((s) => s.is_current))
@@ -82,7 +85,8 @@ export default function AccountSettingsPage() {
 
   const handleDeleteAccount = async () => {
     if (!token) return
-    if (!confirm("Hisobingizni butunlay o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi.")) return
+    const ok = window.confirm("Hisobingizni butunlay o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi.")
+    if (!ok) return
     setDeleting(true)
     setDeleteError(null)
     try {
@@ -170,7 +174,7 @@ export default function AccountSettingsPage() {
               <div
                 key={session.id}
                 className={`flex items-center justify-between gap-4 rounded-xl border p-4 ${
-                  session.is_current ? "border-[#FF6A00]/30 bg-[#FFF9F3]" : "border-[#E8E3DD] bg-white"
+                  session.is_current ? "border-[#FF6A00]/30 bg-[#FFF3E8]" : "border-[#E8E3DD] bg-white"
                 }`}
               >
                 <div className="flex items-center gap-3">
