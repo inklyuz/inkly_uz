@@ -87,7 +87,7 @@ export default function TelegramChannelsPage() {
   const handlePublishToChannel = async (channelUuid: string) => {
     if (!token) return
     // Post UUID ni so'rash - keyinroq posts API bilan integratsiya qilinadi
-    const postUuid = window.postUuidToPublish // Agar global o'zgaruvchi bo'lsa
+    const postUuid = (window as Window & { postUuidToPublish?: string }).postUuidToPublish // Agar global o'zgaruvchi bo'lsa
     if (!postUuid) {
       toast.error("Yuborilishi kerak maqola tanlanmadi")
       return
@@ -202,10 +202,10 @@ export default function TelegramChannelsPage() {
                     <div className="flex items-center gap-2">
                       <p className="font-medium text-[#141414] truncate">{channel.title}</p>
                       {channel.is_verified && (
-                        <CheckCircle2 size={14} className="text-green-500 flex-shrink-0" title="Tasdiqlangan" />
+                        <CheckCircle2 size={14} className="text-green-500 flex-shrink-0" aria-label="Tasdiqlangan" />
                       )}
                     </div>
-                    <p className="text-sm text-[#6B7280] truncate">@{channel.channel_username}</p>
+                    <p className="text-sm text-[#6B7280] truncate">@{channel.username}</p>
                     <p className="text-xs text-[#9CA3AF] mt-0.5">Qo'shilgan: {new Date(channel.created_at).toLocaleDateString("uz-UZ")}</p>
                   </div>
                 </div>
@@ -214,7 +214,7 @@ export default function TelegramChannelsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleOpenChannel(channel.channel_username)}
+                    onClick={() => handleOpenChannel(channel.username)}
                     className="text-[#6B7280] hover:text-[#141414] hover:bg-[#F2F4F7]"
                     title="Kanalni ochish"
                   >

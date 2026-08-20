@@ -9,13 +9,11 @@ import {
 } from "react"
 
 import dynamic from "next/dynamic"
-import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 
 import {
   ArrowLeft,
   Check,
-  ChevronDown,
   Eye,
   EyeOff,
   Loader2,
@@ -57,6 +55,16 @@ const InklyEditorNovel = dynamic(
 
 type SaveStatus = "idle" | "saving" | "saved" | "error"
 type PublicationState = "draft" | "ready" | "published"
+
+const AUTOSAVE_DELAY_MS = 5_000
+
+function htmlToPlainText(value: string) {
+  return value
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+}
 
 /* =========================================================
    Page
@@ -119,8 +127,8 @@ export default function WriteEditorPage() {
 
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const savedUuidRef = useRef<string | null>(editUuid)
-  const [savedUuid, setSavedUuid] = useState<string | null>(editUuid)
   const saveRequestIdRef = useRef(0)
+  const lastSavedSignatureRef = useRef("")
   const coverInputRef = useRef<HTMLInputElement>(null)
   const titleRef = useRef<HTMLTextAreaElement>(null)
   const excerptRef = useRef<HTMLTextAreaElement>(null)
@@ -204,7 +212,21 @@ export default function WriteEditorPage() {
           post.categories?.map((category) => category.uuid) ?? [],
         )
         savedUuidRef.current = post.uuid
-        setSavedUuid(post.uuid)
+        lastSavedSignatureRef.current = JSON.stringify({
+          title: (post.title ?? "").trim(),
+          content: post.content ?? "",
+          excerpt: (post.excerpt ?? "").trim() || undefined,
+          cover: post.cover || undefined,
+          visibility: post.visibility ?? "public",
+          categories: post.categories?.map((category) => category.uuid) ?? [],
+          tags: post.tags ?? [],
+          seo_indexable: post.seo_indexable ?? true,
+          allow_comments: post.allow_comments ?? true,
+          allow_reactions: post.allow_reactions ?? true,
+          allow_reposts: true,
+          is_pinned: post.is_pinned ?? false,
+          scheduled_at: post.scheduled_at ?? null,
+        })
         setSaveStatus("saved")
         setSavedAt(new Date())
         setPublicationState("draft")
@@ -257,6 +279,38 @@ export default function WriteEditorPage() {
     scheduledAt,
   ])
 
+  const draftSignature = useMemo(
+    () => JSON.stringify(buildPostData()),
+    [buildPostData],
+  )
+  const hasContent = htmlToPlainText(content).length > 0
+  const hasDraftInput = Boolean(
+    title.trim() ||
+      hasContent ||
+      excerpt.trim() ||
+      cover ||
+      selectedCategories.length ||
+      tags.length,
+  )
+  const isDirty = hasDraftInput && draftSignature !== lastSavedSignatureRef.current
+
+  useEffect(() => {
+    if (isDirty && saveStatus !== "saving") {
+      setSaveStatus("idle")
+    }
+  }, [isDirty, saveStatus])
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!isDirty) return
+      event.preventDefault()
+      event.returnValue = ""
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload)
+  }, [isDirty])
+
   /* =======================================================
      Save draft
   ======================================================= */
@@ -264,7 +318,12 @@ export default function WriteEditorPage() {
   const saveDraft = useCallback(
     async (showError = true) => {
       if (!token) return
-      if (!title.trim()) return
+      if (!title.trim()) {
+        if (showError && hasContent) {
+          setError("Qoralama saqlash uchun sarlavha kiriting.")
+        }
+        return
+      }
 
       const requestId = ++saveRequestIdRef.current
       setSaveStatus("saving")
@@ -279,10 +338,10 @@ export default function WriteEditorPage() {
           const post = await postsApi.create(token, data)
           uuid = post.uuid
           savedUuidRef.current = uuid
-          setSavedUuid(uuid)
         }
 
         if (requestId === saveRequestIdRef.current) {
+          lastSavedSignatureRef.current = JSON.stringify(data)
           setSaveStatus("saved")
           setSavedAt(new Date())
           setPublicationState("draft")
@@ -295,43 +354,27 @@ export default function WriteEditorPage() {
         }
       }
     },
-    [token, title, buildPostData],
+    [token, title, hasContent, buildPostData],
   )
 
   /* =======================================================
-     Autosave — 30s debounce
+     Autosave
   ======================================================= */
 
   useEffect(() => {
     if (!token) return
-    if (!title.trim() && !content.trim()) return
+    if (!isDirty || !title.trim()) return
 
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
 
     saveTimerRef.current = setTimeout(() => {
       saveDraft(false)
-    }, 30_000)
+    }, AUTOSAVE_DELAY_MS)
 
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current)
     }
-  }, [
-    title,
-    excerpt,
-    content,
-    cover,
-    visibility,
-    selectedCategories,
-    tags,
-    allowComments,
-    allowReactions,
-    allowReposts,
-    seoIndexable,
-    isPinned,
-    scheduledAt,
-    token,
-    saveDraft,
-  ])
+  }, [token, isDirty, title, saveDraft])
 
   /* =======================================================
      Manual save
@@ -366,7 +409,7 @@ export default function WriteEditorPage() {
 
     setUploadingCover(true)
     try {
-      const upload = await uploadsApi.postImage(token, file)
+      const upload = await uploadsApi.cover(token, file)
       setCover(upload.path)
       setCoverPreviewUrl(upload.url)
     } catch (err) {
@@ -452,7 +495,7 @@ export default function WriteEditorPage() {
       setError("Sarlavha majburiy.")
       return
     }
-    if (!content.trim()) {
+    if (!hasContent) {
       setError("Maqola matni bo'sh bo'lishi mumkin emas.")
       return
     }
@@ -465,7 +508,11 @@ export default function WriteEditorPage() {
   ======================================================= */
 
   const handlePublish = async () => {
-    if (!token) return
+    if (!token || publishing) return
+    if (!title.trim() || !hasContent) {
+      setError("Sarlavha va maqola matni majburiy.")
+      return
+    }
 
     setPublishing(true)
     setError(null)
@@ -478,17 +525,17 @@ export default function WriteEditorPage() {
         const post = await postsApi.create(token, data)
         uuid = post.uuid
         savedUuidRef.current = uuid
-        setSavedUuid(uuid)
       }
 
-      await postsApi.publish(token, uuid, { ...data })
+      const publishedPost = await postsApi.publish(token, uuid, { ...data })
 
+      lastSavedSignatureRef.current = JSON.stringify(data)
       setPublicationState("published")
       setSaveStatus("saved")
       setSavedAt(new Date())
       setShowPublishModal(false)
 
-      router.push(`/@${user?.username}`)
+      router.push(`/${publishedPost.author.username}/${publishedPost.slug}`)
       router.refresh()
     } catch (err) {
       setError(
@@ -497,6 +544,13 @@ export default function WriteEditorPage() {
     } finally {
       setPublishing(false)
     }
+  }
+
+  const handleBack = () => {
+    if (isDirty && !window.confirm("Saqlanmagan o'zgarishlar bor. Chiqib ketasizmi?")) {
+      return
+    }
+    router.push("/dashboard/posts")
   }
 
   /* =======================================================
@@ -525,13 +579,15 @@ export default function WriteEditorPage() {
 
         {/* Left: back + save status */}
         <div className="write-topbar-left">
-          <Link
-            href="/write"
+          <button
+            type="button"
+            onClick={handleBack}
             className="write-back-btn"
             title="Yozishga qaytish"
+            aria-label="Yozishga qaytish"
           >
             <ArrowLeft size={16} />
-          </Link>
+          </button>
 
           <div className="write-save-status">
             {saveStatus === "saving" && (
@@ -543,7 +599,11 @@ export default function WriteEditorPage() {
             {saveStatus === "saved" && (
               <>
                 <Check size={12} className="text-green-500" />
-                <span>Saqlangan</span>
+                <span>
+                  {savedAt
+                    ? `Saqlangan ${savedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+                    : "Saqlangan"}
+                </span>
               </>
             )}
             {saveStatus === "error" && (
@@ -589,7 +649,7 @@ export default function WriteEditorPage() {
               publishing ||
               uploadingCover ||
               !title.trim() ||
-              !content.trim()
+              !hasContent
             }
             className="write-publish-btn"
           >
@@ -613,6 +673,7 @@ export default function WriteEditorPage() {
             type="button"
             onClick={() => setError(null)}
             className="write-error-close"
+            aria-label="Xatoni yopish"
           >
             <X size={14} />
           </button>

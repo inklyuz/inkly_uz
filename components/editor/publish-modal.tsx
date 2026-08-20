@@ -100,7 +100,7 @@ interface PublishModalProps {
   uploadingCover: boolean
   onCoverUpload: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>
   onRemoveCover: () => void
-  coverInputRef: React.RefObject<HTMLInputElement>
+  coverInputRef: React.RefObject<HTMLInputElement | null>
 
   allowComments: boolean
   onAllowComments: (value: boolean) => void

@@ -192,7 +192,7 @@ export default function NotificationsSettingsPage() {
             <Button
               onClick={handleToggleBrowserNotifications}
               disabled={pushLoading}
-              variant={permission === "granted" ? "ghost" : "default"}
+              variant={permission === "granted" ? "ghost" : "primary"}
               className={
                 permission === "granted"
                   ? "rounded-full text-red-500 hover:bg-red-50 hover:text-red-600 shrink-0"

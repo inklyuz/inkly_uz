@@ -136,7 +136,7 @@ export default function TelegramVerifyPage() {
       <div className="flex items-center justify-center gap-2 sm:gap-4">
         {["Boshlash", "Kuting", "Tasdiqlash"].map((label, idx) => {
           const isDone = (step === "verified") || (step === "pending" && idx < 1) || (step === "started" && idx === 0)
-          const isActive = (step === "started" && idx === 0) || (step === "pending" && idx === 1) || (step === "complete" && idx === 2)
+          const isActive = (step === "started" && idx === 0) || (step === "pending" && idx === 1) || (step === "verified" && idx === 2)
           return (
             <div key={label} className="flex items-center gap-2">
               <div className={cn(

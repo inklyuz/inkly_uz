@@ -139,7 +139,7 @@ function LockIcon({ size = 17 }: { size?: number }) {
 
 function AlertIcon({ size = 15 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
       <circle cx="12" cy="12" r="10" />
       <line x1="12" y1="8" x2="12" y2="12" />
       <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -147,9 +147,9 @@ function AlertIcon({ size = 15 }: { size?: number }) {
   )
 }
 
-function ShieldIcon({ size = 13 }: { size?: number }) {
+function ShieldIcon({ size = 13, style }: { size?: number; style?: import("react").CSSProperties }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       <polyline points="9 12 11 14 15 10" />
     </svg>
@@ -559,13 +559,13 @@ function RegisterLayout() {
 
             {/* Mobile logo */}
             <div className="flex items-center justify-center gap-1.5 mb-7 lg:hidden">
-              <LogoMark size={22} style={{ color: "#FF6A00" }} />
+              <LogoMark size={22} className="text-[#FF6A00]" />
               <span className="text-lg font-bold tracking-tighter" style={{ color: "#141414" }}>inkly</span>
             </div>
 
             {/* Desktop logo */}
             <div className="hidden lg:flex items-center gap-1.5 mb-7">
-              <LogoMark size={22} style={{ color: "#FF6A00" }} />
+              <LogoMark size={22} className="text-[#FF6A00]" />
               <span className="text-lg font-bold tracking-tighter" style={{ color: "#141414" }}>inkly</span>
             </div>
 

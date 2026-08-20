@@ -169,6 +169,7 @@ export interface PostResponse {
   views_count: number
   reacted: PostReactionType | null
   categories: PostCategory[]
+  tags?: string[]
   sharing_image: SharingImage | null
   is_pinned: boolean
   allow_comments: boolean
@@ -178,6 +179,7 @@ export interface PostResponse {
 }
 
 export interface PostListItem {
+  reading_time: any
   uuid: string
   slug: string
   title: string
