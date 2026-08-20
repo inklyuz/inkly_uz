@@ -354,7 +354,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             {/* Profile dropdown */}
             {user && (
-              <ProfileDropdown user={user} onLogout={handleLogout} />
+              <ProfileDropdown user={{ ...user, avatar: user.avatar ?? undefined }} onLogout={handleLogout} />
             )}
           </div>
         </header>
