@@ -7,10 +7,10 @@ import type { CreatorPublicResponse, Page } from "@/types/api"
 // Stub — hech qayerda to'g'ridan-to'g'ri chaqirilmaydi
 export const creatorsApi = {
   list: (_params?: object): Promise<Page<CreatorPublicResponse>> => {
-    return Promise.resolve({ items: [], total: 0, page: 1, page_size: 12, pages: 0 })
+    return Promise.resolve({ items: [], total: 0, page: 1, page_size: 12, total_pages: 0 })
   },
 }
 
 export async function listCreatorsSafe(): Promise<Page<CreatorPublicResponse>> {
-  return { items: [], total: 0, page: 1, page_size: 12, pages: 0 }
+  return { items: [], total: 0, page: 1, page_size: 12, total_pages: 0 }
 }

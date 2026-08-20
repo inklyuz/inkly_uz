@@ -214,7 +214,7 @@ export default function TelegramChannelsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleOpenChannel(channel.username)}
+                    onClick={() => channel.username && handleOpenChannel(channel.username)}
                     className="text-[#6B7280] hover:text-[#141414] hover:bg-[#F2F4F7]"
                     title="Kanalni ochish"
                   >
