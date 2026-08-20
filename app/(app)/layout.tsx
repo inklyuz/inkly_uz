@@ -18,7 +18,7 @@ const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/write", icon: PenLine, label: "Yozish" },
   { href: "/dashboard/posts", icon: BookOpen, label: "Maqolalarim" },
-  { href: "/telegram/account", icon: Send, label: "Telegram" },
+  // { href: "/telegram/account", icon: Send, label: "Telegram" },
   { href: "/settings/profile", icon: Settings, label: "Sozlamalar" },
 ]
 
