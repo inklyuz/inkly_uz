@@ -199,99 +199,97 @@ export function Navbar() {
       </div>
 
       {/* Mobil dropdown */}
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            id="mobile-navbar"
-            variants={menuVariants}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            className="overflow-hidden border-t border-border-default bg-white/95 backdrop-blur-md lg:hidden"
-          >
-            <nav className="mx-auto flex max-w-[1400px] flex-col px-6 py-4 sm:px-8">
-              {links.map((link) => {
-                const active = isActive(link.href)
-                return (
-                  <motion.div key={link.href} variants={itemVariants}>
-                    <Link
-                      href={link.href}
-                      onClick={() => setOpen(false)}
-                      className={cn(
-                        "flex items-center justify-between rounded-xl px-4 py-3 text-[14px] font-medium transition-colors",
-                        active ? "bg-inkly-orange-light text-primary" : "text-[#222] hover:bg-inkly-orange-light"
-                      )}
-                    >
-                      {link.label}
-                      {active && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
-                    </Link>
-                  </motion.div>
-                )
-              })}
-
-              {user && (
-                <motion.div variants={itemVariants} className="mt-2">
+      {open && (
+        <motion.div
+          id="mobile-navbar"
+          variants={menuVariants}
+          initial="closed"
+          animate="open"
+          exit="closed"
+          className="overflow-hidden border-t border-border-default bg-white/95 backdrop-blur-md lg:hidden"
+        >
+          <nav className="mx-auto flex max-w-[1400px] flex-col px-6 py-4 sm:px-8">
+            {links.map((link) => {
+              const active = isActive(link.href)
+              return (
+                <motion.div key={link.href} variants={itemVariants}>
                   <Link
-                    href={user.username ? `/@${user.username}` : "/dashboard"}
+                    href={link.href}
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 rounded-xl px-4 py-3 text-[14px] font-medium text-[#222] transition-colors hover:bg-inkly-orange-light"
+                    className={cn(
+                      "flex items-center justify-between rounded-xl px-4 py-3 text-[14px] font-medium transition-colors",
+                      active ? "bg-inkly-orange-light text-primary" : "text-[#222] hover:bg-inkly-orange-light"
+                    )}
                   >
-                    <Avatar src={user.avatar} name={user.full_name} size={28} />
-                    <div className="flex flex-col">
-                      <span className="text-[13px] font-semibold text-text-primary">
-                        {user.full_name}
-                      </span>
-                      <span className="text-[11px] text-foreground-muted">
-                        @{user.username}
-                      </span>
-                    </div>
+                    {link.label}
+                    {active && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
                   </Link>
                 </motion.div>
-              )}
+              )
+            })}
 
-              {user && (
-                <motion.div
-                  variants={itemVariants}
-                  className="mt-3 border-t border-border-default pt-3"
+            {user && (
+              <motion.div variants={itemVariants} className="mt-2">
+                <Link
+                  href={user.username ? `/@${user.username}` : "/dashboard"}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-[14px] font-medium text-[#222] transition-colors hover:bg-inkly-orange-light"
                 >
-                  <Link
-                    href="/write"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-[13px] font-semibold text-white hover:bg-inkly-hover"
-                  >
-                    <PenLine size={15} />
-                    Maqola yozish
-                  </Link>
-                </motion.div>
-              )}
+                  <Avatar src={user.avatar} name={user.full_name} size={28} />
+                  <div className="flex flex-col">
+                    <span className="text-[13px] font-semibold text-text-primary">
+                      {user.full_name}
+                    </span>
+                    <span className="text-[11px] text-foreground-muted">
+                      @{user.username}
+                    </span>
+                  </div>
+                </Link>
+              </motion.div>
+            )}
 
-              {/* loading paytida mobil menyuda ham hech narsa ko'rsatmaymiz —
+            {user && (
+              <motion.div
+                variants={itemVariants}
+                className="mt-3 border-t border-border-default pt-3"
+              >
+                <Link
+                  href="/write"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-[13px] font-semibold text-white hover:bg-inkly-hover"
+                >
+                  <PenLine size={15} />
+                  Maqola yozish
+                </Link>
+              </motion.div>
+            )}
+
+            {/* loading paytida mobil menyuda ham hech narsa ko'rsatmaymiz —
                   token bor bo'lsa tasdiqlash tugagunicha kutamiz */}
-              {!user && !loading && (
-                <motion.div
-                  variants={itemVariants}
-                  className="mt-3 grid grid-cols-2 gap-2 border-t border-border-default pt-3"
+            {!user && !loading && (
+              <motion.div
+                variants={itemVariants}
+                className="mt-3 grid grid-cols-2 gap-2 border-t border-border-default pt-3"
+              >
+                <Link
+                  href="/login"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-center rounded-xl border border-border-default px-4 py-3 text-[13px] font-medium text-[#222]"
                 >
-                  <Link
-                    href="/login"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center justify-center rounded-xl border border-border-default px-4 py-3 text-[13px] font-medium text-[#222]"
-                  >
-                    Kirish
-                  </Link>
-                  <Link
-                    href="/register"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center justify-center rounded-xl bg-primary px-4 py-3 text-[13px] font-semibold text-white"
-                  >
-                    Boshlash
-                  </Link>
-                </motion.div>
-              )}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  Kirish
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-center rounded-xl bg-primary px-4 py-3 text-[13px] font-semibold text-white"
+                >
+                  Boshlash
+                </Link>
+              </motion.div>
+            )}
+          </nav>
+        </motion.div>
+      )}
     </header>
   )
 }

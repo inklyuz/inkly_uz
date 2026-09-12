@@ -33,8 +33,6 @@ export default function HomePage() {
 
       <HowItWorks />
 
-      <WaitlistSection />
-
       <CtaSection />
     </main>
   )
