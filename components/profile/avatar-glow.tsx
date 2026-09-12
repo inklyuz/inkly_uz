@@ -4,6 +4,10 @@ import { useEffect, useState } from "react"
 
 interface AvatarGlowProps {
   avatarUrl: string
+  /** Backend'dan kelgan banner (user.cover). Mavjud bo'lsa, sahifa rangi
+   *  avatar o'rniga shu rasmdan hisoblanadi (chunki bannerni ko'radigan
+   *  odam ham, ko'rinadigan rang ham shu rasmga mos bo'lishi kerak). */
+  coverUrl?: string | null
   children: React.ReactNode
 }
 
@@ -19,21 +23,26 @@ interface Rgb {
 const FALLBACK_RGB: Rgb = { r: 255, g: 106, b: 0 }
 
 /**
- * Banner/hero uchun aksent rang HAR BIR foydalanuvchining o'z avatar
- * rasmidan (dominant/eng to'yingan rangidan) hisoblanadi. --glow-r/g/b
+ * Banner/hero uchun aksent rang HAR BIR foydalanuvchining o'z rasmidan
+ * (dominant/eng to'yingan rangidan) hisoblanadi — agar backend `cover`
+ * (banner) bergan bo'lsa o'shandan, aks holda avatardan. --glow-r/g/b
  * CSS o'zgaruvchilari (rgb komponentlari alohida-alohida) shu yerda BIR
  * MARTA o'rnatiladi va bolalarga (banner, follow tugmasi, statistikalar,
  * ikonalar — lib/theme/accent.ts orqali) meros bo'lib tushadi.
  *
- * Agar avatar bo'lmasa yoki rasm boshqa origin'da joylashgani uchun
- * canvas orqali o'qib bo'lmasa (tainted canvas / CORS xatosi), rang
- * FALLBACK_RGB (brend rangi) da qoladi.
+ * Agar na cover, na avatar bo'lmasa, yoki rasm boshqa origin'da
+ * joylashgani uchun canvas orqali o'qib bo'lmasa (tainted canvas / CORS
+ * xatosi), rang FALLBACK_RGB (brend rangi) da qoladi.
  */
-export function AvatarGlow({ avatarUrl, children }: AvatarGlowProps) {
+export function AvatarGlow({ avatarUrl, coverUrl, children }: AvatarGlowProps) {
   const [rgb, setRgb] = useState<Rgb>(FALLBACK_RGB)
 
+  // Banner mavjud bo'lsa, sahifa rangi o'shandan chiqariladi — bo'lmasa
+  // avatarga tushamiz.
+  const colorSourceUrl = coverUrl ?? avatarUrl
+
   useEffect(() => {
-    if (!avatarUrl) {
+    if (!colorSourceUrl) {
       setRgb(FALLBACK_RGB)
       return
     }
@@ -58,12 +67,12 @@ export function AvatarGlow({ avatarUrl, children }: AvatarGlowProps) {
       if (!cancelled) setRgb(FALLBACK_RGB)
     }
 
-    img.src = avatarUrl
+    img.src = colorSourceUrl
 
     return () => {
       cancelled = true
     }
-  }, [avatarUrl])
+  }, [colorSourceUrl])
 
   const style = {
     "--glow-r": rgb.r,
