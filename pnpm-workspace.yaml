@@ -1,0 +1,3 @@
+allowBuilds:
+  full-icu: false
+  msw: false
