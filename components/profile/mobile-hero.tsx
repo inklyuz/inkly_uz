@@ -59,12 +59,8 @@ const BLUR_MASK = `radial-gradient(110.26% 96% at 50% 0%,
 // ─── MobileHero ─────────────────────────────────────────────────────────────
 
 export function MobileHero({ user }: { user: ProfileUser }) {
-    // Mobilda asosiy vizual har doim AVATAR bo'lishi kerak (banner/cover
-    // faqat desktop ProfileBanner'da ishlatiladi) — shuning uchun bu yerda
-    // cover'ga ustunlik berilmaydi.
     const avatarUrl = user.avatar ? getMediaUrl(user.avatar) : null
-    const heroSrc = avatarUrl
-    const [ready, setReady] = useState(!heroSrc)
+    const [ready, setReady] = useState(!avatarUrl)
 
     const initial = user.username?.[0]?.toUpperCase() ?? "?"
     const { telegram, github, twitter, instagram, youtube } = user.socials ?? {}
@@ -82,7 +78,7 @@ export function MobileHero({ user }: { user: ProfileUser }) {
             </div>
 
             {/* ── Avatar BOR ── */}
-            {heroSrc ? (
+            {avatarUrl ? (
                 <div className="relative w-full" style={{ height: "calc(100vw - 80px)" }}>
                     <div className="absolute inset-0" style={{ backgroundColor: "var(--color-white)" }} />
                     <div
@@ -90,7 +86,7 @@ export function MobileHero({ user }: { user: ProfileUser }) {
                         style={{ height: "100vw", mask: RADIAL_MASK, WebkitMask: RADIAL_MASK }}
                     >
                         <NextImage
-                            src={heroSrc}
+                            src={avatarUrl}
                             alt=""
                             aria-hidden
                             fill
@@ -106,7 +102,7 @@ export function MobileHero({ user }: { user: ProfileUser }) {
                     </div>
                 </div>
             ) : (
-                /* ── Avatar YO'Q — bir xil struktura, LetterTile bilan ── */
+                /* ── Avatar YO'Q — avatar bilan aynan bir xil struktura ── */
                 <div className="relative w-full" style={{ height: "calc(100vw - 80px)" }}>
                     <div className="absolute inset-0" style={{ backgroundColor: "var(--color-white)" }} />
                     <div
