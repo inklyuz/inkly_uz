@@ -60,7 +60,11 @@ const BLUR_MASK = `radial-gradient(110.26% 96% at 50% 0%,
 
 export function MobileHero({ user }: { user: ProfileUser }) {
     const avatarUrl = user.avatar ? getMediaUrl(user.avatar) : null
-    const [ready, setReady] = useState(!avatarUrl)
+    // Backend haqiqiy banner (cover) bergan bo'lsa, mobil hero'da ham
+    // o'shani ishlatamiz — bo'lmasa avvalgidek avatarga tushamiz.
+    const coverUrl = user.cover ? getMediaUrl(user.cover) : null
+    const heroSrc = coverUrl ?? avatarUrl
+    const [ready, setReady] = useState(!heroSrc)
 
     const initial = user.username?.[0]?.toUpperCase() ?? "?"
     const { telegram, github, twitter, instagram, youtube } = user.socials ?? {}
@@ -77,8 +81,8 @@ export function MobileHero({ user }: { user: ProfileUser }) {
                 <ShareButton iconOnly />
             </div>
 
-            {/* ── Avatar BOR ── */}
-            {avatarUrl ? (
+            {/* ── Rasm BOR (cover yoki avatar) ── */}
+            {heroSrc ? (
                 <div className="relative w-full" style={{ height: "calc(100vw - 80px)" }}>
                     <div className="absolute inset-0" style={{ backgroundColor: "var(--color-white)" }} />
                     <div
@@ -86,7 +90,7 @@ export function MobileHero({ user }: { user: ProfileUser }) {
                         style={{ height: "100vw", mask: RADIAL_MASK, WebkitMask: RADIAL_MASK }}
                     >
                         <NextImage
-                            src={avatarUrl}
+                            src={heroSrc}
                             alt=""
                             aria-hidden
                             fill
@@ -102,7 +106,7 @@ export function MobileHero({ user }: { user: ProfileUser }) {
                     </div>
                 </div>
             ) : (
-                /* ── Avatar YO'Q — avatar bilan aynan bir xil struktura ── */
+                /* ── Rasm YO'Q — bir xil struktura, LetterTile bilan ── */
                 <div className="relative w-full" style={{ height: "calc(100vw - 80px)" }}>
                     <div className="absolute inset-0" style={{ backgroundColor: "var(--color-white)" }} />
                     <div

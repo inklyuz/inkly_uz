@@ -2,6 +2,9 @@ import Image from "next/image"
 
 interface ProfileBannerProps {
     avatarUrl: string
+    /** Backend'dan kelgan haqiqiy banner rasmi (user.cover). Mavjud bo'lsa,
+     *  rangga asoslangan fallback o'rniga shu ishlatiladi. */
+    coverUrl?: string | null
 }
 
 /**
@@ -9,19 +12,44 @@ interface ProfileBannerProps {
  * Matn, avatar va statistikalar bu yerda YO'Q — ular ProfileHeader'da,
  * bannerdan pastda joylashadi.
  *
- * Rang endi shu komponent ichida hisoblanmaydi — --glow-r/g/b CSS
- * o'zgaruvchilari page.tsx darajasida BITTA <AvatarGlow> orqali
- * o'rnatiladi va shu yerga meros bo'lib tushadi (mobil hero bilan
- * bir xil manba). Bu rang endi foydalanuvchi avataridan emas —
- * saytning logotip rangidan (--color-inkly-orange, app/globals.css)
- * olinadi, shuning uchun barcha profillarda banner bir xil brend
- * rangida bo'ladi.
+ * Ikki holat:
+ * 1) Backend `cover` (banner) rasm bergan bo'lsa — o'sha rasm to'g'ridan
+ *    to'g'ri banner sifatida ko'rsatiladi.
+ * 2) Bo'lmasa — rang endi shu komponent ichida hisoblanmaydi: --glow-r/g/b
+ *    CSS o'zgaruvchilari page.tsx darajasida BITTA <AvatarGlow> orqali
+ *    o'rnatiladi (foydalanuvchi avatarining dominant rangi) va shu yerga
+ *    meros bo'lib tushadi — mobil hero bilan bir xil manba.
  */
-export function ProfileBanner({ avatarUrl }: ProfileBannerProps) {
+export function ProfileBanner({ avatarUrl, coverUrl }: ProfileBannerProps) {
+    if (coverUrl) {
+        return (
+            <section className="relative h-[200px] w-full overflow-hidden bg-[#F3EDE7] sm:h-[240px] lg:h-[280px]">
+                <Image
+                    src={coverUrl}
+                    alt=""
+                    aria-hidden
+                    fill
+                    sizes="100vw"
+                    priority
+                    className="object-cover object-center"
+                />
+
+                {/* Pastga yengil to'qlashtirish — ostidagi oq kontent (ProfileHeader)
+                    bilan tekis qo'shilishi uchun, xuddi rang-fallback variantidagi kabi */}
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        background: "linear-gradient(to top, rgba(0,0,0,0.28) 0%, transparent 45%)",
+                    }}
+                />
+            </section>
+        )
+    }
+
     return (
         <section className="relative h-[200px] w-full overflow-hidden sm:h-[240px] lg:h-[280px]">
 
-            {/* Baza — logo rangi */}
+            {/* Baza — avatardan chiqarilgan rang (yoki brend rangi, agar avatar bo'lmasa/CORS xatosi bo'lsa) */}
             <div
                 className="absolute inset-0"
                 style={{

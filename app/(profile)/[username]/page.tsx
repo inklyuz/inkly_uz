@@ -65,6 +65,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
   const articleCount = postsData.total
   const avatarUrl = user.avatar ? (getMediaUrl(user.avatar) ?? "") : ""
+  // Backend haqiqiy banner (cover) berishi mumkin — bo'lsa, ProfileBanner
+  // rang-fallback o'rniga shu rasmni ko'rsatadi.
+  const coverUrl = user.cover ? getMediaUrl(user.cover) : null
 
   const totalViews = postsData.items.reduce((acc, p) => acc + (p.views_count ?? 0), 0)
   const totalLikes = postsData.items.reduce((acc, p) => acc + (p.likes_count ?? 0), 0)
@@ -92,7 +95,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         {/* ── Desktop Layout ── */}
         <div className="hidden sm:block">
           {/* Banner — faqat fon */}
-          <ProfileBanner avatarUrl={avatarUrl} />
+          <ProfileBanner avatarUrl={avatarUrl} coverUrl={coverUrl} />
 
           {/* Header — avatar, ism, statistika, follow tugmasi */}
           <div className="border-b border-[#EDE8E3] bg-white">
