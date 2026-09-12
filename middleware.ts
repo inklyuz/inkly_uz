@@ -60,7 +60,7 @@ function buildCsp(isDev: boolean): string {
   return directives.join("; ")
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const isDev = process.env.NODE_ENV === "development"
