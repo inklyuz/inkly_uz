@@ -40,7 +40,7 @@ function UserIcon({ size = 17 }: { size?: number }) {
 
 interface Step1Props {
   onNext: (data: Step1Data) => void
-  onTelegramSuccess: () => void
+  onTelegramSuccess: (username?: string) => void
 }
 
 export function RegisterStep1({ onNext, onTelegramSuccess }: Step1Props) {
