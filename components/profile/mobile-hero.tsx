@@ -59,11 +59,11 @@ const BLUR_MASK = `radial-gradient(110.26% 96% at 50% 0%,
 // ─── MobileHero ─────────────────────────────────────────────────────────────
 
 export function MobileHero({ user }: { user: ProfileUser }) {
+    // Mobilda asosiy vizual har doim AVATAR bo'lishi kerak (banner/cover
+    // faqat desktop ProfileBanner'da ishlatiladi) — shuning uchun bu yerda
+    // cover'ga ustunlik berilmaydi.
     const avatarUrl = user.avatar ? getMediaUrl(user.avatar) : null
-    // Backend haqiqiy banner (cover) bergan bo'lsa, mobil hero'da ham
-    // o'shani ishlatamiz — bo'lmasa avvalgidek avatarga tushamiz.
-    const coverUrl = user.cover ? getMediaUrl(user.cover) : null
-    const heroSrc = coverUrl ?? avatarUrl
+    const heroSrc = avatarUrl
     const [ready, setReady] = useState(!heroSrc)
 
     const initial = user.username?.[0]?.toUpperCase() ?? "?"
@@ -81,7 +81,7 @@ export function MobileHero({ user }: { user: ProfileUser }) {
                 <ShareButton iconOnly />
             </div>
 
-            {/* ── Rasm BOR (cover yoki avatar) ── */}
+            {/* ── Avatar BOR ── */}
             {heroSrc ? (
                 <div className="relative w-full" style={{ height: "calc(100vw - 80px)" }}>
                     <div className="absolute inset-0" style={{ backgroundColor: "var(--color-white)" }} />
@@ -106,7 +106,7 @@ export function MobileHero({ user }: { user: ProfileUser }) {
                     </div>
                 </div>
             ) : (
-                /* ── Rasm YO'Q — bir xil struktura, LetterTile bilan ── */
+                /* ── Avatar YO'Q — bir xil struktura, LetterTile bilan ── */
                 <div className="relative w-full" style={{ height: "calc(100vw - 80px)" }}>
                     <div className="absolute inset-0" style={{ backgroundColor: "var(--color-white)" }} />
                     <div
