@@ -23,44 +23,44 @@ export function CtaSection() {
       />
 
       {/* Nuqtalar — chap yuqori */}
-      <div aria-hidden="true" className="pointer-events-none absolute top-8 left-8 grid grid-cols-3 gap-[6px]">
+      <div aria-hidden="true" className="pointer-events-none absolute top-6 left-6 grid grid-cols-3 gap-[6px]">
         {Array.from({ length: 9 }).map((_, i) => (
           <div key={i} className="h-[3px] w-[3px] rounded-full bg-white/20" />
         ))}
       </div>
 
       {/* Nuqtalar — o'ng pastki */}
-      <div aria-hidden="true" className="pointer-events-none absolute bottom-8 right-8 grid grid-cols-3 gap-[6px]">
+      <div aria-hidden="true" className="pointer-events-none absolute bottom-6 right-6 grid grid-cols-3 gap-[6px]">
         {Array.from({ length: 9 }).map((_, i) => (
           <div key={i} className="h-[3px] w-[3px] rounded-full bg-white/20" />
         ))}
       </div>
 
-      {/* Glow — chap */}
+      {/* Glow — chap yuqori */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-32 -left-32 h-[500px] w-[500px] rounded-full"
-        style={{ background: "radial-gradient(circle, rgba(255,106,0,0.22) 0%, transparent 65%)" }}
-      />
-
-      {/* Glow — o'ng pastki */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-20 right-1/3 h-[300px] w-[300px] rounded-full"
-        style={{ background: "radial-gradient(circle, rgba(255,106,0,0.12) 0%, transparent 65%)" }}
+        style={{ background: "radial-gradient(circle, rgba(255,106,0,0.20) 0%, transparent 65%)" }}
       />
 
       {/* Aylana dekoratsiya — chap */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-12 left-12 h-20 w-20 rounded-full border border-[rgba(255,106,0,0.25)]"
+        className="pointer-events-none absolute top-10 left-10 h-16 w-16 rounded-full border border-[rgba(255,106,0,0.20)]"
+      />
+
+      {/* Glow — o'ng pastki (mushuk tagida) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-10 right-24 h-[280px] w-[280px] rounded-full"
+        style={{ background: "radial-gradient(circle, rgba(255,106,0,0.18) 0%, transparent 65%)" }}
       />
 
       <Container variant="marketing" className="relative z-10">
-        <div className="flex flex-col items-start gap-12 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col items-start gap-0 lg:flex-row lg:items-end lg:justify-between">
 
           {/* Chap — kontent */}
-          <div className="flex max-w-xl flex-col items-start">
+          <div className="flex max-w-xl flex-col items-start pb-0 lg:pb-0">
 
             {/* LogoMark */}
             <div className="mb-7 flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5">
@@ -112,26 +112,31 @@ export function CtaSection() {
             </p>
           </div>
 
-          {/* O'ng — mushuk rasmi */}
-          <div className="relative flex-shrink-0 self-end lg:self-auto">
-            {/* Pastki glow mushuk ostida */}
+          {/* O'ng — mushuk pastdan mo'ralab turadi */}
+          <div className="relative hidden lg:block flex-shrink-0">
+            {/* Mushuk panjalar pastki chegaraga yopishadi */}
             <div
-              aria-hidden="true"
-              className="absolute bottom-0 left-1/2 h-24 w-64 -translate-x-1/2"
-              style={{
-                background: "radial-gradient(ellipse, rgba(255,106,0,0.35) 0%, transparent 70%)",
-                filter: "blur(16px)",
-              }}
-            />
-            <Image
-              src="/cat.png"
-              alt=""
-              aria-hidden="true"
-              width={520}
-              height={420}
-              className="relative z-10 w-[280px] select-none sm:w-[380px] lg:w-[480px]"
-              priority
-            />
+              className="relative overflow-hidden"
+              style={{ width: 480, height: 340 }}
+            >
+              {/* Pastki glow */}
+              <div
+                aria-hidden="true"
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 h-20 w-72"
+                style={{
+                  background: "radial-gradient(ellipse, rgba(255,106,0,0.40) 0%, transparent 70%)",
+                  filter: "blur(20px)",
+                }}
+              />
+              <Image
+                src="/cat.png"
+                alt=""
+                aria-hidden="true"
+                fill
+                className="object-contain object-bottom select-none"
+                priority
+              />
+            </div>
           </div>
 
         </div>
