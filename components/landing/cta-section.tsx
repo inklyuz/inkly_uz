@@ -10,7 +10,7 @@ export function CtaSection() {
     <section
       aria-labelledby="cta-heading"
       className="relative isolate overflow-hidden bg-[#141414]"
-      style={{ minHeight: "480px" }}
+      style={{ height: "420px" }}
     >
       {/* Grid tekstura */}
       <div
@@ -50,49 +50,43 @@ export function CtaSection() {
         className="pointer-events-none absolute top-10 left-10 h-20 w-20 rounded-full border border-[rgba(255,106,0,0.22)]"
       />
 
-      {/* Glow — o'ng pastki (mushuk tagida) */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-10 right-32 h-[360px] w-[360px] rounded-full"
-        style={{ background: "radial-gradient(circle, rgba(255,106,0,0.20) 0%, transparent 65%)" }}
-      />
-
-      {/* Mushuk — absolute, o'ng tomonda to'liq balandlikda */}
+      {/* Mushuk — o'ng pastki burchak, fixed o'lcham */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute bottom-0 right-0 hidden lg:block"
-        style={{ width: 620, height: "100%" }}
+        style={{ width: 560, height: 420 }}
       >
         {/* Mushuk ostidagi glow */}
         <div
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 h-24 w-80"
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 h-20 w-80"
           style={{
             background: "radial-gradient(ellipse, rgba(255,106,0,0.45) 0%, transparent 70%)",
-            filter: "blur(24px)",
+            filter: "blur(20px)",
           }}
         />
         <Image
           src="/cat.png"
           alt=""
           fill
-          className="object-contain object-bottom select-none"
+          className="object-contain object-bottom-right select-none"
+          style={{ objectPosition: "right bottom" }}
           priority
         />
       </div>
 
-      {/* Kontent */}
-      <Container variant="marketing" className="relative z-10">
-        <div className="flex min-h-[480px] flex-col justify-center py-20 lg:max-w-[55%]">
+      {/* Kontent — vertikal markazda */}
+      <Container variant="marketing" className="relative z-10 h-full">
+        <div className="flex h-full flex-col justify-center lg:max-w-[52%]">
 
           {/* LogoMark */}
-          <div className="mb-8 flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-            <LogoMark size={22} className="text-[var(--color-inkly-orange)]" />
+          <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+            <LogoMark size={20} className="text-[var(--color-inkly-orange)]" />
           </div>
 
           {/* Sarlavha */}
           <h2
             id="cta-heading"
-            className="font-display text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-white text-balance sm:text-[52px] lg:text-[64px]"
+            className="font-display text-[38px] font-bold leading-[1.08] tracking-[-0.03em] text-white sm:text-[48px] lg:text-[58px]"
           >
             Fikringiz
             <br />
@@ -108,28 +102,28 @@ export function CtaSection() {
           </h2>
 
           {/* Tavsif */}
-          <p className="mt-5 max-w-md text-[15px] leading-[1.75] text-white/50 sm:text-[16px]">
+          <p className="mt-4 max-w-sm text-[15px] leading-[1.7] text-white/50">
             Inkly&apos;da maqola yozing, shaxsiy bloggingizni yarating va
             auditoriyangizni shakllantiring — bepul va hech qanday cheklovsiz.
           </p>
 
           {/* Tugmalar */}
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mt-7 flex flex-row items-center gap-3">
             <Link href="/register">
-              <Button variant="primary" size="lg" className="gap-2 px-8">
+              <Button variant="primary" size="lg" className="gap-2 px-7">
                 Yozishni boshlash
                 <ArrowRight size={15} />
               </Button>
             </Link>
             <Link href="/login">
-              <Button variant="onDark" size="lg" className="px-8">
+              <Button variant="onDark" size="lg" className="px-7">
                 Kirish
               </Button>
             </Link>
           </div>
 
           {/* Ishonch matni */}
-          <p className="mt-6 text-[13px] text-white/25">
+          <p className="mt-5 text-[13px] text-white/25">
             Ro&apos;yxatdan o&apos;tish bepul · Kredit karta talab etilmaydi
           </p>
         </div>
