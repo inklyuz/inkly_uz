@@ -10,7 +10,7 @@ export function CtaSection() {
     <section
       aria-labelledby="cta-heading"
       className="relative isolate overflow-hidden bg-[#141414]"
-      style={{ minHeight: 480 }}
+      style={{ height: 500 }}
     >
       {/* Grid tekstura */}
       <div
@@ -50,87 +50,82 @@ export function CtaSection() {
         className="pointer-events-none absolute top-10 left-10 h-20 w-20 rounded-full border border-[rgba(255,106,0,0.22)]"
       />
 
-      {/* Glow — mushuk tagida */}
+      {/* Mushuk — absolute, seksiya balandligiga teng */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 right-[10%] h-[200px] w-[500px]"
-        style={{
-          background: "radial-gradient(ellipse, rgba(255,106,0,0.30) 0%, transparent 70%)",
-          filter: "blur(30px)",
-        }}
-      />
+        className="pointer-events-none absolute bottom-0 right-0 hidden lg:block"
+        style={{ width: 680, height: 500 }}
+      >
+        {/* Glow mushuk tagida */}
+        <div
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 h-28 w-96"
+          style={{
+            background: "radial-gradient(ellipse, rgba(255,106,0,0.40) 0%, transparent 70%)",
+            filter: "blur(28px)",
+          }}
+        />
+        <Image
+          src="/cat.png"
+          alt=""
+          fill
+          className="select-none"
+          style={{ objectFit: "contain", objectPosition: "right bottom" }}
+          priority
+        />
+      </div>
 
-      <Container variant="marketing" className="relative z-10">
-        {/* 2 ustunli grid */}
-        <div className="grid min-h-[480px] grid-cols-1 items-center gap-0 lg:grid-cols-2">
+      {/* Kontent — absolute, to'liq balandlik, chap tomonda */}
+      <Container variant="marketing" className="relative z-10 h-full">
+        <div className="flex h-full flex-col justify-center lg:max-w-[50%]">
 
-          {/* Chap — kontent */}
-          <div className="flex flex-col justify-center py-16">
+          {/* LogoMark */}
+          <div className="mb-7 flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+            <LogoMark size={22} className="text-[var(--color-inkly-orange)]" />
+          </div>
 
-            {/* LogoMark */}
-            <div className="mb-7 flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-              <LogoMark size={22} className="text-[var(--color-inkly-orange)]" />
-            </div>
-
-            {/* Sarlavha */}
-            <h2
-              id="cta-heading"
-              className="font-display text-[44px] font-bold leading-[1.08] tracking-[-0.03em] text-white sm:text-[52px] lg:text-[62px]"
+          {/* Sarlavha */}
+          <h2
+            id="cta-heading"
+            className="font-display text-[48px] font-bold leading-[1.06] tracking-[-0.03em] text-white sm:text-[56px] lg:text-[68px]"
+          >
+            Fikringiz
+            <br />
+            <span
+              style={{
+                background: "linear-gradient(90deg, var(--color-inkly-orange) 0%, var(--color-inkly-coral) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
             >
-              Fikringiz
-              <br />
-              <span
-                style={{
-                  background: "linear-gradient(90deg, var(--color-inkly-orange) 0%, var(--color-inkly-coral) 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              >
-                o&apos;quvchi topadi.
-              </span>
-            </h2>
+              o&apos;quvchi topadi.
+            </span>
+          </h2>
 
-            {/* Tavsif */}
-            <p className="mt-5 max-w-[380px] text-[15px] leading-[1.75] text-white/50 sm:text-[16px]">
-              Inkly&apos;da maqola yozing, shaxsiy bloggingizni yarating va
-              auditoriyangizni shakllantiring — bepul va hech qanday cheklovsiz.
-            </p>
+          {/* Tavsif */}
+          <p className="mt-5 max-w-[400px] text-[15px] leading-[1.75] text-white/50 sm:text-[16px]">
+            Inkly&apos;da maqola yozing, shaxsiy bloggingizni yarating va
+            auditoriyangizni shakllantiring — bepul va hech qanday cheklovsiz.
+          </p>
 
-            {/* Tugmalar */}
-            <div className="mt-8 flex flex-row items-center gap-3">
-              <Link href="/register">
-                <Button variant="primary" size="lg" className="gap-2 px-7">
-                  Yozishni boshlash
-                  <ArrowRight size={15} />
-                </Button>
-              </Link>
-              <Link href="/login">
-                <Button variant="onDark" size="lg" className="px-7">
-                  Kirish
-                </Button>
-              </Link>
-            </div>
-
-            {/* Ishonch matni */}
-            <p className="mt-5 text-[13px] text-white/25">
-              Ro&apos;yxatdan o&apos;tish bepul · Kredit karta talab etilmaydi
-            </p>
+          {/* Tugmalar */}
+          <div className="mt-8 flex flex-row items-center gap-3">
+            <Link href="/register">
+              <Button variant="primary" size="lg" className="gap-2 px-7">
+                Yozishni boshlash
+                <ArrowRight size={15} />
+              </Button>
+            </Link>
+            <Link href="/login">
+              <Button variant="onDark" size="lg" className="px-7">
+                Kirish
+              </Button>
+            </Link>
           </div>
 
-          {/* O'ng — mushuk */}
-          <div className="relative hidden h-[480px] lg:flex lg:items-end lg:justify-center">
-            <Image
-              src="/cat.png"
-              alt=""
-              aria-hidden="true"
-              width={560}
-              height={480}
-              className="select-none object-contain object-bottom"
-              style={{ maxHeight: 480 }}
-              priority
-            />
-          </div>
-
+          {/* Ishonch matni */}
+          <p className="mt-5 text-[13px] text-white/25">
+            Ro&apos;yxatdan o&apos;tish bepul · Kredit karta talab etilmaydi
+          </p>
         </div>
       </Container>
     </section>
