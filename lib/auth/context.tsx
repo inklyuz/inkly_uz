@@ -115,10 +115,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, {
     user: null,
     token: null,
-    // Protected routes may be entered directly after OAuth. In that case the
-    // access token is not in sessionStorage yet; it must be bootstrapped from
-    // the httpOnly refresh cookie. Keep the protected layout in loading state
-    // until that refresh attempt finishes.
+    // Protected routes may be entered directly after OAuth. The backend has
+    // already set the shared httpOnly refresh cookie, while access tokens live
+    // only in sessionStorage. Keep protected UI in loading until the session
+    // is hydrated.
     loading: isProtectedRoute || getInitialLoading(),
     error: null,
   })
@@ -234,9 +234,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (pair.expires_in) setTokenExpiry(pair.expires_in)
       try {
         const user = await authApi.me(pair.access_token)
-        // MUHIM: middleware'ning /dashboard kabi himoyalangan sahifalarni
-        // bloklamasligi uchun shu marker cookie shart. Backend refresh_token'ni
-        // httpOnly cookie sifatida yubormagani uchun bu yerda o'zimiz qo'yamiz.
+        // Browser login/register endpoints set the httpOnly refresh cookie on
+        // the API response. No JS-readable auth marker is required.
         setSessionMarker()
         dispatch({ type: "SET_USER", user, token: pair.access_token })
         if (pair.expires_in) scheduleProactiveRefresh(pair.expires_in)

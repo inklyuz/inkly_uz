@@ -77,6 +77,9 @@ export const authApi = {
   // Runtime'da backend ba'zan { url: string } shaklida JSON qaytarishi
   // kuzatildi (shu sabab frontendda "/[object Object]"ga redirect bo'lgan).
   // apiRequest<unknown> bilan olib, ikkala shaklni ham qo'llab-quvvatlaymiz.
+  // Browser OAuth start only. The callback is intentionally NOT called from JS:
+  // Google navigates to the API callback, which sets the httpOnly refresh cookie
+  // and redirects the browser to /dashboard.
   getGoogleUrl: async () => {
     const response = await apiRequest<unknown>("/auth/google")
     return extractUrlString(response, "Google orqali kirish")
