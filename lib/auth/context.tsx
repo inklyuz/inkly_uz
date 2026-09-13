@@ -9,6 +9,7 @@ import {
   useRef,
   type ReactNode,
 } from "react"
+import { usePathname } from "next/navigation"
 import { authApi } from "@/lib/api/auth"
 import {
   getStoredAccessToken,
@@ -102,11 +103,23 @@ const AuthContext = createContext<{
 } | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname()
+  const isProtectedRoute =
+    pathname === "/dashboard" ||
+    pathname.startsWith("/dashboard/") ||
+    pathname === "/telegram" ||
+    pathname.startsWith("/telegram/") ||
+    pathname === "/write" ||
+    pathname.startsWith("/write/")
+
   const [state, dispatch] = useReducer(reducer, {
     user: null,
     token: null,
-    // sessionStorage sinxron tekshiruvi — SSR da false, client da token bor/yo'qligiga qarab
-    loading: getInitialLoading(),
+    // Protected routes may be entered directly after OAuth. In that case the
+    // access token is not in sessionStorage yet; it must be bootstrapped from
+    // the httpOnly refresh cookie. Keep the protected layout in loading state
+    // until that refresh attempt finishes.
+    loading: isProtectedRoute || getInitialLoading(),
     error: null,
   })
 
@@ -190,15 +203,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refreshRef.current = refresh
   }, [refresh])
 
-  // Ilk yuklashda faqat mavjud access token bo'lsa sessiyani tekshiramiz.
-  // Anonymous public sahifalarda /auth/refresh ga keraksiz 401 so'rov yubormaymiz.
-  // Bu har bir public page ochilishidagi ortiqcha network wait'ni olib tashlaydi.
+  // Protected route'ga OAuth callback orqali yangi kelganda sessionStorage'da
+  // access token bo'lmaydi. Backend allaqachon httpOnly refresh cookie bergan,
+  // shuning uchun shu yerda refresh() bilan sessiyani bootstrap qilamiz.
+  // Public sahifalarda esa anonymous foydalanuvchi uchun keraksiz /refresh
+  // so'rov yubormaymiz.
   useEffect(() => {
-    if (getStoredAccessToken()) {
+    if (isProtectedRoute || getStoredAccessToken()) {
       void refresh()
     }
     return () => cancelRefreshTimer()
-  }, [refresh, cancelRefreshTimer])
+  }, [isProtectedRoute, refresh, cancelRefreshTimer])
 
   // Boshqa tab/oynada logout bo'lganda ushbu tab ham chiqsin
   useEffect(() => {

@@ -82,10 +82,6 @@ export const authApi = {
     return extractUrlString(response, "Google orqali kirish")
   },
 
-  googleCallback: (code: string, state: string) =>
-    apiRequest<{ tokens: TokenPair }>(
-      `/auth/google/callback?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`,
-    ),
 
   telegramLogin: (data: TelegramAuthData) =>
     apiRequest<{ tokens: TokenPair }>("/auth/telegram/widget", { method: "POST", body: data }),
@@ -94,8 +90,8 @@ export const authApi = {
     apiRequest<TelegramBotStartResponse>("/auth/telegram/bot/start", { method: "POST" }),
 
   /**
-   * @internal INTERNAL — faqat Inkly bot tomonidan chaqiriladi.
-   * Docs: `x-bot-token` header talab qilinadi. Frontend SPA'dan chaqirilmasin.
+   * INTERNAL — faqat Inkly bot tomonidan chaqiriladi.
+   * Frontend SPA bu endpointni chaqirmaydi.
    */
   telegramBotConfirm: (botToken: string, data: Record<string, unknown>) =>
     apiRequest<unknown>("/auth/telegram/bot/confirm", {
@@ -104,16 +100,6 @@ export const authApi = {
       headers: { "x-bot-token": botToken },
     }),
 
-  /**
-   * API-only variant: returns JSON tokens (no redirect).
-   * Used by the telegram-bot/callback page which runs in a browser tab
-   * that was opened by the backend redirect — it needs tokens, not another redirect.
-   * Calls GET /auth/telegram/bot/callback/token (JSON endpoint).
-   */
-  telegramBotCallback: (token: string) =>
-    apiRequest<{ tokens: TokenPair }>(
-      `/auth/telegram/bot/callback/token?token=${encodeURIComponent(token)}`,
-    ),
 
   // Swagger: GET /auth/link/google → "string" (redirect URL) — xuddi
   // getGoogleUrl kabi, backend ba'zan { url } shaklida qaytarishi mumkin.
