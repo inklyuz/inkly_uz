@@ -1,6 +1,5 @@
 import { Suspense } from "react"
 
-import { AnnouncementBar } from "@/components/landing/announcement-bar"
 import { Hero } from "@/components/landing/hero"
 import { FeaturesSection } from "@/components/landing/features-section"
 import { BlogShowcase } from "@/components/landing/blog-showcase"
@@ -17,8 +16,6 @@ import { CtaSection } from "@/components/landing/cta-section"
 export default function HomePage() {
   return (
     <main>
-      <AnnouncementBar />
-
       <Hero />
 
       <ValueStatement />
